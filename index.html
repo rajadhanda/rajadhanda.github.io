@@ -420,31 +420,39 @@
   <footer>© 2025 Raja Dhanda — Crafted with care</footer>
 
   <script>
-    // Enhanced panel logic with backdrop
+    // Full-screen centered panel (exact LoveFrom style)
     const menuBtn = document.getElementById('menuBtn');
     const panel = document.getElementById('panel');
-    const overlay = document.getElementById('overlay');
+    const closeBtn = document.getElementById('closeBtn');
     const aboutLink = document.getElementById('aboutLink');
 
     function togglePanel(forceOpen) {
       const open = forceOpen !== undefined ? forceOpen : !panel.classList.contains('open');
       panel.classList.toggle('open', open);
-      overlay.classList.toggle('active', open);
       panel.setAttribute('aria-hidden', (!open).toString());
       
-      // Icon animation
-      const icon = menuBtn.querySelector('i');
-      icon.className = open ? 'fa-solid fa-xmark' : 'fa-solid fa-circle-info';
+      // Hide/show main button when panel is open
+      menuBtn.style.opacity = open ? '0' : '1';
+      menuBtn.style.pointerEvents = open ? 'none' : 'auto';
+      
+      // Reset animations when closing
+      if (!open) {
+        const navLinks = panel.querySelectorAll('nav a');
+        navLinks.forEach(link => {
+          link.style.animation = 'none';
+          link.offsetHeight; // Force reflow
+          link.style.animation = null;
+        });
+      }
     }
 
-    menuBtn.addEventListener('click', () => togglePanel());
-    overlay.addEventListener('click', () => togglePanel(false));
+    menuBtn.addEventListener('click', () => togglePanel(true));
+    closeBtn.addEventListener('click', () => togglePanel(false));
     
     aboutLink.addEventListener('click', (e) => {
       e.preventDefault();
-      togglePanel(true);
-      const about = document.getElementById('aboutSection');
-      setTimeout(() => about.scrollIntoView({ behavior: 'smooth', block: 'start' }), 300);
+      // For now, just close the panel since About content is on main page
+      togglePanel(false);
     });
 
     // Close panel on ESC
