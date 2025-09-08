@@ -4,87 +4,284 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Raja Dhanda</title>
+
+  <!-- Typeface -->
   <link href="https://fonts.googleapis.com/css2?family=Georgia&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+
+  <!-- Font Awesome (stable CDN) -->
+  <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
+        referrerpolicy="no-referrer" />
+
   <style>
+    :root {
+      --bg: #ffffff;
+      --fg: #000000;
+      --muted: #6a6a6a;
+      --accent: #000000;
+      --maxw: 900px;
+      --menu-w: 380px;
+      --ease: cubic-bezier(.2,.7,.2,1);
+    }
+
+    * { box-sizing: border-box; }
+    html, body { height: 100%; }
     body {
       margin: 0;
-      padding: 0;
       font-family: 'Georgia', serif;
-      background-color: #fff;
-      color: #000;
-      text-align: center;
+      background: var(--bg);
+      color: var(--fg);
+      display: grid;
+      grid-template-rows: 1fr auto;
+      align-items: center;
+      justify-items: center;
+      overflow-x: hidden;
+    }
+
+    /* Top-left info / menu toggle */
+    .menu-toggle {
+      position: fixed;
+      top: 18px;
+      left: 18px;
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      border: 1px solid #ddd;
+      display: grid;
+      place-items: center;
+      background: rgba(255,255,255,0.85);
+      backdrop-filter: blur(6px);
+      cursor: pointer;
+      transition: transform .2s var(--ease), border-color .2s var(--ease);
+      z-index: 1001;
+    }
+    .menu-toggle:hover { transform: scale(1.03); border-color: #bbb; }
+    .menu-toggle i { font-size: 16px; color: var(--fg); }
+
+    /* Slide-out panel */
+    .panel {
+      position: fixed;
+      inset: 0 auto 0 0;
+      width: min(100%, var(--menu-w));
+      max-width: 90vw;
+      background: #fafafa;
+      border-right: 1px solid #eaeaea;
+      transform: translateX(-100%);
+      transition: transform .5s var(--ease);
+      z-index: 1000;
       display: flex;
       flex-direction: column;
+      padding: 22px 24px 28px;
+      overflow-y: auto;
+    }
+    .panel.open { transform: translateX(0); }
+    .panel header {
+      font-size: 0.95rem; 
+      color: var(--muted);
+      letter-spacing: 0.02em;
+      margin-bottom: 8px;
+    }
+    nav ul { list-style: none; padding: 0; margin: 0 0 18px; }
+    nav li { margin: 8px 0; }
+    nav a {
+      text-decoration: none;
+      color: var(--fg);
+      font-size: 1.25rem;
+      transition: opacity .2s var(--ease), transform .2s var(--ease);
+      display: inline-block;
+    }
+    nav a:hover { opacity: 0.7; transform: translateX(2px); }
+
+    .about {
+      margin-top: 14px;
+      border-top: 1px solid #eee;
+      padding-top: 14px;
+      max-width: 38ch;
+      line-height: 1.45;
+      color: #1a1a1a;
+      font-size: 1rem;
+    }
+
+    /* Center content */
+    main {
+      width: 100%;
+      max-width: var(--maxw);
+      text-align: center;
+      padding: 20px;
+      align-self: center;
+      justify-self: center;
+    }
+
+    /* Typing name */
+    .name {
+      font-size: clamp(2.2rem, 4.5vw, 4rem);
+      line-height: 1.1;
+      margin: 0 0 8px 0;
+      min-height: 1.2em; /* prevents layout shift during typing */
+      letter-spacing: 0.02em;
+      white-space: nowrap;
+    }
+    .caret {
+      display: inline-block;
+      width: 0.55ch;
+      border-right: 2px solid var(--fg);
+      animation: blink 1.2s steps(1, end) infinite;
+      margin-left: 1px;
+      transform: translateY(2px);
+    }
+    @keyframes blink {
+      0%, 49% { opacity: 1; }
+      50%, 100% { opacity: 0; }
+    }
+
+    /* Subtitle appears after typing completes */
+    .subtitle {
+      font-size: clamp(1.1rem, 2.1vw, 1.6rem);
+      color: var(--muted);
+      font-weight: normal;
+      margin: 10px 0 22px 0;
+      opacity: 0;
+      transform: translateY(8px);
+      transition: opacity .7s var(--ease), transform .7s var(--ease);
+    }
+    .subtitle.show {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* Bottom icons */
+    .icons {
+      margin-top: 6vh;
+      display: flex;
+      gap: 26px;
       justify-content: center;
       align-items: center;
-      height: 100vh;
     }
-
-    h1 {
-      font-size: 2.5rem;
-      margin-bottom: 10px;
-    }
-
-    h2 {
-      font-size: 1.5rem;
-      color: grey;
-      font-weight: normal;
-      margin-bottom: 30px;
-    }
-
-    p {
-      font-size: 1.1rem;
-      margin: 5px 0;
-    }
-
-    .icons {
-      margin-top: 30px;
-      display: flex;
-      gap: 20px;
-      justify-content: center;
-    }
-
     .icons a {
-      display: inline-block;
-      background-color: #000;
-      color: #fff;
-      padding: 12px;
-      border-radius: 10px;
-      font-size: 1.2rem;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
       text-decoration: none;
-      transition: transform 0.2s;
+      color: var(--fg);
+      font-size: 28px; /* crisp glyphs, no background */
+      transition: transform .15s var(--ease), opacity .15s var(--ease);
     }
-
-    .icons a:hover {
-      transform: scale(1.1);
-    }
+    .icons a:hover { transform: translateY(-2px); opacity: 0.8; }
 
     footer {
-      position: absolute;
-      bottom: 20px;
+      grid-row: 2;
+      width: 100%;
+      text-align: center;
+      padding: 12px 0 18px;
       font-size: 0.9rem;
-      color: grey;
+      color: var(--muted);
+    }
+
+    @media (max-width: 560px) {
+      .about { max-width: 100%; }
+      .icons { margin-top: 10vh; }
     }
   </style>
 </head>
 <body>
 
-  <h1>Raja Dhanda</h1>
-  <h2><em>experimenting...</em></h2>
-  <p>Enjoys making things simple.</p>
-  <p>Exploring design, code & the human experience.</p>
+  <!-- Top-left info toggle -->
+  <button class="menu-toggle" aria-label="Open information panel" id="menuBtn">
+    <i class="fa-solid fa-circle-info" aria-hidden="true"></i>
+  </button>
 
-  <div class="icons">
-    <a href="https://www.linkedin.com/in/ramendra-raja-dhanda/" target="_blank" aria-label="LinkedIn">
-      <i class="fab fa-linkedin-in"></i>
-    </a>
-    <a href="mailto:hello@rajadhanda.me" target="_blank" aria-label="Email">
-      <i class="fas fa-envelope"></i>
-    </a>
-  </div>
+  <!-- Slide-out panel -->
+  <aside class="panel" id="panel" aria-hidden="true">
+    <header>Navigation</header>
+    <nav aria-label="Primary">
+      <ul>
+        <li><a href="#" id="aboutLink">About</a></li>
+        <li><a href="/blog">Blog</a></li>
+        <li><a href="/projects">Projects</a></li>
+        <li><a href="/photographs">Photographs</a></li>
+      </ul>
+    </nav>
+
+    <section class="about" id="aboutSection" aria-live="polite">
+      <h3 style="margin:0 0 6px 0; font-size:1.1rem; color:#3a3a3a;">About</h3>
+      <p>Enjoys making things simple.</p>
+      <p>Exploring design, code &amp; the human experience.</p>
+    </section>
+  </aside>
+
+  <!-- Main content -->
+  <main>
+    <h1 class="name" id="name" data-text="Raja Dhanda"></h1>
+    <div class="subtitle" id="subtitle"><em>experimenting…</em></div>
+
+    <div class="icons" aria-label="External links">
+      <a href="https://www.linkedin.com/in/ramendra-raja-dhanda/"
+         target="_blank" rel="noopener" aria-label="LinkedIn">
+        <i class="fa-brands fa-linkedin" aria-hidden="true"></i>
+      </a>
+      <a href="mailto:hello@rajadhanda.me"
+         target="_blank" rel="noopener" aria-label="Email">
+        <i class="fa-solid fa-envelope" aria-hidden="true"></i>
+      </a>
+    </div>
+  </main>
 
   <footer>© 2025 Raja Dhanda</footer>
 
+  <script>
+    // Slide-out panel logic
+    const menuBtn = document.getElementById('menuBtn');
+    const panel = document.getElementById('panel');
+    const aboutLink = document.getElementById('aboutLink');
+
+    function togglePanel(forceOpen) {
+      const open = forceOpen !== undefined ? forceOpen : !panel.classList.contains('open');
+      panel.classList.toggle('open', open);
+      panel.setAttribute('aria-hidden', (!open).toString());
+    }
+
+    menuBtn.addEventListener('click', () => togglePanel());
+    aboutLink.addEventListener('click', (e) => {
+      e.preventDefault();
+      togglePanel(true);
+      // focuses About heading for a11y feel
+      const about = document.getElementById('aboutSection');
+      about.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    });
+
+    // Close panel on ESC
+    window.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && panel.classList.contains('open')) togglePanel(false);
+    });
+
+    // Typing effect (~5s total)
+    const nameEl = document.getElementById('name');
+    const subtitle = document.getElementById('subtitle');
+    const fullText = nameEl.dataset.text;
+    const totalDurationMs = 5000; // 5 seconds target
+    const stepMs = Math.max(20, Math.floor(totalDurationMs / Math.max(1, fullText.length)));
+    let idx = 0;
+
+    function typeNext() {
+      if (idx <= fullText.length) {
+        nameEl.innerHTML = fullText.slice(0, idx) + '<span class="caret"></span>';
+        idx++;
+        setTimeout(typeNext, stepMs);
+      } else {
+        // remove caret and reveal subtitle smoothly
+        nameEl.textContent = fullText;
+        requestAnimationFrame(() => {
+          subtitle.classList.add('show');
+        });
+      }
+    }
+
+    // Defer a tick to avoid layout jank on first paint
+    window.addEventListener('load', () => {
+      // Start with empty to avoid flash of full text
+      nameEl.textContent = '';
+      typeNext();
+    });
+  </script>
 </body>
 </html>
