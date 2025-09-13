@@ -240,7 +240,7 @@
     </a>
     <a class="bubble" href="/projects" data-key="projects" aria-label="Projects">
       <span class="bubble-title">Projects</span>
-      <em class="bubble-label">things I’ve tried</em>
+      <em class="bubble-label">things I've tried</em>
     </a>
     <a class="bubble" href="/photographs" data-key="photos" aria-label="Photographs">
       <span class="bubble-title">Photographs</span>
@@ -251,10 +251,10 @@
   <!-- Status -->
   <div class="status"><div class="status-dot"></div>Available for projects</div>
 
-  <footer>© 2025 Raja Dhanda — Crafted with care</footer>
+  <footer>© 2025 Raja Dhanda – Crafted with care</footer>
 
   <script>
-    // ===== Bubble freeflow micro-physics (viewport-pinned, window-centered, centerpiece-excluding) =====
+    // ===== Bubble freeflow micro-physics (viewport-pinned, centerpiece-centered) =====
     (function () {
       const nav = document.getElementById('bubbleNav');
       if (!nav) return;
@@ -265,32 +265,41 @@
       const bubbles = Array.from(nav.querySelectorAll('.bubble'));
       if (!bubbles.length) return;
 
-      // Center anchor: true window center. We still read centerpiece size to push radius outside it.
-      function getCenter() {
-        const x = window.innerWidth / 2;
-        const y = window.innerHeight / 2;
+      // Get the actual center of the centerpiece element
+      function getCenterpieceCenter() {
         const cp = document.getElementById('centerpiece');
-        if (cp) {
-          const r = cp.getBoundingClientRect();
-          return { x, y, w: r.width, h: r.height };
+        if (!cp) {
+          return { 
+            x: window.innerWidth / 2, 
+            y: window.innerHeight / 2, 
+            w: 0, 
+            h: 0 
+          };
         }
-        return { x, y, w: 0, h: 0 };
+        
+        const rect = cp.getBoundingClientRect();
+        return {
+          x: rect.left + rect.width / 2,
+          y: rect.top + rect.height / 2,
+          w: rect.width,
+          h: rect.height
+        };
       }
 
       // Tuned parameters for gentle motion
-      const DRIFT_AMP   = 5;      // px breathing
-      const DRIFT_FREQ  = 0.15;   // Hz
-      const SPIN        = 0.01;   // rad/sec — very subtle
-      const MAG_PULL    = 0.015;  // gentle attraction on hover
-      const SPRING      = 0.045;  // steady spring
-      const SPRING_INIT = 0.090;  // initial settle
-      const DAMP        = 0.975;  // higher = calmer
-      const MAX_VEL     = 6;      // px/frame cap
+      const DRIFT_AMP   = 8;      // px breathing
+      const DRIFT_FREQ  = 0.12;   // Hz
+      const SPIN        = 0.008;   // rad/sec – very subtle
+      const MAG_PULL    = 0.02;   // gentle attraction on hover
+      const SPRING      = 0.05;   // steady spring
+      const SPRING_INIT = 0.12;   // initial settle
+      const DAMP        = 0.98;   // higher = calmer
+      const MAX_VEL     = 4;      // px/frame cap
 
       const state = bubbles.map((el, i) => ({
         el,
-        angle: (i / bubbles.length) * Math.PI * 2 + (Math.random() - 0.5) * 0.3,
-        radiusMul: 0.92 + Math.random() * 0.16,
+        angle: (i / bubbles.length) * Math.PI * 2 + (Math.random() - 0.5) * 0.4,
+        radiusMul: 0.9 + Math.random() * 0.2,
         pos: { x: 0, y: 0 },
         vel: { x: 0, y: 0 },
         hovering: false,
@@ -327,38 +336,41 @@
         last = t;
 
         // Pointer smoothing
-        const ALPHA = 0.12;
+        const ALPHA = 0.15;
         filtPointer.x += (rawPointer.x - filtPointer.x) * ALPHA;
         filtPointer.y += (rawPointer.y - filtPointer.y) * ALPHA;
 
-        const c = getCenter();
+        const center = getCenterpieceCenter();
 
-        // Base orbit radius: just outside centerpiece + a cushion
+        // Base orbit radius: distance from centerpiece center, accounting for centerpiece size
         const baseR = Math.max(
-          180,
-          Math.max(c.w, c.h) * 0.70 + 60
+          200, // minimum radius
+          Math.max(center.w, center.h) * 0.8 + 80 // adaptive to centerpiece size
         );
 
         state.forEach(s => {
-          const spinNow = s.hovering ? SPIN * 0.4 : SPIN; // slightly slower while hovering
+          const spinNow = s.hovering ? SPIN * 0.3 : SPIN;
           s.angle += spinNow * dt;
 
           // Gentle breathing
           const drift = Math.sin(t * 0.001 * (DRIFT_FREQ * 2 * Math.PI) + s.driftPhase) * DRIFT_AMP;
 
-          // Per-bubble radius cap based on bubble size & viewport (keeps on-screen)
-          const halfW = s.el.offsetWidth / 2;
-          const halfH = s.el.offsetHeight / 2;
-          const pad = 12;
-          const capX = (window.innerWidth  / 2) - halfW - pad;
-          const capY = (window.innerHeight / 2) - halfH - pad;
-          const Rcap = Math.max(80, Math.min(capX, capY));
+          // Calculate radius with drift and bounds checking
+          const bubbleRect = s.el.getBoundingClientRect();
+          const halfW = bubbleRect.width / 2;
+          const halfH = bubbleRect.height / 2;
+          const pad = 20;
+          
+          // Calculate maximum radius that keeps bubble on screen
+          const maxDistX = Math.min(center.x - pad - halfW, window.innerWidth - center.x - pad - halfW);
+          const maxDistY = Math.min(center.y - pad - halfH, window.innerHeight - center.y - pad - halfH);
+          const maxRadius = Math.max(100, Math.min(maxDistX, maxDistY));
 
-          const R = clamp(baseR * s.radiusMul + drift, 80, Rcap);
+          const R = clamp(baseR * s.radiusMul + drift, 120, maxRadius);
 
-          // Target position around true center
-          let tx = c.x + Math.cos(s.angle) * R;
-          let ty = c.y + Math.sin(s.angle) * R;
+          // Target position around centerpiece center
+          let tx = center.x + Math.cos(s.angle) * R;
+          let ty = center.y + Math.sin(s.angle) * R;
 
           // Gentle magnet toward pointer when hovered
           if (s.hovering && rawPointer.active) {
@@ -366,9 +378,11 @@
             ty += (filtPointer.y - ty) * MAG_PULL;
           }
 
-          // Safety on-screen clamp
-          const minX = halfW + pad, maxX = window.innerWidth  - halfW - pad;
-          const minY = halfH + pad, maxY = window.innerHeight - halfH - pad;
+          // Safety clamps to keep on screen
+          const minX = halfW + pad;
+          const maxX = window.innerWidth - halfW - pad;
+          const minY = halfH + pad;
+          const maxY = window.innerHeight - halfH - pad;
 
           s.target.x = clamp(tx, minX, maxX);
           s.target.y = clamp(ty, minY, maxY);
@@ -379,19 +393,21 @@
           s.vel.y += (s.target.y - s.pos.y) * k;
 
           // Damping + velocity cap
-          s.vel.x *= DAMP; s.vel.y *= DAMP;
+          s.vel.x *= DAMP; 
+          s.vel.y *= DAMP;
           const speed = Math.hypot(s.vel.x, s.vel.y);
           if (speed > MAX_VEL) {
             const scale = MAX_VEL / speed;
-            s.vel.x *= scale; s.vel.y *= scale;
+            s.vel.x *= scale; 
+            s.vel.y *= scale;
           }
 
           s.pos.x += s.vel.x;
           s.pos.y += s.vel.y;
 
-          // Apply transform (GPU-accelerated)
-          const scale = s.hovering ? ' scale(1.03)' : '';
-          s.el.style.transform = `translate3d(${s.pos.x - halfW}px, ${s.pos.y - halfH}px, 0)` + scale;
+          // Apply transform (GPU-accelerated) - position relative to top-left of bubble
+          const scale = s.hovering ? ' scale(1.05)' : '';
+          s.el.style.transform = `translate3d(${s.pos.x - halfW}px, ${s.pos.y - halfH}px, 0)${scale}`;
         });
 
         initialized = true;
@@ -399,25 +415,33 @@
       }
 
       function init() {
-        const c = getCenter();
-        const baseR = Math.max(180, Math.max(c.w, c.h) * 0.70 + 60);
+        // Wait for fonts and layout to be ready
+        setTimeout(() => {
+          const center = getCenterpieceCenter();
+          const baseR = Math.max(200, Math.max(center.w, center.h) * 0.8 + 80);
 
-        state.forEach(s => {
-          const halfW = s.el.offsetWidth / 2;
-          const halfH = s.el.offsetHeight / 2;
-          const pad = 12;
-          const capX = (window.innerWidth  / 2) - halfW - pad;
-          const capY = (window.innerHeight / 2) - halfH - pad;
-          const Rcap = Math.max(80, Math.min(capX, capY));
+          state.forEach(s => {
+            const bubbleRect = s.el.getBoundingClientRect();
+            const halfW = bubbleRect.width / 2;
+            const halfH = bubbleRect.height / 2;
+            const pad = 20;
+            
+            const maxDistX = Math.min(center.x - pad - halfW, window.innerWidth - center.x - pad - halfW);
+            const maxDistY = Math.min(center.y - pad - halfH, window.innerHeight - center.y - pad - halfH);
+            const maxRadius = Math.max(100, Math.min(maxDistX, maxDistY));
 
-          const R = clamp(baseR * s.radiusMul, 80, Rcap);
-          s.pos.x = c.x + Math.cos(s.angle) * R;
-          s.pos.y = c.y + Math.sin(s.angle) * R;
+            const R = clamp(baseR * s.radiusMul, 120, maxRadius);
+            
+            // Initial position around centerpiece center
+            s.pos.x = center.x + Math.cos(s.angle) * R;
+            s.pos.y = center.y + Math.sin(s.angle) * R;
+            
+            // Set initial transform
+            s.el.style.transform = `translate3d(${s.pos.x - halfW}px, ${s.pos.y - halfH}px, 0)`;
+          });
 
-          s.el.style.transform = `translate3d(${s.pos.x - halfW}px, ${s.pos.y - halfH}px, 0)`;
-        });
-
-        requestAnimationFrame((t)=>{ last = t; tick(t); });
+          requestAnimationFrame((t) => { last = t; tick(t); });
+        }, 100);
       }
 
       if (document.readyState === 'loading') {
@@ -426,11 +450,14 @@
         init();
       }
 
-      // Re-center on resize
-      let rz;
+      // Re-center on resize with debounce
+      let resizeTimeout;
       window.addEventListener('resize', () => {
-        cancelAnimationFrame(rz);
-        rz = requestAnimationFrame(init);
+        clearTimeout(resizeTimeout);
+        resizeTimeout = setTimeout(() => {
+          initialized = false;
+          init();
+        }, 100);
       });
     })();
 
