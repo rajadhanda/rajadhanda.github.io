@@ -417,6 +417,45 @@
       opacity: 1;
       transform: translate(-50%, 0);
     }
+    /* --- Freeflow layout (orbit around name) --- */
+.bubble-nav.freeflow {
+  position: absolute;
+  inset: 0;
+  pointer-events: none; /* bubbles themselves re-enable pointer */
+}
+.bubble-nav.freeflow .bubble {
+  position: absolute;
+  pointer-events: auto;
+}
+
+/* Hover clarity upgrades */
+.bubble {
+  will-change: transform;
+}
+.bubble:hover {
+  transform: translateY(-2px) scale(1.04);
+  border-color: #cfcfcf;
+  box-shadow: 0 10px 24px rgba(0,0,0,0.08);
+}
+.bubble:focus-visible {
+  transform: scale(1.03);
+  box-shadow: 0 0 0 3px rgba(0,0,0,.10), 0 10px 24px rgba(0,0,0,0.08);
+}
+
+/* Label reveal a touch smoother/clearer */
+.bubble-label {
+  transition: opacity .2s var(--ease), transform .2s var(--ease);
+}
+
+/* Respect reduced motion: fall back to your tidy grid */
+@media (prefers-reduced-motion: reduce) {
+  .bubble-nav.freeflow {
+    position: static;
+  }
+  .bubble-nav.freeflow .bubble {
+    position: static;
+  }
+}
 
     /* Responsive adjustments */
     @media (max-width: 768px) {
@@ -468,7 +507,7 @@
     <div class="subtitle" id="subtitle">experimenting with intention</div>
 
     <!-- Bubble navigation -->
-    <nav class="bubble-nav" aria-label="Primary">
+    <nav id="bubbleNav" class="bubble-nav freeflow" aria-label="Primary">
       <a class="bubble" href="/about" data-key="about" aria-label="About">
         <span class="bubble-title">About</span>
         <em class="bubble-label">who I am in 2 mins</em>
@@ -508,9 +547,153 @@
     Available for projects
   </div>
 
-  <footer>© 2025 Raja Dhanda — Crafted with care</footer>
-
+<footer>© 2025 Raja Dhanda — Crafted with care</footer>
   <script>
+  // ===============================
+  // Bubble freeflow micro-physics
+  // ===============================
+  (function () {
+    const nav = document.getElementById('bubbleNav');
+    if (!nav) return;
+
+    // Respect reduced motion: keep grid layout
+    const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (prefersReduced) {
+      nav.classList.remove('freeflow');
+      return;
+    }
+
+    const nameEl = document.getElementById('name');
+    const bubbles = Array.from(nav.querySelectorAll('.bubble'));
+    if (!nameEl || !bubbles.length) return;
+
+    // Spring/motion params (silky, not bouncy)
+    const STIFFNESS = 160;
+    const DAMPING   = 18;
+    const MAX_MAG   = 12;
+    const HOVER_SCALE = 1.04;
+
+    // Orbital layout params
+    const TWO_PI = Math.PI * 2;
+    const baseRadius = () => Math.max(120, Math.min(window.innerWidth, window.innerHeight) * 0.22);
+    const driftAmp   = 8;     // px
+    const driftFreq  = 0.35;  // Hz, gentle
+
+    // Internal state
+    const state = bubbles.map((el, i) => ({
+      el,
+      angle: (i / bubbles.length) * TWO_PI,
+      driftPhase: Math.random() * TWO_PI,
+      pos: { x: 0, y: 0 },
+      vel: { x: 0, y: 0 },
+      mag: { x: 0, y: 0 },
+      hovering: false
+    }));
+
+    function getCenter() {
+      const r = nameEl.getBoundingClientRect();
+      return {
+        x: r.left + r.width / 2 + window.scrollX,
+        y: r.top  + r.height/ 2 + window.scrollY
+      };
+    }
+
+    function sizeNavOverlay() {
+      nav.style.position = 'absolute';
+      nav.style.left = '0px';
+      nav.style.top  = '0px';
+      nav.style.width  = `${document.documentElement.scrollWidth}px`;
+      nav.style.height = `${document.documentElement.scrollHeight}px`;
+    }
+
+    let pointer = { x: 0, y: 0, active: false };
+    window.addEventListener('pointermove', (e) => {
+      pointer = { x: e.pageX, y: e.pageY, active: true };
+    }, { passive: true });
+
+    state.forEach(s => {
+      const el = s.el;
+      el.addEventListener('pointerenter', () => {
+        s.hovering = true;
+        el.style.transition = 'transform .12s var(--ease)';
+        el.style.transform += ` scale(${HOVER_SCALE})`;
+      });
+      el.addEventListener('pointerleave', () => {
+        s.hovering = false;
+        el.style.transition = 'transform .18s var(--ease)';
+        el.style.transform = el.style.transform.replace(/ scale\([^)]+\)/, '');
+        s.mag.x = 0; s.mag.y = 0;
+      });
+    });
+
+    let lastT = performance.now();
+    let running = true;
+    document.addEventListener('visibilitychange', () => {
+      running = !document.hidden;
+      if (running) { lastT = performance.now(); requestAnimationFrame(tick); }
+    });
+
+    function tick(t) {
+      if (!running) return;
+      const dt = Math.min(0.032, (t - lastT) / 1000);
+      lastT = t;
+
+      sizeNavOverlay();
+      const center = getCenter();
+      const R = baseRadius();
+
+      state.forEach((s) => {
+        const baseX = center.x + Math.cos(s.angle) * R;
+        const baseY = center.y + Math.sin(s.angle) * R;
+
+        const driftX = Math.sin((t/1000) * TWO_PI * driftFreq + s.driftPhase) * driftAmp;
+        const driftY = Math.cos((t/1000) * TWO_PI * driftFreq + s.driftPhase*0.9) * driftAmp;
+
+        if (s.hovering && pointer.active) {
+          const dx = pointer.x - (s.pos.x || baseX);
+          const dy = pointer.y - (s.pos.y || baseY);
+          const len = Math.hypot(dx, dy) || 1;
+          const mx = (dx / len) * MAX_MAG;
+          const my = (dy / len) * MAX_MAG;
+          s.mag.x += (mx - s.mag.x) * 0.25;
+          s.mag.y += (my - s.mag.y) * 0.25;
+        } else {
+          s.mag.x *= 0.85;
+          s.mag.y *= 0.85;
+        }
+
+        const targetX = baseX + driftX + s.mag.x;
+        const targetY = baseY + driftY + s.mag.y;
+
+        const ax = STIFFNESS * (targetX - s.pos.x) - DAMPING * s.vel.x;
+        const ay = STIFFNESS * (targetY - s.pos.y) - DAMPING * s.vel.y;
+
+        s.vel.x += ax * dt;
+        s.vel.y += ay * dt;
+
+        s.pos.x = (s.pos.x || targetX) + s.vel.x * dt;
+        s.pos.y = (s.pos.y || targetY) + s.vel.y * dt;
+
+        s.el.style.transform = `translate(${s.pos.x - s.el.offsetWidth/2}px, ${s.pos.y - s.el.offsetHeight/2}px)`;
+      });
+
+      requestAnimationFrame(tick);
+    }
+
+    (function initPositions() {
+      const center = getCenter();
+      const R = baseRadius();
+      state.forEach((s) => {
+        const x = center.x + Math.cos(s.angle) * R;
+        const y = center.y + Math.sin(s.angle) * R;
+        s.pos.x = x; s.pos.y = y;
+        s.el.style.transform = `translate(${x - s.el.offsetWidth/2}px, ${y - s.el.offsetHeight/2}px)`;
+      });
+    })();
+
+    requestAnimationFrame((t) => { lastT = t; tick(t); });
+  })();
+
     // Enhanced panel logic with backdrop
     const menuBtn = document.getElementById('menuBtn');
     const panel   = document.getElementById('panel');
@@ -525,7 +708,7 @@
 
       // Icon animation
       const icon = menuBtn.querySelector('i');
-      icon.className = open ? 'fa-solid fa-xmark' : 'fa-solid fa-circle-info';
+      icon.className = open ? 'fa-solid fa-xmark' : 'fa-solid fa-bars';
     }
 
     menuBtn.addEventListener('click', () => togglePanel());
