@@ -277,7 +277,8 @@
 
       function getCenter() {
         const r = nameEl.getBoundingClientRect();
-        return { x: r.left + r.width/2 + window.scrollX, y: r.top + r.height/2 + window.scrollY };
+        // Coordinates relative to the viewport (match the fixed container)
+        return { x: r.left + r.width / 2, y: r.top + r.height / 2 };
       }
 
       let pointer = { x: 0, y: 0, active: false };
@@ -296,17 +297,26 @@
         if (running) { lastT = performance.now(); requestAnimationFrame(tick); }
       });
 
+      function clamp(v, min, max){
+        return Math.max(min, Math.min(max, v));
+      }
+
       function tick(t){
         if (!running) return;
         const dt = Math.min(0.032, (t - lastT) / 1000);
         lastT = t;
 
         const center = getCenter();
-        const R = baseRadius();
 
         state.forEach((s) => {
-          const baseX = center.x + Math.cos(s.angle) * R;
-          const baseY = center.y + Math.sin(s.angle) * R;
+          // Compute a safe radius per bubble so the circle sits around the title and stays on-screen
+          const bubbleHalf = s.el.offsetWidth / 2;
+          const safeR = Math.min(
+            baseRadius(),
+            (Math.min(window.innerWidth, window.innerHeight) / 2) - bubbleHalf - 20
+          );
+          const baseX = center.x + Math.cos(s.angle) * safeR;
+          const baseY = center.y + Math.sin(s.angle) * safeR;
 
           const driftX = Math.sin((t/1000) * TWO_PI * driftFreq + s.driftPhase) * driftAmp;
           const driftY = Math.cos((t/1000) * TWO_PI * driftFreq + s.driftPhase*0.9) * driftAmp;
@@ -323,8 +333,16 @@
             s.mag.x *= 0.85; s.mag.y *= 0.85;
           }
 
-          const targetX = baseX + driftX + s.mag.x;
-          const targetY = baseY + driftY + s.mag.y;
+          let targetX = baseX + driftX + s.mag.x;
+          let targetY = baseY + driftY + s.mag.y;
+          // Keep within viewport bounds of the fixed container
+          const half = s.el.offsetWidth / 2;
+          const minX = half + 12;
+          const maxX = window.innerWidth - half - 12;
+          const minY = half + 12;
+          const maxY = window.innerHeight - half - 12;
+          targetX = clamp(targetX, minX, maxX);
+          targetY = clamp(targetY, minY, maxY);
 
           const ax = STIFFNESS * (targetX - s.pos.x) - DAMPING * s.vel.x;
           const ay = STIFFNESS * (targetY - s.pos.y) - DAMPING * s.vel.y;
@@ -344,12 +362,23 @@
       // First paint at base positions
       (function initPositions(){
         const center = getCenter();
-        const R = baseRadius();
         state.forEach((s) => {
-          const x = center.x + Math.cos(s.angle) * R;
-          const y = center.y + Math.sin(s.angle) * R;
-          s.pos.x = x; s.pos.y = y;
-          s.el.style.transform = `translate(${x - s.el.offsetWidth/2}px, ${y - s.el.offsetHeight/2}px)`;
+          const bubbleHalf = s.el.offsetWidth / 2;
+          const safeR = Math.min(
+            baseRadius(),
+            (Math.min(window.innerWidth, window.innerHeight) / 2) - bubbleHalf - 20
+          );
+          const x = center.x + Math.cos(s.angle) * safeR;
+          const y = center.y + Math.sin(s.angle) * safeR;
+          // Clamp to viewport in case the title is very close to an edge
+          const minX = bubbleHalf + 12;
+          const maxX = window.innerWidth - bubbleHalf - 12;
+          const minY = bubbleHalf + 12;
+          const maxY = window.innerHeight - bubbleHalf - 12;
+          const cx = clamp(x, minX, maxX);
+          const cy = clamp(y, minY, maxY);
+          s.pos.x = cx; s.pos.y = cy;
+          s.el.style.transform = `translate(${cx - bubbleHalf}px, ${cy - bubbleHalf}px)`;
         });
       })();
 
