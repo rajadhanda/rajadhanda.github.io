@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Raja Dhanda</title>
+  <title>Raja Dhanda - Fixed Bubbles</title>
 
   <!-- Type -->
   <link href="https://fonts.googleapis.com/css2?family=Crimson+Text:ital,wght@0,400;0,600;1,400&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
@@ -128,14 +128,24 @@
 
     .bubble{
       position:relative; width:clamp(160px,24vw,220px); aspect-ratio:1/1; border-radius:50%;
-      border:2px solid var(--border); display:grid; place-items:center; text-decoration:none; color:var(--fg);
-      overflow:hidden; background:transparent; transition:border-color .18s var(--ease), box-shadow .18s var(--ease);
-      will-change:transform;
+      border:1px solid rgba(0,0,0,.06); display:grid; place-items:center; text-decoration:none; color:var(--fg);
+      overflow:hidden; background:rgba(250,250,250,.3); backdrop-filter:blur(8px);
+      transition:all .4s var(--ease); will-change:transform;
     }
-    .bubble:hover{border-color:#cfcfcf; box-shadow:0 10px 24px rgba(0,0,0,.08)}
-    .bubble:focus-visible{outline:none; box-shadow:0 0 0 3px rgba(0,0,0,.10), 0 10px 24px rgba(0,0,0,.08); border-color:#cfcfcf}
+    .bubble:hover{
+      border-color:var(--border-hover); box-shadow:0 12px 32px rgba(0,0,0,.12); 
+      background:rgba(254,254,254,.85); backdrop-filter:blur(12px);
+    }
+    .bubble:focus-visible{
+      outline:none; box-shadow:0 0 0 3px rgba(0,0,0,.08), 0 12px 32px rgba(0,0,0,.12); 
+      border-color:var(--border-hover); background:rgba(254,254,254,.85);
+    }
 
-    .bubble-title{font-size:clamp(1.05rem,2.2vw,1.4rem); font-weight:500; line-height:1.2; text-align:center; pointer-events:none}
+    .bubble-title{
+      font-size:clamp(1.05rem,2.2vw,1.4rem); font-weight:400; line-height:1.2; text-align:center; 
+      pointer-events:none; color:var(--muted); transition:color .4s var(--ease);
+    }
+    .bubble:hover .bubble-title{color:var(--fg)}
     .bubble-label{
       position:absolute; bottom:16px; left:50%; transform:translate(-50%,6px);
       font-style:italic; font-size:clamp(.82rem,1.6vw,.95rem); color:var(--muted);
@@ -143,26 +153,27 @@
       pointer-events:none; text-align:center; max-width:88%; line-height:1.25; white-space:normal; word-break:break-word
     }
     .bubble:hover .bubble-label,.bubble:focus-within .bubble-label{opacity:1; transform:translate(-50%,0)}
-/* Freeflow physics layer pinned to viewport (prevents infinite page growth) */
-.bubble-nav.freeflow{
-  position: fixed;
-  inset: 0;
-  width: 100vw;
-  height: 100vh;
-  pointer-events: none;
-  z-index: 3;       /* above ornaments and below menu */
-  display: block;   /* no grid */
-}
-.bubble-nav.freeflow .bubble{
-  position: absolute;
-  pointer-events: auto;
-}
 
-/* Reduced motion: revert to grid */
-@media (prefers-reduced-motion: reduce){
-  .bubble-nav.freeflow{position: static; width: auto; height: auto; display: grid; pointer-events: auto}
-  .bubble-nav.freeflow .bubble{position: static}
-}
+    /* Freeflow physics layer pinned to viewport */
+    .bubble-nav.freeflow{
+      position: fixed;
+      inset: 0;
+      width: 100vw;
+      height: 100vh;
+      pointer-events: none;
+      z-index: 3;
+      display: block;
+    }
+    .bubble-nav.freeflow .bubble{
+      position: absolute;
+      pointer-events: auto;
+    }
+
+    /* Reduced motion: revert to grid */
+    @media (prefers-reduced-motion: reduce){
+      .bubble-nav.freeflow{position: static; width: auto; height: auto; display: grid; pointer-events: auto}
+      .bubble-nav.freeflow .bubble{position: static}
+    }
 
     /* Responsive tweaks */
     @media (max-width:768px){
@@ -224,7 +235,7 @@
       </a>
       <a class="bubble" href="/projects" data-key="projects" aria-label="Projects">
         <span class="bubble-title">Projects</span>
-        <em class="bubble-label">things I’ve tried</em>
+        <em class="bubble-label">things I've tried</em>
       </a>
       <a class="bubble" href="/photographs" data-key="photos" aria-label="Photographs">
         <span class="bubble-title">Photographs</span>
@@ -245,10 +256,10 @@
   <!-- Status -->
   <div class="status"><div class="status-dot"></div>Available for projects</div>
 
-  <footer>© 2025 Raja Dhanda — Crafted with care</footer>
+  <footer>© 2025 Raja Dhanda – Crafted with care</footer>
 
   <script>
-    // ===== Bubble freeflow micro-physics (viewport-pinned) =====
+    // ===== Simplified Bubble freeflow physics =====
     (function () {
       const nav = document.getElementById('bubbleNav');
       if (!nav) return;
@@ -257,164 +268,142 @@
       const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
       if (prefersReduced) { nav.classList.remove('freeflow'); return; }
 
-      const nameEl = document.getElementById('name');
       const bubbles = Array.from(nav.querySelectorAll('.bubble'));
-      if (!nameEl || !bubbles.length) return;
+      if (!bubbles.length) return;
 
-      // Parameters
-      const STIFFNESS = 160;    // spring k
-      const DAMPING   = 18;     // damping c
-      const MAX_MAG   = 12;     // px magnetic offset
-      const HOVER_SCALE = 1.04; // applied in RAF to avoid transform conflicts
+      // Simple center calculation
+      function getCenter() {
+        const name = document.getElementById('name');
+        const subtitle = document.getElementById('subtitle');
+        const socialLinks = document.querySelector('.social-links');
+        
+        if (!name || !name.offsetHeight) {
+          return { x: window.innerWidth / 2, y: window.innerHeight / 2, radius: 200 };
+        }
 
-      const TWO_PI = Math.PI * 2;
-    
-      const driftAmp   = 8;     // px
-      const driftFreq  = 0.35;  // Hz
+        const nameRect = name.getBoundingClientRect();
+        const subtitleRect = subtitle ? subtitle.getBoundingClientRect() : nameRect;
+        const socialRect = socialLinks ? socialLinks.getBoundingClientRect() : subtitleRect;
 
-      const state = bubbles.map((el, i) => ({
-        el,
-        angle: (i / bubbles.length) * TWO_PI,
-        driftPhase: Math.random() * TWO_PI,
-        pos: { x: 0, y: 0 },
-        vel: { x: 0, y: 0 },
-        mag: { x: 0, y: 0 },
-        hovering: false
-      }));
+        const centerX = window.innerWidth / 2;
+        const centerY = (nameRect.top + socialRect.bottom) / 2;
+        const radius = Math.min(200, Math.min(window.innerWidth, window.innerHeight) / 3);
 
-function getCenter() {
-  // Visual anchor: name + subtitle + icons
-  const name  = document.getElementById('name');
-  const sub   = document.getElementById('subtitle');
-  const icons = document.querySelector('.social-links');
-
-  const rects = [name, sub, icons]
-    .filter(Boolean)
-    .map(el => el.getBoundingClientRect());
-
-  // Fallback: viewport center + conservative radius
-  if (!rects.length) {
-    const fallbackR = Math.max(140, Math.min(window.innerWidth, window.innerHeight) * 0.24);
-    return { x: window.innerWidth/2, y: window.innerHeight/2, idealR: fallbackR };
-  }
-
-  const left   = Math.min(...rects.map(r => r.left));
-  const right  = Math.max(...rects.map(r => r.right));
-  const top    = Math.min(...rects.map(r => r.top));
-  const bottom = Math.max(...rects.map(r => r.bottom));
-
-  const w = right - left;
-  const h = bottom - top;
-
-  // Radius sized to the header group with a gentle padding
-  const groupSizedR = Math.max(w, h) * 0.6 + 40; // tweakable
-  const minR = 140;
-  const idealR = Math.max(minR, groupSizedR);
-
-  // Viewport coords (fixed layer), no scroll offsets
-  return { x: (left + right) / 2, y: (top + bottom) / 2, idealR };
-}
-      let pointer = { x: 0, y: 0, active: false };
-      window.addEventListener('pointermove', (e) => { pointer = { x: e.pageX, y: e.pageY, active: true }; }, { passive:true });
-
-      // Hover flag only — scaling is handled in RAF so transforms never clash
-      state.forEach(s => {
-        s.el.addEventListener('pointerenter', () => { s.hovering = true; });
-        s.el.addEventListener('pointerleave', () => { s.hovering = false; s.mag.x = 0; s.mag.y = 0; });
-      });
-
-      let lastT = performance.now();
-      let running = true;
-      document.addEventListener('visibilitychange', () => {
-        running = !document.hidden;
-        if (running) { lastT = performance.now(); requestAnimationFrame(tick); }
-      });
-
-      function clamp(v, min, max){
-        return Math.max(min, Math.min(max, v));
+        return { x: centerX, y: centerY, radius };
       }
 
-      function tick(t){
+      // Initialize bubbles with random positions around center
+      const state = bubbles.map((el, i) => {
+        const baseAngle = (i / bubbles.length) * Math.PI * 2;
+        const randomAngle = baseAngle + (Math.random() - 0.5) * 1.0;
+        const randomRadius = 0.8 + Math.random() * 0.6;
+        
+        return {
+          el,
+          angle: randomAngle,
+          radiusMultiplier: randomRadius,
+          pos: { x: 0, y: 0 },
+          vel: { x: 0, y: 0 },
+          hovering: false,
+          driftPhase: Math.random() * Math.PI * 2
+        };
+      });
+
+      // Mouse tracking
+      let pointer = { x: window.innerWidth / 2, y: window.innerHeight / 2, active: false };
+      window.addEventListener('pointermove', (e) => {
+        pointer = { x: e.clientX, y: e.clientY, active: true };
+      }, { passive: true });
+
+      // Hover handling
+      state.forEach(s => {
+        s.el.addEventListener('pointerenter', () => s.hovering = true);
+        s.el.addEventListener('pointerleave', () => s.hovering = false);
+      });
+
+      let lastTime = performance.now();
+      let running = true;
+
+      document.addEventListener('visibilitychange', () => {
+        running = !document.hidden;
+        if (running) {
+          lastTime = performance.now();
+          requestAnimationFrame(animate);
+        }
+      });
+
+      function animate(time) {
         if (!running) return;
-        const dt = Math.min(0.032, (t - lastT) / 1000);
-        lastT = t;
+        
+        const dt = Math.min(0.032, (time - lastTime) / 1000);
+        lastTime = time;
 
         const center = getCenter();
 
-        state.forEach((s) => {
-          // Compute a safe radius per bubble so the circle sits around the title and stays on-screen
-const bubbleHalf = s.el.offsetWidth / 2;
-// cap by viewport so bubbles never go off-screen
-const viewportCap = (Math.min(window.innerWidth, window.innerHeight) / 2) - bubbleHalf - 20;
-// size by title height so the ring hugs the text
-const safeR = Math.min(center.idealR, viewportCap);
-const baseX = center.x + Math.cos(s.angle) * safeR;
-const baseY = center.y + Math.sin(s.angle) * safeR;
+        state.forEach(s => {
+          // Base position
+          const targetRadius = center.radius * s.radiusMultiplier;
+          const drift = Math.sin(time * 0.001 + s.driftPhase) * 20;
+          const baseX = center.x + Math.cos(s.angle) * (targetRadius + drift);
+          const baseY = center.y + Math.sin(s.angle) * (targetRadius + drift);
 
-          const driftX = Math.sin((t/1000) * TWO_PI * driftFreq + s.driftPhase) * driftAmp;
-          const driftY = Math.cos((t/1000) * TWO_PI * driftFreq + s.driftPhase*0.9) * driftAmp;
-
+          // Magnetic effect on hover
+          let targetX = baseX;
+          let targetY = baseY;
+          
           if (s.hovering && pointer.active) {
-            const dx = pointer.x - (s.pos.x || baseX);
-            const dy = pointer.y - (s.pos.y || baseY);
-            const len = Math.hypot(dx, dy) || 1;
-            const mx = (dx/len) * MAX_MAG;
-            const my = (dy/len) * MAX_MAG;
-            s.mag.x += (mx - s.mag.x) * 0.25;
-            s.mag.y += (my - s.mag.y) * 0.25;
-          } else {
-            s.mag.x *= 0.85; s.mag.y *= 0.85;
+            const dx = pointer.x - baseX;
+            const dy = pointer.y - baseY;
+            const dist = Math.sqrt(dx * dx + dy * dy);
+            if (dist > 0) {
+              targetX += (dx / dist) * 30;
+              targetY += (dy / dist) * 30;
+            }
           }
 
-          let targetX = baseX + driftX + s.mag.x;
-          let targetY = baseY + driftY + s.mag.y;
-          // Keep within viewport bounds of the fixed container
-          const half = s.el.offsetWidth / 2;
-          const minX = half + 12;
-          const maxX = window.innerWidth - half - 12;
-          const minY = half + 12;
-          const maxY = window.innerHeight - half - 12;
-          targetX = clamp(targetX, minX, maxX);
-          targetY = clamp(targetY, minY, maxY);
+          // Keep in bounds
+          const margin = 100;
+          targetX = Math.max(margin, Math.min(window.innerWidth - margin, targetX));
+          targetY = Math.max(margin, Math.min(window.innerHeight - margin, targetY));
 
-          const ax = STIFFNESS * (targetX - s.pos.x) - DAMPING * s.vel.x;
-          const ay = STIFFNESS * (targetY - s.pos.y) - DAMPING * s.vel.y;
+          // Spring physics
+          const springForce = 0.1;
+          const damping = 0.8;
+          
+          s.vel.x += (targetX - s.pos.x) * springForce;
+          s.vel.y += (targetY - s.pos.y) * springForce;
+          s.vel.x *= damping;
+          s.vel.y *= damping;
+          
+          s.pos.x += s.vel.x;
+          s.pos.y += s.vel.y;
 
-          s.vel.x += ax * dt; s.vel.y += ay * dt;
-          s.pos.x = (s.pos.x || targetX) + s.vel.x * dt;
-          s.pos.y = (s.pos.y || targetY) + s.vel.y * dt;
-
-          const scale = s.hovering ? ` scale(${HOVER_SCALE})` : '';
-          s.el.style.transform =
-            `translate(${s.pos.x - s.el.offsetWidth/2}px, ${s.pos.y - s.el.offsetHeight/2}px)` + scale;
+          // Apply transform
+          const scale = s.hovering ? 'scale(1.06)' : '';
+          const bubbleSize = s.el.offsetWidth / 2;
+          s.el.style.transform = `translate(${s.pos.x - bubbleSize}px, ${s.pos.y - bubbleSize}px) ${scale}`;
         });
 
-        requestAnimationFrame(tick);
+        requestAnimationFrame(animate);
       }
 
-      // First paint at base positions
-      (function initPositions(){
-  const center = getCenter();
-  state.forEach((s) => {
-    const bubbleHalf = s.el.offsetWidth / 2;
-    const viewportCap = (Math.min(window.innerWidth, window.innerHeight) / 2) - bubbleHalf - 20;
-    const safeR = Math.min(center.idealR, viewportCap);
+      // Initialize positions
+      function init() {
+        const center = getCenter();
+        state.forEach(s => {
+          const radius = center.radius * s.radiusMultiplier;
+          s.pos.x = center.x + Math.cos(s.angle) * radius;
+          s.pos.y = center.y + Math.sin(s.angle) * radius;
+          
+          const bubbleSize = s.el.offsetWidth / 2;
+          s.el.style.transform = `translate(${s.pos.x - bubbleSize}px, ${s.pos.y - bubbleSize}px)`;
+        });
+        
+        requestAnimationFrame(animate);
+      }
 
-    const x = center.x + Math.cos(s.angle) * safeR;
-    const y = center.y + Math.sin(s.angle) * safeR;
-
-    const minX = bubbleHalf + 12, maxX = window.innerWidth - bubbleHalf - 12;
-    const minY = bubbleHalf + 12, maxY = window.innerHeight - bubbleHalf - 12;
-
-    const cx = Math.max(minX, Math.min(maxX, x));
-    const cy = Math.max(minY, Math.min(maxY, y));
-
-    s.pos.x = cx; s.pos.y = cy;
-    s.el.style.transform = `translate(${cx - bubbleHalf}px, ${cy - bubbleHalf}px)`;
-  });
-})();
-
-      requestAnimationFrame((t)=>{ lastT = t; tick(t); });
+      // Start after elements are ready
+      setTimeout(init, 200);
     })();
 
     // ===== Panel + typing =====
@@ -423,7 +412,7 @@ const baseY = center.y + Math.sin(s.angle) * safeR;
     const overlay = document.getElementById('overlay');
     const aboutLink = document.getElementById('aboutLink');
 
-    function togglePanel(forceOpen){
+    function togglePanel(forceOpen) {
       const open = forceOpen !== undefined ? forceOpen : !panel.classList.contains('open');
       panel.classList.toggle('open', open);
       overlay.classList.toggle('active', open);
@@ -431,41 +420,53 @@ const baseY = center.y + Math.sin(s.angle) * safeR;
       const icon = menuBtn.querySelector('i');
       icon.className = open ? 'fa-solid fa-xmark' : 'fa-solid fa-bars';
     }
-    menuBtn.addEventListener('click', ()=>togglePanel());
-    overlay.addEventListener('click', ()=>togglePanel(false));
-    aboutLink?.addEventListener('click', (e)=>{ e.preventDefault(); togglePanel(true); document.getElementById('aboutSection').scrollIntoView({behavior:'smooth',block:'start'}); });
-    window.addEventListener('keydown', (e)=>{ if (e.key==='Escape' && panel.classList.contains('open')) togglePanel(false); });
 
-    // Typing (~5s)
-const nameEl = document.getElementById('name');
-const subtitleEl = document.getElementById('subtitle');
-const fullText = nameEl.dataset.text;
-const totalMs = 5000;
-const stepMs = Math.max(30, Math.floor(totalMs / Math.max(1, fullText.length)));
-let idx = 0;
+    menuBtn.addEventListener('click', () => togglePanel());
+    overlay.addEventListener('click', () => togglePanel(false));
+    aboutLink?.addEventListener('click', (e) => { 
+      e.preventDefault(); 
+      togglePanel(true); 
+      document.getElementById('aboutSection').scrollIntoView({behavior:'smooth',block:'start'}); 
+    });
+    window.addEventListener('keydown', (e) => { 
+      if (e.key === 'Escape' && panel.classList.contains('open')) togglePanel(false); 
+    });
 
-function typeNext(){
-  if (idx <= fullText.length){
-    nameEl.innerHTML =
-      '<span id="nameText">' + fullText.slice(0, idx) + '</span>' +
-      '<span class="typing-cursor"></span>';
-    idx++; setTimeout(typeNext, stepMs + Math.random()*40);
-  } else {
-    nameEl.innerHTML =
-      '<span id="nameText">' + fullText + '</span>' +
-      '<span class="typing-cursor"></span>';
-    setTimeout(()=> subtitleEl.classList.add('show'), 400);
-  }
-}
-    window.addEventListener('load', ()=>{ nameEl.textContent=''; setTimeout(typeNext, 500); });
+    // Typing animation
+    const nameEl = document.getElementById('name');
+    const subtitleEl = document.getElementById('subtitle');
+    const fullText = nameEl.dataset.text;
+    const totalMs = 5000;
+    const stepMs = Math.max(30, Math.floor(totalMs / Math.max(1, fullText.length)));
+    let idx = 0;
 
-    // Tiny parallax on ornaments
+    function typeNext() {
+      if (idx <= fullText.length) {
+        nameEl.innerHTML =
+          '<span id="nameText">' + fullText.slice(0, idx) + '</span>' +
+          '<span class="typing-cursor"></span>';
+        idx++; 
+        setTimeout(typeNext, stepMs + Math.random() * 40);
+      } else {
+        nameEl.innerHTML =
+          '<span id="nameText">' + fullText + '</span>' +
+          '<span class="typing-cursor"></span>';
+        setTimeout(() => subtitleEl.classList.add('show'), 400);
+      }
+    }
+
+    window.addEventListener('load', () => { 
+      nameEl.textContent = ''; 
+      setTimeout(typeNext, 500); 
+    });
+
+    // Parallax on ornaments
     let scrollPos = 0;
-    window.addEventListener('scroll', ()=>{
+    window.addEventListener('scroll', () => {
       scrollPos = window.pageYOffset;
-      document.querySelectorAll('.floating-element').forEach((el,i)=>{
-        const speed = (i+1)*0.5;
-        el.style.transform = `translateY(${scrollPos*speed}px)`;
+      document.querySelectorAll('.floating-element').forEach((el, i) => {
+        const speed = (i + 1) * 0.5;
+        el.style.transform = `translateY(${scrollPos * speed}px)`;
       });
     });
   </script>
