@@ -225,27 +225,27 @@
         </a>
       </div>
     </div>
-
-    <!-- Bubble navigation (freeflow enables physics) -->
-    <nav id="bubbleNav" class="bubble-nav freeflow" aria-label="Primary">
-      <a class="bubble" href="/about" data-key="about" aria-label="About">
-        <span class="bubble-title">About</span>
-        <em class="bubble-label">who I am in 2 mins</em>
-      </a>
-      <a class="bubble" href="/blog" data-key="blog" aria-label="Blog">
-        <span class="bubble-title">Blog</span>
-        <em class="bubble-label">notes and thought experiments</em>
-      </a>
-      <a class="bubble" href="/projects" data-key="projects" aria-label="Projects">
-        <span class="bubble-title">Projects</span>
-        <em class="bubble-label">things I’ve tried</em>
-      </a>
-      <a class="bubble" href="/photographs" data-key="photos" aria-label="Photographs">
-        <span class="bubble-title">Photographs</span>
-        <em class="bubble-label">frames I liked</em>
-      </a>
-    </nav>
   </main>
+
+  <!-- Bubble navigation (freeflow enables physics) — placed OUTSIDE <main> -->
+  <nav id="bubbleNav" class="bubble-nav freeflow" aria-label="Primary">
+    <a class="bubble" href="/about" data-key="about" aria-label="About">
+      <span class="bubble-title">About</span>
+      <em class="bubble-label">who I am in 2 mins</em>
+    </a>
+    <a class="bubble" href="/blog" data-key="blog" aria-label="Blog">
+      <span class="bubble-title">Blog</span>
+      <em class="bubble-label">notes and thought experiments</em>
+    </a>
+    <a class="bubble" href="/projects" data-key="projects" aria-label="Projects">
+      <span class="bubble-title">Projects</span>
+      <em class="bubble-label">things I’ve tried</em>
+    </a>
+    <a class="bubble" href="/photographs" data-key="photos" aria-label="Photographs">
+      <span class="bubble-title">Photographs</span>
+      <em class="bubble-label">frames I liked</em>
+    </a>
+  </nav>
 
   <!-- Status -->
   <div class="status"><div class="status-dot"></div>Available for projects</div>
@@ -272,17 +272,17 @@
           return { x: r.left + r.width/2, y: r.top + r.height/2, w: r.width, h: r.height };
         }
         return { x: window.innerWidth/2, y: window.innerHeight/2, w: 0, h: 0 };
-        }
+      }
 
       // Tuned parameters for “gentle + tactile”
       const DRIFT_AMP = 8;       // px
       const DRIFT_FREQ = 0.30;   // Hz
       const SPIN = 0.035;        // rad/sec
-      const MAG_PULL = 0.06;     // magnet strength on hover (soft)
+      const MAG_PULL = 0.05;     // magnet strength on hover (soft)
       const SPRING = 0.06;       // steady spring
       const SPRING_INIT = 0.16;  // initial settle
-      const DAMP = 0.94;         // damping (higher = calmer)
-      const MAX_VEL = 13;        // px/frame cap
+      const DAMP = 0.95;         // damping (higher = calmer)
+      const MAX_VEL = 11;        // px/frame cap
 
       const state = bubbles.map((el, i) => ({
         el,
@@ -331,7 +331,6 @@
         const c = getCenter();
         // Base radius derived from centerpiece and viewport
         const baseR = Math.max(140, Math.max(c.w, c.h) * 0.6 + 36);
-        const vCap = (Math.min(window.innerWidth, window.innerHeight) / 2) - 20;
 
         state.forEach(s => {
           // Gentle angle drift; slow it while hovering
@@ -340,7 +339,16 @@
 
           // Breathing radius drift
           const drift = Math.sin(t * 0.001 * (DRIFT_FREQ * 2 * Math.PI) + s.driftPhase) * DRIFT_AMP;
-          const R = clamp(baseR * s.radiusMul + drift, 80, vCap);
+
+          // Per-bubble radius cap based on actual bubble size and viewport
+          const halfW = s.el.offsetWidth / 2;
+          const halfH = s.el.offsetHeight / 2;
+          const pad = 12;
+          const capX = (window.innerWidth  / 2) - halfW - pad;
+          const capY = (window.innerHeight / 2) - halfH - pad;
+          const Rcap = Math.max(80, Math.min(capX, capY));
+
+          const R = clamp(baseR * s.radiusMul + drift, 80, Rcap);
 
           // Target position
           let tx = c.x + Math.cos(s.angle) * R;
@@ -352,10 +360,7 @@
             ty += (filtPointer.y - ty) * MAG_PULL;
           }
 
-          // Keep fully on-screen
-          const halfW = s.el.offsetWidth / 2;
-          const halfH = s.el.offsetHeight / 2;
-          const pad = 12;
+          // Keep fully on-screen as a safety net
           const minX = halfW + pad, maxX = window.innerWidth  - halfW - pad;
           const minY = halfH + pad, maxY = window.innerHeight - halfH - pad;
 
@@ -390,15 +395,19 @@
       function init() {
         const c = getCenter();
         const baseR = Math.max(140, Math.max(c.w, c.h) * 0.6 + 36);
-        const vCap = (Math.min(window.innerWidth, window.innerHeight) / 2) - 20;
 
         state.forEach(s => {
-          const R = clamp(baseR * s.radiusMul, 80, vCap);
+          const halfW = s.el.offsetWidth / 2;
+          const halfH = s.el.offsetHeight / 2;
+          const pad = 12;
+          const capX = (window.innerWidth  / 2) - halfW - pad;
+          const capY = (window.innerHeight / 2) - halfH - pad;
+          const Rcap = Math.max(80, Math.min(capX, capY));
+
+          const R = clamp(baseR * s.radiusMul, 80, Rcap);
           s.pos.x = c.x + Math.cos(s.angle) * R;
           s.pos.y = c.y + Math.sin(s.angle) * R;
 
-          const halfW = s.el.offsetWidth / 2;
-          const halfH = s.el.offsetHeight / 2;
           s.el.style.transform = `translate(${s.pos.x - halfW}px, ${s.pos.y - halfH}px)`;
         });
 
