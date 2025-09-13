@@ -143,19 +143,26 @@
       pointer-events:none; text-align:center; max-width:88%; line-height:1.25; white-space:normal; word-break:break-word
     }
     .bubble:hover .bubble-label,.bubble:focus-within .bubble-label{opacity:1; transform:translate(-50%,0)}
+/* Freeflow physics layer pinned to viewport (prevents infinite page growth) */
+.bubble-nav.freeflow{
+  position: fixed;
+  inset: 0;
+  width: 100vw;
+  height: 100vh;
+  pointer-events: none;
+  z-index: 3;       /* above ornaments and below menu */
+  display: block;   /* no grid */
+}
+.bubble-nav.freeflow .bubble{
+  position: absolute;
+  pointer-events: auto;
+}
 
-    /* Freeflow physics layer pinned to viewport (prevents infinite page growth) */
-    .bubble-nav.freeflow{
-      position:fixed; inset:0; width:100vw; height:100vh; pointer-events:none; z-index:2;
-      display:block;
-    }
-    .bubble-nav.freeflow .bubble{position:absolute; pointer-events:auto}
-
-    /* Reduced motion: revert to grid */
-    @media (prefers-reduced-motion: reduce){
-      .bubble-nav.freeflow{position:static; width:auto; height:auto; display:grid; pointer-events:auto}
-      .bubble-nav.freeflow .bubble{position:static}
-    }
+/* Reduced motion: revert to grid */
+@media (prefers-reduced-motion: reduce){
+  .bubble-nav.freeflow{position: static; width: auto; height: auto; display: grid; pointer-events: auto}
+  .bubble-nav.freeflow .bubble{position: static}
+}
 
     /* Responsive tweaks */
     @media (max-width:768px){
@@ -261,7 +268,7 @@
       const HOVER_SCALE = 1.04; // applied in RAF to avoid transform conflicts
 
       const TWO_PI = Math.PI * 2;
-      const baseRadius = () => Math.max(120, Math.min(window.innerWidth, window.innerHeight) * 0.22);
+      const baseRadius = () => Math.max(140, Math.min(window.innerWidth, window.innerHeight) * 0.26);
       const driftAmp   = 8;     // px
       const driftFreq  = 0.35;  // Hz
 
@@ -275,15 +282,26 @@
         hovering: false
       }));
 
-      function getCenter() {
-  // Prefer the tight text span if present, else the H1
-  const textEl = document.getElementById('nameText') || nameEl;
-  const r = textEl.getBoundingClientRect();
-  const cx = r.left + r.width / 2;
-  const cy = r.top + r.height / 2;
-  // Ideal radius feels like a halo around the title
-  const idealR = Math.max(r.height * 1.25, 140);
-  return { x: cx, y: cy, idealR };
+function getCenter() {
+  // Use the *visual group* as the anchor: name + subtitle + icons
+  const name  = document.getElementById('name');
+  const sub   = document.getElementById('subtitle');
+  const icons = document.querySelector('.social-links');
+
+  const rects = [name, sub, icons]
+    .filter(Boolean)
+    .map(el => el.getBoundingClientRect());
+
+  // Fallback to center of viewport if anything odd
+  if (!rects.length) return { x: window.innerWidth/2, y: window.innerHeight/2 };
+
+  const left   = Math.min(...rects.map(r => r.left));
+  const right  = Math.max(...rects.map(r => r.right));
+  const top    = Math.min(...rects.map(r => r.top));
+  const bottom = Math.max(...rects.map(r => r.bottom));
+
+  // Viewport coordinates (no scroll offsets, because our layer is fixed)
+  return { x: (left + right) / 2, y: (top + bottom) / 2 };
 }
 
       let pointer = { x: 0, y: 0, active: false };
