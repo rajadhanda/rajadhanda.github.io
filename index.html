@@ -271,41 +271,55 @@
       const bubbles = Array.from(nav.querySelectorAll('.bubble'));
       if (!bubbles.length) return;
 
-      // Simple center calculation
+      // Better center calculation that accounts for the full content area
       function getCenter() {
         const name = document.getElementById('name');
         const subtitle = document.getElementById('subtitle');
         const socialLinks = document.querySelector('.social-links');
         
-        if (!name || !name.offsetHeight) {
-          return { x: window.innerWidth / 2, y: window.innerHeight / 2, radius: 200 };
+        // Get viewport center as fallback
+        let centerX = window.innerWidth / 2;
+        let centerY = window.innerHeight / 2;
+        
+        // If elements exist, calculate proper center based on content
+        if (name && name.getBoundingClientRect().height > 0) {
+          const nameRect = name.getBoundingClientRect();
+          const subtitleRect = subtitle ? subtitle.getBoundingClientRect() : nameRect;
+          const socialRect = socialLinks ? socialLinks.getBoundingClientRect() : subtitleRect;
+          
+          // Center horizontally on viewport
+          centerX = window.innerWidth / 2;
+          
+          // Center vertically between the name and social links
+          const contentTop = nameRect.top;
+          const contentBottom = socialRect.bottom;
+          centerY = (contentTop + contentBottom) / 2;
         }
-
-        const nameRect = name.getBoundingClientRect();
-        const subtitleRect = subtitle ? subtitle.getBoundingClientRect() : nameRect;
-        const socialRect = socialLinks ? socialLinks.getBoundingClientRect() : subtitleRect;
-
-        const centerX = window.innerWidth / 2;
-        const centerY = (nameRect.top + socialRect.bottom) / 2;
-        const radius = Math.min(200, Math.min(window.innerWidth, window.innerHeight) / 3);
-
-        return { x: centerX, y: centerY, radius };
+        
+        // Calculate radius based on available space, ensuring bubbles don't go off-screen
+        const availableWidth = window.innerWidth - 200; // margin for bubbles
+        const availableHeight = window.innerHeight - 200; // margin for bubbles
+        const radius = Math.min(200, Math.min(availableWidth, availableHeight) / 3);
+        
+        return { x: centerX, y: centerY, radius: Math.max(120, radius) };
       }
 
-      // Initialize bubbles with random positions around center
+      // Initialize bubbles with evenly spaced positions around center
       const state = bubbles.map((el, i) => {
+        // Evenly distribute bubbles around circle with slight randomness
         const baseAngle = (i / bubbles.length) * Math.PI * 2;
-        const randomAngle = baseAngle + (Math.random() - 0.5) * 1.0;
-        const randomRadius = 0.8 + Math.random() * 0.6;
+        const angleOffset = (Math.random() - 0.5) * 0.3; // Small random offset
+        const radiusVariation = 0.9 + Math.random() * 0.2; // Slight radius variation
         
         return {
           el,
-          angle: randomAngle,
-          radiusMultiplier: randomRadius,
+          angle: baseAngle + angleOffset,
+          radiusMultiplier: radiusVariation,
           pos: { x: 0, y: 0 },
           vel: { x: 0, y: 0 },
           hovering: false,
-          driftPhase: Math.random() * Math.PI * 2
+          driftPhase: Math.random() * Math.PI * 2,
+          targetPos: { x: 0, y: 0 }
         };
       });
 
@@ -323,6 +337,7 @@
 
       let lastTime = performance.now();
       let running = true;
+      let initialized = false;
 
       document.addEventListener('visibilitychange', () => {
         running = !document.hidden;
@@ -341,45 +356,41 @@
         const center = getCenter();
 
         state.forEach(s => {
-          // Base position
-          const targetRadius = center.radius * s.radiusMultiplier;
-          const drift = Math.sin(time * 0.001 + s.driftPhase) * 20;
-          const baseX = center.x + Math.cos(s.angle) * (targetRadius + drift);
-          const baseY = center.y + Math.sin(s.angle) * (targetRadius + drift);
-
-          // Magnetic effect on hover
-          let targetX = baseX;
-          let targetY = baseY;
+          // Calculate target position with drift
+          const driftAmount = Math.sin(time * 0.0008 + s.driftPhase) * 15;
+          const targetRadius = center.radius * s.radiusMultiplier + driftAmount;
           
+          let targetX = center.x + Math.cos(s.angle) * targetRadius;
+          let targetY = center.y + Math.sin(s.angle) * targetRadius;
+
+          // Magnetic effect on hover - pull toward mouse
           if (s.hovering && pointer.active) {
-            const dx = pointer.x - baseX;
-            const dy = pointer.y - baseY;
-            const dist = Math.sqrt(dx * dx + dy * dy);
-            if (dist > 0) {
-              targetX += (dx / dist) * 30;
-              targetY += (dy / dist) * 30;
-            }
+            const pullStrength = 0.3;
+            targetX += (pointer.x - targetX) * pullStrength;
+            targetY += (pointer.y - targetY) * pullStrength;
           }
 
-          // Keep in bounds
-          const margin = 100;
-          targetX = Math.max(margin, Math.min(window.innerWidth - margin, targetX));
-          targetY = Math.max(margin, Math.min(window.innerHeight - margin, targetY));
+          // Boundary enforcement with some margin
+          const bubbleRadius = 110; // approximate bubble radius
+          targetX = Math.max(bubbleRadius, Math.min(window.innerWidth - bubbleRadius, targetX));
+          targetY = Math.max(bubbleRadius, Math.min(window.innerHeight - bubbleRadius, targetY));
+
+          s.targetPos = { x: targetX, y: targetY };
 
           // Spring physics
-          const springForce = 0.1;
-          const damping = 0.8;
+          const springStrength = initialized ? 0.08 : 0.2; // Faster initial positioning
+          const damping = 0.85;
           
-          s.vel.x += (targetX - s.pos.x) * springForce;
-          s.vel.y += (targetY - s.pos.y) * springForce;
+          s.vel.x += (s.targetPos.x - s.pos.x) * springStrength;
+          s.vel.y += (s.targetPos.y - s.pos.y) * springStrength;
           s.vel.x *= damping;
           s.vel.y *= damping;
           
           s.pos.x += s.vel.x;
           s.pos.y += s.vel.y;
 
-          // Apply transform
-          const scale = s.hovering ? 'scale(1.06)' : '';
+          // Apply transform with hover scaling
+          const scale = s.hovering ? 'scale(1.08)' : '';
           const bubbleSize = s.el.offsetWidth / 2;
           s.el.style.transform = `translate(${s.pos.x - bubbleSize}px, ${s.pos.y - bubbleSize}px) ${scale}`;
         });
@@ -387,9 +398,10 @@
         requestAnimationFrame(animate);
       }
 
-      // Initialize positions
+      // Initialize positions immediately
       function init() {
         const center = getCenter();
+        
         state.forEach(s => {
           const radius = center.radius * s.radiusMultiplier;
           s.pos.x = center.x + Math.cos(s.angle) * radius;
@@ -399,11 +411,38 @@
           s.el.style.transform = `translate(${s.pos.x - bubbleSize}px, ${s.pos.y - bubbleSize}px)`;
         });
         
+        initialized = true;
         requestAnimationFrame(animate);
       }
 
-      // Start after elements are ready
-      setTimeout(init, 200);
+      // Wait for layout to settle, then initialize
+      function waitForLayout() {
+        const name = document.getElementById('name');
+        if (name && name.getBoundingClientRect().height > 0) {
+          init();
+        } else {
+          setTimeout(waitForLayout, 50);
+        }
+      }
+
+      // Start when DOM is ready
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', waitForLayout);
+      } else {
+        waitForLayout();
+      }
+
+      // Recalculate on resize
+      let resizeTimeout;
+      window.addEventListener('resize', () => {
+        clearTimeout(resizeTimeout);
+        resizeTimeout = setTimeout(() => {
+          initialized = false;
+          setTimeout(() => {
+            init();
+          }, 100);
+        }, 150);
+      });
     })();
 
     // ===== Panel + typing =====
