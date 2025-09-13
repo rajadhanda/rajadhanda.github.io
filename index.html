@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Raja Dhanda - Fixed Bubbles</title>
+  <title>Raja Dhanda</title>
 
   <!-- Type -->
   <link href="https://fonts.googleapis.com/css2?family=Crimson+Text:ital,wght@0,400;0,600;1,400&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
@@ -91,7 +91,8 @@
     .social-link{
       display:inline-flex; align-items:center; justify-content:center; text-decoration:none; color:var(--fg);
       font-size:24px; width:56px; height:56px; border:1px solid var(--border); border-radius:50%; background:var(--bg);
-      transition:all .3s var(--ease-back); position:relative; overflow:hidden
+      transition: border-color .18s var(--ease), box-shadow .18s var(--ease), background .18s var(--ease);
+      position:relative; overflow:hidden
     }
     .social-link::before{content:''; position:absolute; inset:0; background:var(--fg); border-radius:50%; transform:scale(0); transition:transform .3s var(--ease-back); z-index:-1}
     .social-link:hover::before{transform:scale(1)}
@@ -117,7 +118,7 @@
     .overlay{position:fixed; inset:0; background:rgba(0,0,0,0); backdrop-filter:blur(0); opacity:0; visibility:hidden; transition:all .4s var(--ease); z-index:999}
     .overlay.active{background:rgba(0,0,0,.1); backdrop-filter:blur(2px); opacity:1; visibility:visible}
 
-    /* Bubble navigation (grid fallback) */
+    /* Bubble navigation (grid fallback for reduced motion) */
     .bubble-nav{
       margin-top:6vh; display:grid; grid-template-columns:repeat(2, minmax(160px,1fr));
       gap:clamp(16px,5vw,36px); align-items:center; justify-items:center;
@@ -126,28 +127,18 @@
       .bubble-nav{grid-template-columns:1fr 1fr; gap:18px; margin-top:5vh}
     }
 
-   .bubble{
-  position:relative; width:clamp(160px,24vw,220px); aspect-ratio:1/1; border-radius:50%;
-  border:1px solid rgba(0,0,0,.06); display:grid; place-items:center; text-decoration:none; color:var(--fg);
-  overflow:hidden; background:rgba(250,250,250,.3); backdrop-filter:blur(8px);
-  /* Do NOT transition transform; the physics loop owns it */
-  transition: border-color .18s var(--ease), box-shadow .18s var(--ease), background .18s var(--ease);
-  will-change: transform;
-}
-    .bubble:hover{
-      border-color:var(--border-hover); box-shadow:0 12px 32px rgba(0,0,0,.12); 
-      background:rgba(254,254,254,.85); backdrop-filter:blur(12px);
+    .bubble{
+      position:relative; width:clamp(160px,24vw,220px); aspect-ratio:1/1; border-radius:50%;
+      border:2px solid var(--border); display:grid; place-items:center; text-decoration:none; color:var(--fg);
+      overflow:hidden; background:transparent;
+      /* IMPORTANT: no transform transition; JS owns transform entirely */
+      transition: border-color .18s var(--ease), box-shadow .18s var(--ease);
+      will-change: transform;
     }
-    .bubble:focus-visible{
-      outline:none; box-shadow:0 0 0 3px rgba(0,0,0,.08), 0 12px 32px rgba(0,0,0,.12); 
-      border-color:var(--border-hover); background:rgba(254,254,254,.85);
-    }
+    .bubble:hover{border-color:#cfcfcf; box-shadow:0 10px 24px rgba(0,0,0,.08)}
+    .bubble:focus-visible{outline:none; box-shadow:0 0 0 3px rgba(0,0,0,.10), 0 10px 24px rgba(0,0,0,.08); border-color:#cfcfcf}
 
-    .bubble-title{
-      font-size:clamp(1.05rem,2.2vw,1.4rem); font-weight:400; line-height:1.2; text-align:center; 
-      pointer-events:none; color:var(--muted); transition:color .4s var(--ease);
-    }
-    .bubble:hover .bubble-title{color:var(--fg)}
+    .bubble-title{font-size:clamp(1.05rem,2.2vw,1.4rem); font-weight:500; line-height:1.2; text-align:center; pointer-events:none}
     .bubble-label{
       position:absolute; bottom:16px; left:50%; transform:translate(-50%,6px);
       font-style:italic; font-size:clamp(.82rem,1.6vw,.95rem); color:var(--muted);
@@ -156,26 +147,23 @@
     }
     .bubble:hover .bubble-label,.bubble:focus-within .bubble-label{opacity:1; transform:translate(-50%,0)}
 
-    /* Freeflow physics layer pinned to viewport */
+    /* Viewport-pinned physics layer */
     .bubble-nav.freeflow{
-  position: fixed;
-  inset: 0;
-  width: 100vw;
-  height: 100vh;
-  pointer-events: none;
-  z-index: 3;
-  display: block;
-  margin: 0; /* override base .bubble-nav margin-top */
-}
-    .bubble-nav.freeflow .bubble{
-      position: absolute;
-      pointer-events: auto;
+      position: fixed;
+      inset: 0;
+      width: 100vw;
+      height: 100vh;
+      pointer-events: none;
+      z-index: 3;
+      display: block;  /* no grid in freeflow mode */
+      margin: 0;       /* override base .bubble-nav margin-top */
     }
+    .bubble-nav.freeflow .bubble{ position: absolute; pointer-events: auto; }
 
     /* Reduced motion: revert to grid */
     @media (prefers-reduced-motion: reduce){
-      .bubble-nav.freeflow{position: static; width: auto; height: auto; display: grid; pointer-events: auto}
-      .bubble-nav.freeflow .bubble{position: static}
+      .bubble-nav.freeflow{position:static; width:auto; height:auto; display:grid; pointer-events:auto}
+      .bubble-nav.freeflow .bubble{position:static}
     }
 
     /* Responsive tweaks */
@@ -223,8 +211,20 @@
 
   <!-- Main -->
   <main>
-    <h1 class="name" id="name" data-text="Raja Dhanda"></h1>
-    <div class="subtitle" id="subtitle">experimenting with intention</div>
+    <!-- Single anchor that defines the visual center -->
+    <div id="centerpiece">
+      <h1 class="name" id="name" data-text="Raja Dhanda"></h1>
+      <div class="subtitle" id="subtitle">experimenting with intention</div>
+
+      <div class="social-links" aria-label="Connect with me">
+        <a class="social-link" href="https://www.linkedin.com/in/ramendra-raja-dhanda/" target="_blank" rel="noopener" aria-label="LinkedIn">
+          <i class="fa-brands fa-linkedin" aria-hidden="true"></i>
+        </a>
+        <a class="social-link" href="mailto:hello@rajadhanda.me" target="_blank" rel="noopener" aria-label="Email">
+          <i class="fa-solid fa-envelope" aria-hidden="true"></i>
+        </a>
+      </div>
+    </div>
 
     <!-- Bubble navigation (freeflow enables physics) -->
     <nav id="bubbleNav" class="bubble-nav freeflow" aria-label="Primary">
@@ -238,219 +238,184 @@
       </a>
       <a class="bubble" href="/projects" data-key="projects" aria-label="Projects">
         <span class="bubble-title">Projects</span>
-        <em class="bubble-label">things I've tried</em>
+        <em class="bubble-label">things I’ve tried</em>
       </a>
       <a class="bubble" href="/photographs" data-key="photos" aria-label="Photographs">
         <span class="bubble-title">Photographs</span>
         <em class="bubble-label">frames I liked</em>
       </a>
     </nav>
-
-    <div class="social-links" aria-label="Connect with me">
-      <a class="social-link" href="https://www.linkedin.com/in/ramendra-raja-dhanda/" target="_blank" rel="noopener" aria-label="LinkedIn">
-        <i class="fa-brands fa-linkedin" aria-hidden="true"></i>
-      </a>
-      <a class="social-link" href="mailto:hello@rajadhanda.me" target="_blank" rel="noopener" aria-label="Email">
-        <i class="fa-solid fa-envelope" aria-hidden="true"></i>
-      </a>
-    </div>
   </main>
 
   <!-- Status -->
   <div class="status"><div class="status-dot"></div>Available for projects</div>
 
-  <footer>© 2025 Raja Dhanda – Crafted with care</footer>
+  <footer>© 2025 Raja Dhanda — Crafted with care</footer>
 
   <script>
-    // ===== Simplified Bubble freeflow physics =====
+    // ===== Bubble freeflow micro-physics (viewport-pinned, centerpiece-anchored) =====
     (function () {
       const nav = document.getElementById('bubbleNav');
       if (!nav) return;
 
-      // Respect reduced motion: keep grid layout
       const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
       if (prefersReduced) { nav.classList.remove('freeflow'); return; }
 
       const bubbles = Array.from(nav.querySelectorAll('.bubble'));
       if (!bubbles.length) return;
 
-      // Better center calculation that accounts for the full content area
+      // Center from single anchor
       function getCenter() {
-        const name = document.getElementById('name');
-        const subtitle = document.getElementById('subtitle');
-        const socialLinks = document.querySelector('.social-links');
-        
-        // Get viewport center as fallback
-        let centerX = window.innerWidth / 2;
-        let centerY = window.innerHeight / 2;
-        
-        // If elements exist, calculate proper center based on content
-        if (name && name.getBoundingClientRect().height > 0) {
-          const nameRect = name.getBoundingClientRect();
-          const subtitleRect = subtitle ? subtitle.getBoundingClientRect() : nameRect;
-          const socialRect = socialLinks ? socialLinks.getBoundingClientRect() : subtitleRect;
-          
-          // Center horizontally on viewport
-          centerX = window.innerWidth / 2;
-          
-          // Center vertically between the name and social links
-          const contentTop = nameRect.top;
-          const contentBottom = socialRect.bottom;
-          centerY = (contentTop + contentBottom) / 2;
+        const cp = document.getElementById('centerpiece');
+        if (cp) {
+          const r = cp.getBoundingClientRect(); // viewport coords (layer is fixed)
+          return { x: r.left + r.width/2, y: r.top + r.height/2, w: r.width, h: r.height };
         }
-        
-        // Calculate radius based on available space, ensuring bubbles don't go off-screen
-        const availableWidth = window.innerWidth - 200; // margin for bubbles
-        const availableHeight = window.innerHeight - 200; // margin for bubbles
-        const radius = Math.min(200, Math.min(availableWidth, availableHeight) / 3);
-        
-        return { x: centerX, y: centerY, radius: Math.max(120, radius) };
-      }
+        return { x: window.innerWidth/2, y: window.innerHeight/2, w: 0, h: 0 };
+        }
 
-      // Initialize bubbles with evenly spaced positions around center
-      const state = bubbles.map((el, i) => {
-        // Evenly distribute bubbles around circle with slight randomness
-        const baseAngle = (i / bubbles.length) * Math.PI * 2;
-        const angleOffset = (Math.random() - 0.5) * 0.3; // Small random offset
-        const radiusVariation = 0.9 + Math.random() * 0.2; // Slight radius variation
-        
-        return {
-          el,
-          angle: baseAngle + angleOffset,
-          radiusMultiplier: radiusVariation,
-          pos: { x: 0, y: 0 },
-          vel: { x: 0, y: 0 },
-          hovering: false,
-          driftPhase: Math.random() * Math.PI * 2,
-          targetPos: { x: 0, y: 0 }
-        };
-      });
+      // Tuned parameters for “gentle + tactile”
+      const DRIFT_AMP = 8;       // px
+      const DRIFT_FREQ = 0.30;   // Hz
+      const SPIN = 0.035;        // rad/sec
+      const MAG_PULL = 0.10;     // magnet strength on hover (soft)
+      const SPRING = 0.06;       // steady spring
+      const SPRING_INIT = 0.16;  // initial settle
+      const DAMP = 0.90;         // damping (higher = calmer)
+      const MAX_VEL = 18;        // px/frame cap
 
-      // Mouse tracking
-      let pointer = { x: window.innerWidth / 2, y: window.innerHeight / 2, active: false };
+      const state = bubbles.map((el, i) => ({
+        el,
+        angle: (i / bubbles.length) * Math.PI * 2 + (Math.random() - 0.5) * 0.3,
+        radiusMul: 0.9 + Math.random() * 0.2,
+        pos: { x: 0, y: 0 },
+        vel: { x: 0, y: 0 },
+        hovering: false,
+        driftPhase: Math.random() * Math.PI * 2,
+        target: { x: 0, y: 0 }
+      }));
+
+      // Smoothed pointer
+      let rawPointer = { x: window.innerWidth / 2, y: window.innerHeight / 2, active: false };
+      let filtPointer = { x: rawPointer.x, y: rawPointer.y };
       window.addEventListener('pointermove', (e) => {
-        pointer = { x: e.clientX, y: e.clientY, active: true };
+        rawPointer = { x: e.clientX, y: e.clientY, active: true };
       }, { passive: true });
 
-      // Hover handling
       state.forEach(s => {
-        s.el.addEventListener('pointerenter', () => s.hovering = true);
-        s.el.addEventListener('pointerleave', () => s.hovering = false);
+        s.el.addEventListener('pointerenter', () => { s.hovering = true; });
+        s.el.addEventListener('pointerleave', () => { s.hovering = false; });
       });
 
-      let lastTime = performance.now();
-      let running = true;
+      let last = performance.now();
       let initialized = false;
+      let running = true;
 
       document.addEventListener('visibilitychange', () => {
         running = !document.hidden;
-        if (running) {
-          lastTime = performance.now();
-          requestAnimationFrame(animate);
-        }
+        if (running) { last = performance.now(); requestAnimationFrame(tick); }
       });
 
-      function animate(time) {
-        if (!running) return;
-        
-        const dt = Math.min(0.032, (time - lastTime) / 1000);
-        lastTime = time;
+      function clamp(v, lo, hi){ return Math.max(lo, Math.min(hi, v)); }
 
-        const center = getCenter();
+      function tick(t) {
+        if (!running) return;
+        const dt = Math.min(0.032, (t - last) / 1000);
+        last = t;
+
+        // Pointer smoothing (low-pass)
+        const ALPHA = 0.18;
+        filtPointer.x += (rawPointer.x - filtPointer.x) * ALPHA;
+        filtPointer.y += (rawPointer.y - filtPointer.y) * ALPHA;
+
+        const c = getCenter();
+        // Base radius derived from centerpiece and viewport
+        const baseR = Math.max(140, Math.max(c.w, c.h) * 0.6 + 36);
+        const vCap = (Math.min(window.innerWidth, window.innerHeight) / 2) - 20;
 
         state.forEach(s => {
-          // Calculate target position with drift
-          const driftAmount = Math.sin(time * 0.0007 + s.driftPhase) * 10;
-          const targetRadius = center.radius * s.radiusMultiplier + driftAmount;
-          
-          let targetX = center.x + Math.cos(s.angle) * targetRadius;
-          let targetY = center.y + Math.sin(s.angle) * targetRadius;
-// Gentle global spin so angles drift over time (radians/sec)
-const spin = 0.08; // subtle
-s.angle += spin * dt;
-       // Magnetic effect on hover - gentle pull toward pointer
-if (s.hovering && pointer.active) {
-  const pullStrength = 0.16; // softer
-  targetX += (pointer.x - targetX) * pullStrength;
-  targetY += (pointer.y - targetY) * pullStrength;
-}
+          // Gentle angle drift; slow it while hovering
+          const spinNow = s.hovering ? SPIN * 0.25 : SPIN;
+          s.angle += spinNow * dt;
 
-          // Boundary enforcement with some margin, based on actual element size
-const halfW = s.el.offsetWidth / 2;
-const halfH = s.el.offsetHeight / 2;
-const pad = 12;
-const minX = halfW + pad, maxX = window.innerWidth  - halfW - pad;
-const minY = halfH + pad, maxY = window.innerHeight - halfH - pad;
-targetX = Math.max(minX, Math.min(maxX, targetX));
-targetY = Math.max(minY, Math.min(maxY, targetY));
+          // Breathing radius drift
+          const drift = Math.sin(t * 0.001 * (DRIFT_FREQ * 2 * Math.PI) + s.driftPhase) * DRIFT_AMP;
+          const R = clamp(baseR * s.radiusMul + drift, 80, vCap);
 
-          s.targetPos = { x: targetX, y: targetY };
+          // Target position
+          let tx = c.x + Math.cos(s.angle) * R;
+          let ty = c.y + Math.sin(s.angle) * R;
 
-         // Spring physics (more damped, less overshoot)
-const springStrength = initialized ? 0.06 : 0.18; // calm settle
-const damping = 0.90; // stronger damping
-          
-s.vel.x += (s.targetPos.x - s.pos.x) * springStrength;
-s.vel.y += (s.targetPos.y - s.pos.y) * springStrength;
-s.vel.x *= damping;
-s.vel.y *= damping;
-          
+          // Gentle magnet on hover
+          if (s.hovering && rawPointer.active) {
+            tx += (filtPointer.x - tx) * MAG_PULL;
+            ty += (filtPointer.y - ty) * MAG_PULL;
+          }
+
+          // Keep fully on-screen
+          const halfW = s.el.offsetWidth / 2;
+          const halfH = s.el.offsetHeight / 2;
+          const pad = 12;
+          const minX = halfW + pad, maxX = window.innerWidth  - halfW - pad;
+          const minY = halfH + pad, maxY = window.innerHeight - halfH - pad;
+
+          s.target.x = clamp(tx, minX, maxX);
+          s.target.y = clamp(ty, minY, maxY);
+
+          // Spring toward target
+          const k = initialized ? SPRING : SPRING_INIT;
+          s.vel.x += (s.target.x - s.pos.x) * k;
+          s.vel.y += (s.target.y - s.pos.y) * k;
+
+          // Damping + velocity cap
+          s.vel.x *= DAMP; s.vel.y *= DAMP;
+          const speed = Math.hypot(s.vel.x, s.vel.y);
+          if (speed > MAX_VEL) {
+            const scale = MAX_VEL / speed;
+            s.vel.x *= scale; s.vel.y *= scale;
+          }
+
           s.pos.x += s.vel.x;
           s.pos.y += s.vel.y;
 
-          // Apply transform with hover scaling
-          const scale = s.hovering ? 'scale(1.08)' : '';
-          const bubbleSize = s.el.offsetWidth / 2;
-          s.el.style.transform = `translate(${s.pos.x - bubbleSize}px, ${s.pos.y - bubbleSize}px) ${scale}`;
+          // Apply transform (single pipeline)
+          const scale = s.hovering ? ' scale(1.05)' : '';
+          s.el.style.transform = `translate(${s.pos.x - halfW}px, ${s.pos.y - halfH}px)` + scale;
         });
 
-        requestAnimationFrame(animate);
-      }
-
-      // Initialize positions immediately
-      function init() {
-        const center = getCenter();
-        
-        state.forEach(s => {
-          const radius = center.radius * s.radiusMultiplier;
-          s.pos.x = center.x + Math.cos(s.angle) * radius;
-          s.pos.y = center.y + Math.sin(s.angle) * radius;
-          
-          const bubbleSize = s.el.offsetWidth / 2;
-          s.el.style.transform = `translate(${s.pos.x - bubbleSize}px, ${s.pos.y - bubbleSize}px)`;
-        });
-        
         initialized = true;
-        requestAnimationFrame(animate);
+        requestAnimationFrame(tick);
       }
 
-      // Wait for layout to settle, then initialize
-      function waitForLayout() {
-        const name = document.getElementById('name');
-        if (name && name.getBoundingClientRect().height > 0) {
-          init();
-        } else {
-          setTimeout(waitForLayout, 50);
-        }
+      function init() {
+        const c = getCenter();
+        const baseR = Math.max(140, Math.max(c.w, c.h) * 0.6 + 36);
+        const vCap = (Math.min(window.innerWidth, window.innerHeight) / 2) - 20;
+
+        state.forEach(s => {
+          const R = clamp(baseR * s.radiusMul, 80, vCap);
+          s.pos.x = c.x + Math.cos(s.angle) * R;
+          s.pos.y = c.y + Math.sin(s.angle) * R;
+
+          const halfW = s.el.offsetWidth / 2;
+          const halfH = s.el.offsetHeight / 2;
+          s.el.style.transform = `translate(${s.pos.x - halfW}px, ${s.pos.y - halfH}px)`;
+        });
+
+        requestAnimationFrame((t)=>{ last = t; tick(t); });
       }
 
-      // Start when DOM is ready
       if (document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', waitForLayout);
+        document.addEventListener('DOMContentLoaded', init);
       } else {
-        waitForLayout();
+        init();
       }
 
-      // Recalculate on resize
-      let resizeTimeout;
+      // Re-center on resize
+      let rz;
       window.addEventListener('resize', () => {
-        clearTimeout(resizeTimeout);
-        resizeTimeout = setTimeout(() => {
-          initialized = false;
-          setTimeout(() => {
-            init();
-          }, 100);
-        }, 150);
+        cancelAnimationFrame(rz);
+        rz = requestAnimationFrame(init);
       });
     })();
 
@@ -460,7 +425,7 @@ s.vel.y *= damping;
     const overlay = document.getElementById('overlay');
     const aboutLink = document.getElementById('aboutLink');
 
-    function togglePanel(forceOpen) {
+    function togglePanel(forceOpen){
       const open = forceOpen !== undefined ? forceOpen : !panel.classList.contains('open');
       panel.classList.toggle('open', open);
       overlay.classList.toggle('active', open);
@@ -468,53 +433,36 @@ s.vel.y *= damping;
       const icon = menuBtn.querySelector('i');
       icon.className = open ? 'fa-solid fa-xmark' : 'fa-solid fa-bars';
     }
+    menuBtn.addEventListener('click', ()=>togglePanel());
+    overlay.addEventListener('click', ()=>togglePanel(false));
+    aboutLink?.addEventListener('click', (e)=>{ e.preventDefault(); togglePanel(true); document.getElementById('aboutSection').scrollIntoView({behavior:'smooth',block:'start'}); });
+    window.addEventListener('keydown', (e)=>{ if (e.key==='Escape' && panel.classList.contains('open')) togglePanel(false); });
 
-    menuBtn.addEventListener('click', () => togglePanel());
-    overlay.addEventListener('click', () => togglePanel(false));
-    aboutLink?.addEventListener('click', (e) => { 
-      e.preventDefault(); 
-      togglePanel(true); 
-      document.getElementById('aboutSection').scrollIntoView({behavior:'smooth',block:'start'}); 
-    });
-    window.addEventListener('keydown', (e) => { 
-      if (e.key === 'Escape' && panel.classList.contains('open')) togglePanel(false); 
-    });
-
-    // Typing animation
+    // Typing (~5s total, natural jitter)
     const nameEl = document.getElementById('name');
     const subtitleEl = document.getElementById('subtitle');
     const fullText = nameEl.dataset.text;
     const totalMs = 5000;
     const stepMs = Math.max(30, Math.floor(totalMs / Math.max(1, fullText.length)));
     let idx = 0;
-
-    function typeNext() {
-      if (idx <= fullText.length) {
-        nameEl.innerHTML =
-          '<span id="nameText">' + fullText.slice(0, idx) + '</span>' +
-          '<span class="typing-cursor"></span>';
-        idx++; 
-        setTimeout(typeNext, stepMs + Math.random() * 40);
+    function typeNext(){
+      if (idx <= fullText.length){
+        nameEl.innerHTML = fullText.slice(0, idx) + '<span class="typing-cursor"></span>';
+        idx++; setTimeout(typeNext, stepMs + Math.random()*40);
       } else {
-        nameEl.innerHTML =
-          '<span id="nameText">' + fullText + '</span>' +
-          '<span class="typing-cursor"></span>';
-        setTimeout(() => subtitleEl.classList.add('show'), 400);
+        nameEl.innerHTML = fullText + '<span class="typing-cursor"></span>';
+        setTimeout(()=> subtitleEl.classList.add('show'), 400);
       }
     }
+    window.addEventListener('load', ()=>{ nameEl.textContent=''; setTimeout(typeNext, 500); });
 
-    window.addEventListener('load', () => { 
-      nameEl.textContent = ''; 
-      setTimeout(typeNext, 500); 
-    });
-
-    // Parallax on ornaments
+    // Tiny parallax on ornaments
     let scrollPos = 0;
-    window.addEventListener('scroll', () => {
+    window.addEventListener('scroll', ()=>{
       scrollPos = window.pageYOffset;
-      document.querySelectorAll('.floating-element').forEach((el, i) => {
-        const speed = (i + 1) * 0.5;
-        el.style.transform = `translateY(${scrollPos * speed}px)`;
+      document.querySelectorAll('.floating-element').forEach((el,i)=>{
+        const speed = (i+1)*0.5;
+        el.style.transform = `translateY(${scrollPos*speed}px)`;
       });
     });
   </script>
