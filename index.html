@@ -276,10 +276,15 @@
       }));
 
       function getCenter() {
-        const r = nameEl.getBoundingClientRect();
-        // Coordinates relative to the viewport (match the fixed container)
-        return { x: r.left + r.width / 2, y: r.top + r.height / 2 };
-      }
+  // Prefer the tight text span if present, else the H1
+  const textEl = document.getElementById('nameText') || nameEl;
+  const r = textEl.getBoundingClientRect();
+  const cx = r.left + r.width / 2;
+  const cy = r.top + r.height / 2;
+  // Ideal radius feels like a halo around the title
+  const idealR = Math.max(r.height * 1.25, 140);
+  return { x: cx, y: cy, idealR };
+}
 
       let pointer = { x: 0, y: 0, active: false };
       window.addEventListener('pointermove', (e) => { pointer = { x: e.pageX, y: e.pageY, active: true }; }, { passive:true });
@@ -310,13 +315,13 @@
 
         state.forEach((s) => {
           // Compute a safe radius per bubble so the circle sits around the title and stays on-screen
-          const bubbleHalf = s.el.offsetWidth / 2;
-          const safeR = Math.min(
-            baseRadius(),
-            (Math.min(window.innerWidth, window.innerHeight) / 2) - bubbleHalf - 20
-          );
-          const baseX = center.x + Math.cos(s.angle) * safeR;
-          const baseY = center.y + Math.sin(s.angle) * safeR;
+const bubbleHalf = s.el.offsetWidth / 2;
+// cap by viewport so bubbles never go off-screen
+const viewportCap = (Math.min(window.innerWidth, window.innerHeight) / 2) - bubbleHalf - 20;
+// size by title height so the ring hugs the text
+const safeR = Math.min(center.idealR, viewportCap);
+const baseX = center.x + Math.cos(s.angle) * safeR;
+const baseY = center.y + Math.sin(s.angle) * safeR;
 
           const driftX = Math.sin((t/1000) * TWO_PI * driftFreq + s.driftPhase) * driftAmp;
           const driftY = Math.cos((t/1000) * TWO_PI * driftFreq + s.driftPhase*0.9) * driftAmp;
@@ -361,26 +366,25 @@
 
       // First paint at base positions
       (function initPositions(){
-        const center = getCenter();
-        state.forEach((s) => {
-          const bubbleHalf = s.el.offsetWidth / 2;
-          const safeR = Math.min(
-            baseRadius(),
-            (Math.min(window.innerWidth, window.innerHeight) / 2) - bubbleHalf - 20
-          );
-          const x = center.x + Math.cos(s.angle) * safeR;
-          const y = center.y + Math.sin(s.angle) * safeR;
-          // Clamp to viewport in case the title is very close to an edge
-          const minX = bubbleHalf + 12;
-          const maxX = window.innerWidth - bubbleHalf - 12;
-          const minY = bubbleHalf + 12;
-          const maxY = window.innerHeight - bubbleHalf - 12;
-          const cx = clamp(x, minX, maxX);
-          const cy = clamp(y, minY, maxY);
-          s.pos.x = cx; s.pos.y = cy;
-          s.el.style.transform = `translate(${cx - bubbleHalf}px, ${cy - bubbleHalf}px)`;
-        });
-      })();
+  const center = getCenter();
+  state.forEach((s) => {
+    const bubbleHalf = s.el.offsetWidth / 2;
+    const viewportCap = (Math.min(window.innerWidth, window.innerHeight) / 2) - bubbleHalf - 20;
+    const safeR = Math.min(center.idealR, viewportCap);
+
+    const x = center.x + Math.cos(s.angle) * safeR;
+    const y = center.y + Math.sin(s.angle) * safeR;
+
+    const minX = bubbleHalf + 12, maxX = window.innerWidth - bubbleHalf - 12;
+    const minY = bubbleHalf + 12, maxY = window.innerHeight - bubbleHalf - 12;
+
+    const cx = Math.max(minX, Math.min(maxX, x));
+    const cy = Math.max(minY, Math.min(maxY, y));
+
+    s.pos.x = cx; s.pos.y = cy;
+    s.el.style.transform = `translate(${cx - bubbleHalf}px, ${cy - bubbleHalf}px)`;
+  });
+})();
 
       requestAnimationFrame((t)=>{ lastT = t; tick(t); });
     })();
@@ -405,21 +409,26 @@
     window.addEventListener('keydown', (e)=>{ if (e.key==='Escape' && panel.classList.contains('open')) togglePanel(false); });
 
     // Typing (~5s)
-    const nameEl = document.getElementById('name');
-    const subtitleEl = document.getElementById('subtitle');
-    const fullText = nameEl.dataset.text;
-    const totalMs = 5000;
-    const stepMs = Math.max(30, Math.floor(totalMs / Math.max(1, fullText.length)));
-    let idx = 0;
-    function typeNext(){
-      if (idx <= fullText.length){
-        nameEl.innerHTML = fullText.slice(0, idx) + '<span class="typing-cursor"></span>';
-        idx++; setTimeout(typeNext, stepMs + Math.random()*40);
-      } else {
-        nameEl.innerHTML = fullText + '<span class="typing-cursor"></span>';
-        setTimeout(()=> subtitleEl.classList.add('show'), 400);
-      }
-    }
+const nameEl = document.getElementById('name');
+const subtitleEl = document.getElementById('subtitle');
+const fullText = nameEl.dataset.text;
+const totalMs = 5000;
+const stepMs = Math.max(30, Math.floor(totalMs / Math.max(1, fullText.length)));
+let idx = 0;
+
+function typeNext(){
+  if (idx <= fullText.length){
+    nameEl.innerHTML =
+      '<span id="nameText">' + fullText.slice(0, idx) + '</span>' +
+      '<span class="typing-cursor"></span>';
+    idx++; setTimeout(typeNext, stepMs + Math.random()*40);
+  } else {
+    nameEl.innerHTML =
+      '<span id="nameText">' + fullText + '</span>' +
+      '<span class="typing-cursor"></span>';
+    setTimeout(()=> subtitleEl.classList.add('show'), 400);
+  }
+}
     window.addEventListener('load', ()=>{ nameEl.textContent=''; setTimeout(typeNext, 500); });
 
     // Tiny parallax on ornaments
