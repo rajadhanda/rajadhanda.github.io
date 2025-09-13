@@ -265,22 +265,27 @@
       if (!bubbles.length) return;
 
       // Center from single anchor
-      function getCenter() {
-        const cp = document.getElementById('centerpiece');
-        if (cp) {
-          const r = cp.getBoundingClientRect(); // viewport coords (layer is fixed)
-          return { x: r.left + r.width/2, y: r.top + r.height/2, w: r.width, h: r.height };
-        }
-        return { x: window.innerWidth/2, y: window.innerHeight/2, w: 0, h: 0 };
-      }
+    function getCenter() {
+  // Use window center as anchor
+  const x = window.innerWidth / 2;
+  const y = window.innerHeight / 2;
+
+  // Also grab centerpiece box for exclusion
+  const cp = document.getElementById('centerpiece');
+  if (cp) {
+    const r = cp.getBoundingClientRect();
+    return { x, y, w: r.width, h: r.height };
+  }
+  return { x, y, w: 0, h: 0 };
+}
 
       // Tuned parameters for “gentle + tactile”
       const DRIFT_AMP = 8;       // px
       const DRIFT_FREQ = 0.30;   // Hz
       const SPIN = 0.02;         // rad/sec (very subtle)
-      const MAG_PULL = 0.04;     // magnet strength on hover (soft)
+      const MAG_PULL = 0.02;     // magnet strength on hover (soft)
       const SPRING = 0.06;       // steady spring
-      const SPRING_INIT = 0.16;  // initial settle
+      const SPRING_INIT = 0.10;  // initial settle
       const DAMP = 0.96;         // damping (higher = calmer)
       const MAX_VEL = 9;         // px/frame cap
 
@@ -394,7 +399,11 @@
 
       function init() {
         const c = getCenter();
-        const baseR = Math.max(140, Math.max(c.w, c.h) * 0.6 + 36);
+        // Base radius derived from centerpiece size
+const baseR = Math.max(
+  180,
+  Math.max(c.w, c.h) * 0.7 + 60 // push bubbles just outside centerpiece
+);
 
         state.forEach(s => {
           const halfW = s.el.offsetWidth / 2;
