@@ -268,7 +268,7 @@
       const HOVER_SCALE = 1.04; // applied in RAF to avoid transform conflicts
 
       const TWO_PI = Math.PI * 2;
-      const baseRadius = () => Math.max(140, Math.min(window.innerWidth, window.innerHeight) * 0.26);
+    
       const driftAmp   = 8;     // px
       const driftFreq  = 0.35;  // Hz
 
@@ -283,7 +283,7 @@
       }));
 
 function getCenter() {
-  // Use the *visual group* as the anchor: name + subtitle + icons
+  // Visual anchor: name + subtitle + icons
   const name  = document.getElementById('name');
   const sub   = document.getElementById('subtitle');
   const icons = document.querySelector('.social-links');
@@ -292,18 +292,28 @@ function getCenter() {
     .filter(Boolean)
     .map(el => el.getBoundingClientRect());
 
-  // Fallback to center of viewport if anything odd
-  if (!rects.length) return { x: window.innerWidth/2, y: window.innerHeight/2 };
+  // Fallback: viewport center + conservative radius
+  if (!rects.length) {
+    const fallbackR = Math.max(140, Math.min(window.innerWidth, window.innerHeight) * 0.24);
+    return { x: window.innerWidth/2, y: window.innerHeight/2, idealR: fallbackR };
+  }
 
   const left   = Math.min(...rects.map(r => r.left));
   const right  = Math.max(...rects.map(r => r.right));
   const top    = Math.min(...rects.map(r => r.top));
   const bottom = Math.max(...rects.map(r => r.bottom));
 
-  // Viewport coordinates (no scroll offsets, because our layer is fixed)
-  return { x: (left + right) / 2, y: (top + bottom) / 2 };
-}
+  const w = right - left;
+  const h = bottom - top;
 
+  // Radius sized to the header group with a gentle padding
+  const groupSizedR = Math.max(w, h) * 0.6 + 40; // tweakable
+  const minR = 140;
+  const idealR = Math.max(minR, groupSizedR);
+
+  // Viewport coords (fixed layer), no scroll offsets
+  return { x: (left + right) / 2, y: (top + bottom) / 2, idealR };
+}
       let pointer = { x: 0, y: 0, active: false };
       window.addEventListener('pointermove', (e) => { pointer = { x: e.pageX, y: e.pageY, active: true }; }, { passive:true });
 
