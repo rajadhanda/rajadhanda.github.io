@@ -64,13 +64,13 @@
       z-index: 1001;
       box-shadow: var(--shadow-soft);
     }
-    .menu-toggle:hover { 
-      transform: scale(1.05) translateY(-1px); 
+    .menu-toggle:hover {
+      transform: scale(1.05) translateY(-1px);
       border-color: var(--border-hover);
       box-shadow: var(--shadow-medium);
     }
-    .menu-toggle i { 
-      font-size: 18px; 
+    .menu-toggle i {
+      font-size: 18px;
       color: var(--fg);
       transition: transform .2s var(--ease);
     }
@@ -94,26 +94,28 @@
       backdrop-filter: blur(20px);
     }
     .panel.open { transform: translateX(0); }
-    
+
     .panel header {
       font-family: 'Inter', sans-serif;
-      font-size: 0.85rem; 
+      font-size: 0.85rem;
       color: var(--muted);
       letter-spacing: 0.08em;
       text-transform: uppercase;
       margin-bottom: 24px;
       font-weight: 500;
     }
-    
-    nav ul { 
-      list-style: none; 
-      padding: 0; 
-      margin: 0 0 32px; 
+
+    nav ul {
+      list-style: none;
+      padding: 0;
+      margin: 0 0 32px;
     }
-    nav li { 
-      margin: 0; 
-      border-bottom: 1px solid rgba(0,0,0,0.04);
-      last-child:border-bottom: none;
+    nav li {
+      margin: 0;
+        border-bottom: 1px solid rgba(0,0,0,0.04);
+      }
+      nav li:last-child {
+        border-bottom: none;
     }
     nav a {
       text-decoration: none;
@@ -137,7 +139,7 @@
       transition: left .4s var(--ease);
     }
     nav a:hover::before { left: 0; }
-    nav a:hover { 
+    nav a:hover {
       color: var(--accent);
       transform: translateX(4px);
     }
@@ -152,8 +154,8 @@
       font-size: 1.05rem;
     }
     .about h3 {
-      margin: 0 0 12px 0; 
-      font-size: 1.2rem; 
+      margin: 0 0 12px 0;
+      font-size: 1.2rem;
       color: var(--accent);
       font-family: 'Inter', sans-serif;
       font-weight: 500;
@@ -180,7 +182,7 @@
       font-weight: 400;
       position: relative;
     }
-    
+
     .typing-cursor {
       display: inline-block;
       width: 3px;
@@ -191,7 +193,7 @@
       animation: cursor-blink 1.4s ease-in-out infinite;
       border-radius: 1px;
     }
-    
+
     @keyframes cursor-blink {
       0%, 45% { opacity: 1; }
       50%, 95% { opacity: 0.1; }
@@ -223,7 +225,7 @@
       justify-content: center;
       align-items: center;
     }
-    
+
     .social-link {
       display: inline-flex;
       align-items: center;
@@ -240,7 +242,7 @@
       position: relative;
       overflow: hidden;
     }
-    
+
     .social-link::before {
       content: '';
       position: absolute;
@@ -251,11 +253,11 @@
       transition: transform .3s var(--ease-back);
       z-index: -1;
     }
-    
+
     .social-link:hover::before {
       transform: scale(1);
     }
-    
+
     .social-link:hover {
       color: var(--bg);
       transform: translateY(-3px);
@@ -273,13 +275,13 @@
       animation: float 8s ease-in-out infinite;
       z-index: -1;
     }
-    
+
     @keyframes float {
       0%, 100% { transform: translateY(0px) rotate(0deg); }
       33% { transform: translateY(-8px) rotate(2deg); }
       66% { transform: translateY(4px) rotate(-1deg); }
     }
-    
+
     .floating-element:nth-child(1) { top: 15%; right: 10%; animation-delay: -2s; }
     .floating-element:nth-child(2) { bottom: 20%; left: 8%; animation-delay: -5s; animation-duration: 12s; }
 
@@ -302,7 +304,7 @@
       opacity: 0;
       animation: fadeInUp 0.8s ease-out 3s forwards;
     }
-    
+
     .status-dot {
       width: 6px;
       height: 6px;
@@ -310,27 +312,15 @@
       border-radius: 50%;
       animation: pulse 2s ease-in-out infinite;
     }
-    
+
     @keyframes pulse {
       0%, 100% { opacity: 1; transform: scale(1); }
       50% { opacity: 0.6; transform: scale(1.1); }
     }
-    
+
     @keyframes fadeInUp {
       from { opacity: 0; transform: translateY(10px); }
       to { opacity: 1; transform: translateY(0); }
-    }
-
-    /* Refined footer */
-    footer {
-      grid-row: 2;
-      width: 100%;
-      text-align: center;
-      padding: 16px 0 24px;
-      font-family: 'Inter', sans-serif;
-      font-size: 0.85rem;
-      color: var(--muted);
-      letter-spacing: 0.02em;
     }
 
     /* Backdrop overlay for panel */
@@ -351,6 +341,84 @@
       visibility: visible;
     }
 
+    /* Bubble navigation */
+    .bubble-nav {
+      margin-top: 6vh;
+      display: grid;
+      grid-template-columns: repeat(2, minmax(160px, 1fr));
+      gap: clamp(16px, 5vw, 36px);
+      align-items: center;
+      justify-items: center;
+    }
+
+    /* Mobile layout adjustments for bubble nav */
+    @media (max-width: 560px) {
+      .bubble-nav {
+        grid-template-columns: 1fr 1fr;
+        gap: 18px;
+        margin-top: 5vh;
+      }
+    }
+
+    .bubble {
+      position: relative;
+      width: clamp(160px, 24vw, 220px);
+      aspect-ratio: 1 / 1;
+      border-radius: 50%;
+      border: 2px solid var(--border);
+      display: grid;
+      place-items: center;
+      text-decoration: none;
+      color: var(--fg);
+      overflow: hidden;
+      transition: transform .18s var(--ease), border-color .18s var(--ease), box-shadow .18s var(--ease);
+      background: transparent;
+    }
+
+    .bubble:hover {
+      transform: translateY(-2px);
+      border-color: var(--border-hover);
+    }
+
+    .bubble:focus-visible {
+      outline: none;
+      box-shadow: 0 0 0 3px rgba(0,0,0,.08), 0 0 0 6px rgba(0,0,0,.05);
+      border-color: var(--border-hover);
+    }
+
+    .bubble-title {
+      font-size: clamp(1.05rem, 2.2vw, 1.4rem);
+      font-weight: 500;
+      line-height: 1.2;
+      text-align: center;
+      pointer-events: none;
+    }
+
+    .bubble-label {
+      position: absolute;
+      bottom: 16px;
+      left: 50%;
+      transform: translate(-50%, 6px);
+      font-style: italic;
+      font-size: clamp(.82rem, 1.6vw, .95rem);
+      color: var(--muted);
+      opacity: 0;
+      transition: opacity .14s var(--ease), transform .14s var(--ease);
+      pointer-events: none;
+      text-align: center;
+      max-width: 88%;
+      line-height: 1.25;
+      white-space: normal;
+      word-break: break-word;
+    }
+
+    .bubble:hover .bubble-label,
+    .bubble:focus-within .bubble-label {
+      opacity: 1;
+      transform: translate(-50%, 0);
+    }
+
+    /* Responsive adjustments */
     @media (max-width: 768px) {
       .menu-toggle { top: 20px; left: 20px; width: 46px; height: 46px; }
       .panel { padding: 24px; }
@@ -381,9 +449,9 @@
     <nav aria-label="Primary">
       <ul>
         <li><a href="#" id="aboutLink">About</a></li>
-        <li><a href="/blog">Writing</a></li>
+        <li><a href="/blog">Blog</a></li>
         <li><a href="/projects">Projects</a></li>
-        <li><a href="/photographs">Photography</a></li>
+        <li><a href="/photographs">Photographs</a></li>
       </ul>
     </nav>
 
@@ -398,6 +466,29 @@
   <main>
     <h1 class="name" id="name" data-text="Raja Dhanda"></h1>
     <div class="subtitle" id="subtitle">experimenting with intention</div>
+
+    <!-- Bubble navigation -->
+    <nav class="bubble-nav" aria-label="Primary">
+      <a class="bubble" href="/about" data-key="about" aria-label="About">
+        <span class="bubble-title">About</span>
+        <em class="bubble-label">who I am in 2 mins</em>
+      </a>
+
+      <a class="bubble" href="/blog" data-key="blog" aria-label="Blog">
+        <span class="bubble-title">Blog</span>
+        <em class="bubble-label">notes and thought experiments</em>
+      </a>
+
+      <a class="bubble" href="/projects" data-key="projects" aria-label="Projects">
+        <span class="bubble-title">Projects</span>
+        <em class="bubble-label">things I’ve tried</em>
+      </a>
+
+      <a class="bubble" href="/photographs" data-key="photos" aria-label="Photographs">
+        <span class="bubble-title">Photographs</span>
+        <em class="bubble-label">frames I liked</em>
+      </a>
+    </nav>
 
     <div class="social-links" aria-label="Connect with me">
       <a href="https://www.linkedin.com/in/ramendra-raja-dhanda/"
@@ -422,7 +513,7 @@
   <script>
     // Enhanced panel logic with backdrop
     const menuBtn = document.getElementById('menuBtn');
-    const panel = document.getElementById('panel');
+    const panel   = document.getElementById('panel');
     const overlay = document.getElementById('overlay');
     const aboutLink = document.getElementById('aboutLink');
 
@@ -431,7 +522,7 @@
       panel.classList.toggle('open', open);
       overlay.classList.toggle('active', open);
       panel.setAttribute('aria-hidden', (!open).toString());
-      
+
       // Icon animation
       const icon = menuBtn.querySelector('i');
       icon.className = open ? 'fa-solid fa-xmark' : 'fa-solid fa-circle-info';
@@ -439,7 +530,7 @@
 
     menuBtn.addEventListener('click', () => togglePanel());
     overlay.addEventListener('click', () => togglePanel(false));
-    
+
     aboutLink.addEventListener('click', (e) => {
       e.preventDefault();
       togglePanel(true);
@@ -453,8 +544,8 @@
     });
 
     // Enhanced typing effect with persistent cursor
-    const nameEl = document.getElementById('name');
-    const subtitle = document.getElementById('subtitle');
+    const nameEl  = document.getElementById('name');
+    const subtitleEl = document.getElementById('subtitle');
     const fullText = nameEl.dataset.text;
     const typingSpeed = 120; // ms per character
     let idx = 0;
@@ -468,7 +559,7 @@
         // Keep cursor and reveal subtitle
         nameEl.innerHTML = fullText + '<span class="typing-cursor"></span>';
         setTimeout(() => {
-          subtitle.classList.add('show');
+          subtitleEl.classList.add('show');
         }, 400);
       }
     }
