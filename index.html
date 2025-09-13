@@ -71,7 +71,8 @@
     .about h3{margin:0 0 12px 0; font-size:1.2rem; color:var(--accent); font-family:'Inter',sans-serif; font-weight:500}
 
     /* Main */
-    main{width:100%; max-width:var(--maxw); text-align:center; padding:40px 20px; align-self:center; justify-self:center; position:relative}
+    main{width:100%; max-width:var(--maxw); text-align:center; padding:40px 20px; align-self:center; justify-self:center; position:relative; z-index:2}
+    #centerpiece{display:inline-block}
     .name{
       font-size:clamp(2.8rem,6vw,5.2rem); line-height:1.08; margin:0 0 16px 0; min-height:1.2em;
       letter-spacing:-.02em; font-weight:400; position:relative
@@ -108,7 +109,7 @@
     .status{
       position:fixed; bottom:28px; right:28px; font-family:'Inter',sans-serif; font-size:.8rem; color:var(--muted);
       display:flex; align-items:center; gap:8px; background:rgba(254,254,254,.9); backdrop-filter:blur(8px);
-      padding:8px 16px; border-radius:20px; border:1px solid var(--border); opacity:0; animation:fadeInUp .8s ease-out 3s forwards
+      padding:8px 16px; border-radius:20px; border:1px solid var(--border); opacity:0; animation:fadeInUp .8s ease-out 3s forwards; z-index:2
     }
     .status-dot{width:6px; height:6px; background:#22c55e; border-radius:50%; animation:pulse 2s ease-in-out infinite}
     @keyframes pulse{0%,100%{opacity:1; transform:scale(1)}50%{opacity:.6; transform:scale(1.1)}}
@@ -131,9 +132,10 @@
       position:relative; width:clamp(160px,24vw,220px); aspect-ratio:1/1; border-radius:50%;
       border:2px solid var(--border); display:grid; place-items:center; text-decoration:none; color:var(--fg);
       overflow:hidden; background:transparent;
-      /* IMPORTANT: no transform transition; JS owns transform entirely */
+      /* JS owns transform entirely for silky motion */
       transition: border-color .18s var(--ease), box-shadow .18s var(--ease);
       will-change: transform;
+      backface-visibility:hidden; transform:translate3d(0,0,0);
     }
     .bubble:hover{border-color:#cfcfcf; box-shadow:0 10px 24px rgba(0,0,0,.08)}
     .bubble:focus-visible{outline:none; box-shadow:0 0 0 3px rgba(0,0,0,.10), 0 10px 24px rgba(0,0,0,.08); border-color:#cfcfcf}
@@ -154,9 +156,9 @@
       width: 100vw;
       height: 100vh;
       pointer-events: none;
-      z-index: 3;
-      display: block;  /* no grid in freeflow mode */
-      margin: 0;       /* override base .bubble-nav margin-top */
+      z-index: 1;
+      display: block;
+      margin: 0;
     }
     .bubble-nav.freeflow .bubble{ position: absolute; pointer-events: auto; }
 
@@ -211,7 +213,6 @@
 
   <!-- Main -->
   <main>
-    <!-- Single anchor that defines the visual center -->
     <div id="centerpiece">
       <h1 class="name" id="name" data-text="Raja Dhanda"></h1>
       <div class="subtitle" id="subtitle">experimenting with intention</div>
@@ -227,7 +228,7 @@
     </div>
   </main>
 
-  <!-- Bubble navigation (freeflow enables physics) — placed OUTSIDE <main> -->
+  <!-- Bubble navigation (freeflow enables physics) -->
   <nav id="bubbleNav" class="bubble-nav freeflow" aria-label="Primary">
     <a class="bubble" href="/about" data-key="about" aria-label="About">
       <span class="bubble-title">About</span>
@@ -253,7 +254,7 @@
   <footer>© 2025 Raja Dhanda — Crafted with care</footer>
 
   <script>
-    // ===== Bubble freeflow micro-physics (viewport-pinned, centerpiece-anchored) =====
+    // ===== Bubble freeflow micro-physics (viewport-pinned, window-centered, centerpiece-excluding) =====
     (function () {
       const nav = document.getElementById('bubbleNav');
       if (!nav) return;
@@ -264,35 +265,32 @@
       const bubbles = Array.from(nav.querySelectorAll('.bubble'));
       if (!bubbles.length) return;
 
-      // Center from single anchor
-    function getCenter() {
-  // Use window center as anchor
-  const x = window.innerWidth / 2;
-  const y = window.innerHeight / 2;
+      // Center anchor: true window center. We still read centerpiece size to push radius outside it.
+      function getCenter() {
+        const x = window.innerWidth / 2;
+        const y = window.innerHeight / 2;
+        const cp = document.getElementById('centerpiece');
+        if (cp) {
+          const r = cp.getBoundingClientRect();
+          return { x, y, w: r.width, h: r.height };
+        }
+        return { x, y, w: 0, h: 0 };
+      }
 
-  // Also grab centerpiece box for exclusion
-  const cp = document.getElementById('centerpiece');
-  if (cp) {
-    const r = cp.getBoundingClientRect();
-    return { x, y, w: r.width, h: r.height };
-  }
-  return { x, y, w: 0, h: 0 };
-}
-
-      // Tuned parameters for “gentle + tactile”
-      const DRIFT_AMP = 8;       // px
-      const DRIFT_FREQ = 0.30;   // Hz
-      const SPIN = 0.02;         // rad/sec (very subtle)
-      const MAG_PULL = 0.02;     // magnet strength on hover (soft)
-      const SPRING = 0.06;       // steady spring
-      const SPRING_INIT = 0.10;  // initial settle
-      const DAMP = 0.96;         // damping (higher = calmer)
-      const MAX_VEL = 9;         // px/frame cap
+      // Tuned parameters for gentle motion
+      const DRIFT_AMP   = 5;      // px breathing
+      const DRIFT_FREQ  = 0.15;   // Hz
+      const SPIN        = 0.01;   // rad/sec — very subtle
+      const MAG_PULL    = 0.015;  // gentle attraction on hover
+      const SPRING      = 0.045;  // steady spring
+      const SPRING_INIT = 0.090;  // initial settle
+      const DAMP        = 0.975;  // higher = calmer
+      const MAX_VEL     = 6;      // px/frame cap
 
       const state = bubbles.map((el, i) => ({
         el,
         angle: (i / bubbles.length) * Math.PI * 2 + (Math.random() - 0.5) * 0.3,
-        radiusMul: 0.9 + Math.random() * 0.2,
+        radiusMul: 0.92 + Math.random() * 0.16,
         pos: { x: 0, y: 0 },
         vel: { x: 0, y: 0 },
         hovering: false,
@@ -300,7 +298,7 @@
         target: { x: 0, y: 0 }
       }));
 
-      // Smoothed pointer
+      // Smoothed pointer (low-pass)
       let rawPointer = { x: window.innerWidth / 2, y: window.innerHeight / 2, active: false };
       let filtPointer = { x: rawPointer.x, y: rawPointer.y };
       window.addEventListener('pointermove', (e) => {
@@ -328,24 +326,27 @@
         const dt = Math.min(0.032, (t - last) / 1000);
         last = t;
 
-        // Pointer smoothing (low-pass)
-        const ALPHA = 0.18;
+        // Pointer smoothing
+        const ALPHA = 0.12;
         filtPointer.x += (rawPointer.x - filtPointer.x) * ALPHA;
         filtPointer.y += (rawPointer.y - filtPointer.y) * ALPHA;
 
         const c = getCenter();
-        // Base radius derived from centerpiece and viewport
-        const baseR = Math.max(140, Math.max(c.w, c.h) * 0.6 + 36);
+
+        // Base orbit radius: just outside centerpiece + a cushion
+        const baseR = Math.max(
+          180,
+          Math.max(c.w, c.h) * 0.70 + 60
+        );
 
         state.forEach(s => {
-          // Gentle angle drift; slow it while hovering
-          const spinNow = s.hovering ? SPIN * 0.25 : SPIN;
+          const spinNow = s.hovering ? SPIN * 0.4 : SPIN; // slightly slower while hovering
           s.angle += spinNow * dt;
 
-          // Breathing radius drift
+          // Gentle breathing
           const drift = Math.sin(t * 0.001 * (DRIFT_FREQ * 2 * Math.PI) + s.driftPhase) * DRIFT_AMP;
 
-          // Per-bubble radius cap based on actual bubble size and viewport
+          // Per-bubble radius cap based on bubble size & viewport (keeps on-screen)
           const halfW = s.el.offsetWidth / 2;
           const halfH = s.el.offsetHeight / 2;
           const pad = 12;
@@ -355,17 +356,17 @@
 
           const R = clamp(baseR * s.radiusMul + drift, 80, Rcap);
 
-          // Target position
+          // Target position around true center
           let tx = c.x + Math.cos(s.angle) * R;
           let ty = c.y + Math.sin(s.angle) * R;
 
-          // Gentle magnet on hover
+          // Gentle magnet toward pointer when hovered
           if (s.hovering && rawPointer.active) {
             tx += (filtPointer.x - tx) * MAG_PULL;
             ty += (filtPointer.y - ty) * MAG_PULL;
           }
 
-          // Keep fully on-screen as a safety net
+          // Safety on-screen clamp
           const minX = halfW + pad, maxX = window.innerWidth  - halfW - pad;
           const minY = halfH + pad, maxY = window.innerHeight - halfH - pad;
 
@@ -388,9 +389,9 @@
           s.pos.x += s.vel.x;
           s.pos.y += s.vel.y;
 
-          // Apply transform (single pipeline)
-          const scale = s.hovering ? ' scale(1.05)' : '';
-          s.el.style.transform = `translate(${s.pos.x - halfW}px, ${s.pos.y - halfH}px)` + scale;
+          // Apply transform (GPU-accelerated)
+          const scale = s.hovering ? ' scale(1.03)' : '';
+          s.el.style.transform = `translate3d(${s.pos.x - halfW}px, ${s.pos.y - halfH}px, 0)` + scale;
         });
 
         initialized = true;
@@ -399,11 +400,7 @@
 
       function init() {
         const c = getCenter();
-        // Base radius derived from centerpiece size
-const baseR = Math.max(
-  180,
-  Math.max(c.w, c.h) * 0.7 + 60 // push bubbles just outside centerpiece
-);
+        const baseR = Math.max(180, Math.max(c.w, c.h) * 0.70 + 60);
 
         state.forEach(s => {
           const halfW = s.el.offsetWidth / 2;
@@ -417,7 +414,7 @@ const baseR = Math.max(
           s.pos.x = c.x + Math.cos(s.angle) * R;
           s.pos.y = c.y + Math.sin(s.angle) * R;
 
-          s.el.style.transform = `translate(${s.pos.x - halfW}px, ${s.pos.y - halfH}px)`;
+          s.el.style.transform = `translate3d(${s.pos.x - halfW}px, ${s.pos.y - halfH}px, 0)`;
         });
 
         requestAnimationFrame((t)=>{ last = t; tick(t); });
