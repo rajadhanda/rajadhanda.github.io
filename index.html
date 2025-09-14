@@ -278,10 +278,30 @@
           return { x: innerWidth/2, y: innerHeight/2, w:0, h:0 };
         }
         
+        const calculatedX = rect.left + rect.width/2;
+        const calculatedY = rect.top + rect.height/2;
+        const viewportCenterX = innerWidth/2;
+        const viewportCenterY = innerHeight/2;
+        
+        // Debug: log the centerpiece position
+        console.log('Centerpiece rect:', rect);
+        console.log('Calculated center:', { x: calculatedX, y: calculatedY });
+        console.log('Viewport center:', { x: viewportCenterX, y: viewportCenterY });
+        
+        // If the calculated center is too far from viewport center, use viewport center
+        // This handles cases where the grid layout hasn't fully centered the element yet
+        const distanceFromViewportCenter = Math.hypot(calculatedX - viewportCenterX, calculatedY - viewportCenterY);
+        const maxDistance = Math.min(innerWidth, innerHeight) * 0.3; // 30% of viewport
+        
+        if (distanceFromViewportCenter > maxDistance) {
+          console.log('Using viewport center as fallback - centerpiece too far from center');
+          return { x: viewportCenterX, y: viewportCenterY, w: rect.width, h: rect.height };
+        }
+        
         // Return the actual center position in viewport coordinates
         return { 
-          x: rect.left + rect.width/2, 
-          y: rect.top + rect.height/2, 
+          x: calculatedX, 
+          y: calculatedY, 
           w: rect.width, 
           h: rect.height 
         };
@@ -439,7 +459,7 @@
         if (started) return; 
         started = true;
         
-        // Wait a bit longer to ensure centerpiece is properly positioned
+        // Wait longer to ensure centerpiece is properly positioned and grid layout is complete
         setTimeout(() => {
           const center = getCenterpieceCenter();
           layoutOnce(center);
@@ -448,7 +468,7 @@
             last = performance.now();
             rafId = requestAnimationFrame(tick);
           }
-        }, 100);
+        }, 300);
       }
 
       // Multiple fallbacks to ensure proper initialization
