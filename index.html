@@ -174,7 +174,7 @@
 
     /* Reduced motion: keep centred positions without animation */
     @media (prefers-reduced-motion: reduce){
-      .bubble-nav.freeflow{position:fixed; inset:0; width:100vw; height:100dvh; display:block; pointer-events:none}
+      .bubble-nav.freeflow{position:fixed; inset:0; width:100vw; height:100dvh; display:block; pointer-events:none; opacity:1 !important}
       .bubble-nav.freeflow .bubble{position:absolute}
       .social-link{opacity:1 !important; transform:none !important; animation:none !important}
     }
@@ -196,15 +196,10 @@
   <div class="floating-element">✦</div>
   <div class="floating-element">◇</div>
 
-  <!-- Menu -->
-  <button class="menu-toggle" aria-label="Open navigation" id="menuBtn">
-    <i class="fa-solid fa-bars" aria-hidden="true"></i>
-  </button>
-
-  <div class="overlay" id="overlay"></div>
+  <!-- Menu removed -->
 
   <!-- Panel -->
-  <aside class="panel" id="panel" aria-hidden="true">
+  <aside class="panel" id="panel" aria-hidden="true" style="display:none">
     <header>Navigation</header>
     <nav aria-label="Primary">
       <ul>
@@ -241,9 +236,9 @@
 
   <!-- Bubble navigation (freeflow enables physics) -->
   <nav id="bubbleNav" class="bubble-nav freeflow" aria-label="Primary">
-    <a class="bubble" href="/about" data-key="about" aria-label="About">
-      <span class="bubble-title">About</span>
-      <em class="bubble-label">who I am in 2 mins</em>
+    <a class="bubble" href="/photographs" data-key="photos" aria-label="Photographs">
+      <span class="bubble-title">Photographs</span>
+      <em class="bubble-label">frames I liked</em>
     </a>
     <a class="bubble" href="/blog" data-key="blog" aria-label="Blog">
       <span class="bubble-title">Blog</span>
@@ -253,14 +248,13 @@
       <span class="bubble-title">Projects</span>
       <em class="bubble-label">things I've tried</em>
     </a>
-    <a class="bubble" href="/photographs" data-key="photos" aria-label="Photographs">
-      <span class="bubble-title">Photographs</span>
-      <em class="bubble-label">frames I liked</em>
+    <a class="bubble" href="/about" data-key="about" aria-label="About">
+      <span class="bubble-title">About</span>
+      <em class="bubble-label">who I am in 2 mins</em>
     </a>
   </nav>
 
-  <!-- Status -->
-  <div class="status"><div class="status-dot"></div>Available for projects</div>
+  <!-- Status removed -->
 
   <footer>© 2025 Raja Dhanda – Crafted with care</footer>
 
@@ -294,9 +288,9 @@
       }
 
       // Gentle parameters
-      const DRIFT_AMP   = 6;     // softer ambient motion
-      const DRIFT_FREQ  = 0.12;
-      const SPIN        = 0.006; // gentler orbital spin
+      const DRIFT_AMP   = 9;     // more ambient motion after appear
+      const DRIFT_FREQ  = 0.15;
+      const SPIN        = 0.008; // slightly faster orbit
       const MAG_PULL    = 0.015; // subtle magnetic pull on hover
       const SPRING      = 0.035; // smoother pursuit
       const SPRING_INIT = 0.12;  // faster initial float-in
@@ -495,31 +489,33 @@
       window.addEventListener('orientationchange', handleResize);
     })();
 
-    // ===== Panel + typing =====
+    // ===== Panel (removed button) + typing =====
     const menuBtn = document.getElementById('menuBtn');
     const panel = document.getElementById('panel');
     const overlay = document.getElementById('overlay');
     const aboutLink = document.getElementById('aboutLink');
 
-    function togglePanel(forceOpen){
-      const open = forceOpen !== undefined ? forceOpen : !panel.classList.contains('open');
-      panel.classList.toggle('open', open);
-      overlay.classList.toggle('active', open);
-      panel.setAttribute('aria-hidden', (!open).toString());
-      const icon = menuBtn.querySelector('i');
-      icon.className = open ? 'fa-solid fa-xmark' : 'fa-solid fa-bars';
+    if (menuBtn && panel && overlay){
+      function togglePanel(forceOpen){
+        const open = forceOpen !== undefined ? forceOpen : !panel.classList.contains('open');
+        panel.classList.toggle('open', open);
+        overlay.classList.toggle('active', open);
+        panel.setAttribute('aria-hidden', (!open).toString());
+        const icon = menuBtn.querySelector('i');
+        icon.className = open ? 'fa-solid fa-xmark' : 'fa-solid fa-bars';
+      }
+      menuBtn.addEventListener('click', ()=>togglePanel());
+      overlay.addEventListener('click', ()=>togglePanel(false));
+      aboutLink?.addEventListener('click', (e)=>{ e.preventDefault(); togglePanel(true); document.getElementById('aboutSection').scrollIntoView({behavior:'smooth',block:'start'}); });
+      window.addEventListener('keydown', (e)=>{ if (e.key==='Escape' && panel.classList.contains('open')) togglePanel(false); });
     }
-    menuBtn.addEventListener('click', ()=>togglePanel());
-    overlay.addEventListener('click', ()=>togglePanel(false));
-    aboutLink?.addEventListener('click', (e)=>{ e.preventDefault(); togglePanel(true); document.getElementById('aboutSection').scrollIntoView({behavior:'smooth',block:'start'}); });
-    window.addEventListener('keydown', (e)=>{ if (e.key==='Escape' && panel.classList.contains('open')) togglePanel(false); });
 
     // Typing (~5s total, natural jitter)
     const nameEl = document.getElementById('name');
     const subtitleEl = document.getElementById('subtitle');
     const socialLinksEl = document.querySelector('.social-links');
     const fullText = nameEl.dataset.text;
-    const totalMs = 5000;
+    const totalMs = 3200; // faster typing
     const stepMs = Math.max(30, Math.floor(totalMs / Math.max(1, fullText.length)));
     let idx = 0;
     function typeNext(){
@@ -534,8 +530,8 @@
           setTimeout(()=>{
             socialLinksEl?.classList.add('icons-in');
             // After icons pop, start bubbles with initial offscreen placement
-            setTimeout(()=>{ window.dispatchEvent(new Event('bubbles:start')); }, 620);
-          }, 180);
+            setTimeout(()=>{ window.dispatchEvent(new Event('bubbles:start')); }, 450);
+          }, 320);
         }, 400);
       }
     }
