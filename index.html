@@ -184,9 +184,20 @@
       .menu-toggle{top:20px; left:20px; width:46px; height:46px}
       .panel{padding:24px}
       .about{max-width:100%}
-      .social-links{margin-top:20px; gap:24px}
+      .social-links{margin-top:16px; gap:24px}
       .status{bottom:20px; right:20px; font-size:.75rem}
       .floating-element{display:none}
+    }
+
+    /* Mobile typography and bubble size tuning */
+    @media (max-width:560px){
+      .name{font-size:clamp(1.9rem, 8.4vw, 3rem)}
+      .subtitle{font-size:clamp(1rem, 4.2vw, 1.2rem)}
+      .bubble{width:clamp(110px, 28vw, 160px)}
+    }
+    @media (max-width:380px){
+      .name{font-size:clamp(1.8rem, 8.8vw, 2.6rem)}
+      .bubble{width:clamp(100px, 30vw, 140px)}
     }
   </style>
 </head>
@@ -288,13 +299,15 @@
       }
 
       // Gentle parameters
-      const DRIFT_AMP   = 12;    // even more ambient motion
-      const DRIFT_FREQ  = 0.18;  // slightly quicker drift cycle
+      const DRIFT_AMP   = 16;    // lively ambient drift
+      const DRIFT_FREQ  = 0.18;  // drift cycle
+      const BOUNCE_AMP  = 8;     // soft radial bounce
+      const BOUNCE_FREQ = 0.08;
       const SPIN        = 0.010; // slightly faster orbit
       const MAG_PULL    = 0.015; // subtle magnetic pull on hover
       const SPRING      = 0.035; // smoother pursuit
       const SPRING_INIT = 0.12;  // faster initial float-in
-      const DAMP        = 0.92;  // higher damping reduces bounce
+      const DAMP        = 0.90;  // softer, more organic motion
       const MAX_VEL     = 5;     // allow brisk but smooth entry
 
       const state = bubbles.map((el, i) => ({
@@ -372,8 +385,23 @@
           //
           
           s.vel.x = 0; s.vel.y = 0;     // reset velocities to avoid bounce on re-layout
-          s.target.x = clamp(targetX, minX, maxX);
-          s.target.y = clamp(targetY, minY, maxY);
+          // Clamp and enforce centerpiece clearance on initial placement
+          let tx = clamp(targetX, minX, maxX);
+          let ty = clamp(targetY, minY, maxY);
+          const dx0 = tx - center.x;
+          const dy0 = ty - center.y;
+          const dist0 = Math.hypot(dx0, dy0);
+          const centerHalfDiag2 = Math.hypot(center.w/2, center.h/2);
+          const minClear2 = centerHalfDiag2 + Math.max(halfW, halfH) + 24;
+          if (dist0 < minClear2 && dist0 > 0.0001){
+            const sc = minClear2 / dist0;
+            tx = center.x + dx0 * sc;
+            ty = center.y + dy0 * sc;
+            tx = clamp(tx, minX, maxX);
+            ty = clamp(ty, minY, maxY);
+          }
+          s.target.x = tx;
+          s.target.y = ty;
           s.el.style.transform = `translate3d(${s.pos.x - halfW}px, ${s.pos.y - halfH}px, 0)`;
         });
         // leave `initialized` false so first tick uses SPRING_INIT
@@ -412,7 +440,9 @@
           const spinNow = s.hover > 0 ? SPIN * 0.3 : SPIN;
           s.angle += spinNow * dt;
 
-          const drift = Math.sin(t * 0.001 * (DRIFT_FREQ * 2 * Math.PI) + s.driftPhase) * DRIFT_AMP;
+          const time = t * 0.001;
+          const drift = Math.sin(time * (DRIFT_FREQ * 2 * Math.PI) + s.driftPhase) * DRIFT_AMP
+                       + Math.sin(time * (BOUNCE_FREQ * 2 * Math.PI) + s.driftPhase*0.7) * BOUNCE_AMP;
           
           // Calculate radius with reasonable constraints and keep clear of centerpiece
           const centerHalfDiag = Math.hypot(center.w/2, center.h/2);
@@ -431,8 +461,26 @@
             ty += (filtPointer.y - ty) * pull;
           }
 
-          s.target.x = clamp(tx, minX, maxX);
-          s.target.y = clamp(ty, minY, maxY);
+          // First, clamp to viewport safe bounds
+          tx = clamp(tx, minX, maxX);
+          ty = clamp(ty, minY, maxY);
+
+          // Then enforce centerpiece clearance even after clamping
+          const centerHalfDiag = Math.hypot(center.w/2, center.h/2);
+          const minClear = centerHalfDiag + Math.max(halfW, halfH) + 24;
+          let dx = tx - center.x;
+          let dy = ty - center.y;
+          let dist = Math.hypot(dx, dy);
+          if (dist < minClear && dist > 0.0001){
+            const scale = minClear / dist;
+            tx = center.x + dx * scale;
+            ty = center.y + dy * scale;
+            tx = clamp(tx, minX, maxX);
+            ty = clamp(ty, minY, maxY);
+          }
+
+          s.target.x = tx;
+          s.target.y = ty;
 
           const k = initialized ? SPRING : SPRING_INIT;
           s.vel.x = (s.vel.x + (s.target.x - s.pos.x) * k) * DAMP;
@@ -469,6 +517,34 @@
       }
       // Allow external trigger after icons reveal
       window.addEventListener('bubbles:start', () => start(true), { once:true });
+
+      // Mobile: first tap acts like hover, second tap navigates
+      const elToState = new Map(state.map(s => [s.el, s]));
+      const isTouch = 'ontouchstart' in window || (navigator.maxTouchPoints||0) > 0;
+      if (isTouch){
+        bubbles.forEach(el => {
+          el.addEventListener('click', (e) => {
+            const s = elToState.get(el);
+            if (!s) return;
+            const armed = el.dataset.armed === '1';
+            if (!armed){
+              // arm and simulate hover
+              el.dataset.armed = '1';
+              s.hoverT = 1; s.hover = 1;
+              // auto-disarm after a short window if no second tap
+              setTimeout(() => { if (el.dataset.armed === '1') { el.dataset.armed = ''; s.hoverT = 0; } }, 1400);
+              e.preventDefault(); e.stopPropagation();
+              return false;
+            } else {
+              // navigate manually and clear
+              el.dataset.armed = '';
+              window.location.assign(el.href);
+              e.preventDefault(); e.stopPropagation();
+              return false;
+            }
+          }, { passive:false });
+        });
+      }
 
       // Removed ResizeObserver on centerpiece/body to avoid re-initialization
       // while typing (which caused a visible re-spread/bounce). Viewport
