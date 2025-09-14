@@ -13,7 +13,7 @@
 
   <style>
     :root{
-      --bg:#fefefe; --fg:#1a1a1a; --fg-light:#404040; --muted:#686868;
+      --bg:#FFF8F0; --fg:#1a1a1a; --fg-light:#404040; --muted:#686868;
       --accent:#2a2a2a; --accent-soft:#f8f8f8;
       --border:#e8e8e8; --border-hover:#d4d4d4;
       --maxw:880px; --menu-w:420px;
@@ -144,7 +144,7 @@
     .bubble:hover{border-color:#cfcfcf; box-shadow:0 10px 24px rgba(0,0,0,.08)}
     .bubble:focus-visible{outline:none; box-shadow:0 0 0 3px rgba(0,0,0,.10), 0 10px 24px rgba(0,0,0,.08); border-color:#cfcfcf}
 
-    .bubble-title{font-size:clamp(1.05rem,2.2vw,1.4rem); font-weight:500; line-height:1.2; text-align:center; pointer-events:none}
+    .bubble-title{font-size:clamp(1.05rem,2.2vw,1.4rem); font-weight:500; line-height:1.2; text-align:center; pointer-events:none; color:#8c8c8c}
     .bubble-label{
       position:absolute; bottom:16px; left:50%; transform:translate(-50%,6px);
       font-style:italic; font-size:clamp(.82rem,1.6vw,.95rem); color:var(--muted);
@@ -288,9 +288,9 @@
       }
 
       // Gentle parameters
-      const DRIFT_AMP   = 9;     // more ambient motion after appear
-      const DRIFT_FREQ  = 0.15;
-      const SPIN        = 0.008; // slightly faster orbit
+      const DRIFT_AMP   = 12;    // even more ambient motion
+      const DRIFT_FREQ  = 0.18;  // slightly quicker drift cycle
+      const SPIN        = 0.010; // slightly faster orbit
       const MAG_PULL    = 0.015; // subtle magnetic pull on hover
       const SPRING      = 0.035; // smoother pursuit
       const SPRING_INIT = 0.12;  // faster initial float-in
@@ -515,7 +515,7 @@
     const subtitleEl = document.getElementById('subtitle');
     const socialLinksEl = document.querySelector('.social-links');
     const fullText = nameEl.dataset.text;
-    const totalMs = 3200; // faster typing
+    const totalMs = 2200; // faster typing again
     const stepMs = Math.max(30, Math.floor(totalMs / Math.max(1, fullText.length)));
     let idx = 0;
     function typeNext(){
@@ -526,12 +526,12 @@
         nameEl.innerHTML = fullText + '<span class="typing-cursor"></span>';
         setTimeout(()=> {
           subtitleEl.classList.add('show');
-          // Pop in icons just after subtitle reveal
+          // Pop in icons after a larger gap
           setTimeout(()=>{
             socialLinksEl?.classList.add('icons-in');
             // After icons pop, start bubbles with initial offscreen placement
             setTimeout(()=>{ window.dispatchEvent(new Event('bubbles:start')); }, 450);
-          }, 320);
+          }, 600);
         }, 400);
       }
     }
