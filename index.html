@@ -611,7 +611,21 @@
         }, 400);
       }
     }
-    window.addEventListener('load', ()=>{ nameEl.textContent=''; setTimeout(typeNext, 500); });
+    // Kick off typing as soon as DOM is ready; also on load as redundancy
+    document.addEventListener('DOMContentLoaded', ()=>{ nameEl.textContent=''; setTimeout(typeNext, 300); });
+    window.addEventListener('load', ()=>{ if (!nameEl.textContent) { nameEl.textContent=''; setTimeout(typeNext, 300); } });
+
+    // Absolute fallbacks so page never feels blank if something blocks animations
+    setTimeout(()=>{
+      if (!subtitleEl.classList.contains('show')) subtitleEl.classList.add('show');
+    }, 1800);
+    setTimeout(()=>{
+      if (!socialLinksEl.classList.contains('icons-in')) socialLinksEl.classList.add('icons-in');
+    }, 2400);
+    setTimeout(()=>{
+      // ensure bubbles start even if typing flow didn't dispatch
+      window.dispatchEvent(new Event('bubbles:start'));
+    }, 3200);
 
     // Tiny parallax on ornaments
     let scrollPos = 0;
