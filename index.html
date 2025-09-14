@@ -152,16 +152,18 @@
     /* Viewport-pinned physics layer */
     .bubble-nav.freeflow{
       position: fixed;
-      inset: 0;
-      width: 100vw;
-      height: 100dvh;        /* robust on mobile address-bar changes */
-      height: 100vh;         /* fallback */
+      inset: 0;              /* pin to viewport; avoids 100vw scrollbar shift */
       pointer-events: none;
       z-index: 1;
       display: block;
       margin: 0;
     }
-    .bubble-nav.freeflow .bubble{ position: absolute; pointer-events: auto; }
+    .bubble-nav.freeflow .bubble{
+      position: absolute;
+      left: 0;               /* ensure transform origin is the viewport's top-left */
+      top: 0;
+      pointer-events: auto;
+    }
 
     /* Reduced motion: keep centred positions without animation */
     @media (prefers-reduced-motion: reduce){
@@ -269,30 +271,18 @@
       function clamp(v, lo, hi){ return Math.max(lo, Math.min(hi, v)); }
 
       function getCenterpieceCenter() {
-        // For now, let's use viewport center directly to test if this fixes the issue
-        const viewportCenterX = innerWidth / 2;
-        const viewportCenterY = innerHeight / 2;
-        
-        console.log('Using viewport center:', { x: viewportCenterX, y: viewportCenterY });
-        console.log('Viewport dimensions:', { width: innerWidth, height: innerHeight });
-        
-        // Let's also check what the centerpiece actually looks like
         const cp = document.getElementById('centerpiece');
         if (cp) {
           const rect = cp.getBoundingClientRect();
-          console.log('Centerpiece rect:', rect);
-          console.log('Centerpiece center would be:', { 
-            x: rect.left + rect.width/2, 
-            y: rect.top + rect.height/2 
-          });
+          return {
+            x: rect.left + rect.width / 2,
+            y: rect.top + rect.height / 2,
+            w: rect.width,
+            h: rect.height,
+          };
         }
-        
-        return { 
-          x: viewportCenterX, 
-          y: viewportCenterY, 
-          w: 0, 
-          h: 0 
-        };
+        // Fallback to viewport center if centerpiece missing
+        return { x: innerWidth / 2, y: innerHeight / 2, w: 0, h: 0 };
       }
 
       // Gentle parameters
@@ -338,8 +328,7 @@
           Math.min(innerWidth, innerHeight) * 0.3 // But not more than 30% of viewport
         );
         
-        console.log('LayoutOnce - center:', center);
-        console.log('LayoutOnce - baseR:', baseR);
+        //
         
         state.forEach((s, index) => {
           const rect = s.el.getBoundingClientRect();
@@ -367,19 +356,7 @@
           s.pos.x = clamp(targetX, minX, maxX);
           s.pos.y = clamp(targetY, minY, maxY);
           
-          // Debug first bubble positioning
-          if (index === 0) {
-            console.log(`Bubble ${index}:`, {
-              angle: s.angle,
-              radiusMul: s.radiusMul,
-              R: R,
-              targetX: targetX,
-              targetY: targetY,
-              finalX: s.pos.x,
-              finalY: s.pos.y,
-              transform: `translate3d(${s.pos.x - halfW}px, ${s.pos.y - halfH}px, 0)`
-            });
-          }
+          //
           
           s.el.style.transform = `translate3d(${s.pos.x - halfW}px, ${s.pos.y - halfH}px, 0)`;
         });
@@ -564,4 +541,4 @@
     });
   </script>
 </body>
-</html>xw
+</html>
