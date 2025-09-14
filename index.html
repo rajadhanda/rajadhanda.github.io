@@ -194,20 +194,20 @@
 
     /* Mobile typography and bubble size tuning */
     @media (max-width:560px){
-      .name{font-size:clamp(1.6rem, 7.2vw, 2.6rem)}
-      .subtitle{font-size:clamp(.95rem, 3.8vw, 1.1rem)}
-      .social-link{width:44px; height:44px; font-size:20px}
-      .bubble{width:clamp(100px, 26vw, 150px)}
-      .bubble-label{font-size:.78rem}
-      .bubble[data-armed="1"] .bubble-label{font-size:.72rem}
-    }
-    @media (max-width:380px){
-      .name{font-size:clamp(1.5rem, 8vw, 2.2rem)}
+      .name{font-size:clamp(1.4rem, 6.6vw, 2.2rem)}
       .subtitle{font-size:clamp(.9rem, 3.6vw, 1.05rem)}
       .social-link{width:40px; height:40px; font-size:18px}
-      .bubble{width:clamp(92px, 28vw, 132px)}
-      .bubble-label{font-size:.74rem}
-      .bubble[data-armed="1"] .bubble-label{font-size:.68rem}
+      .bubble{width:clamp(88px, 24vw, 120px)}
+      .bubble-label{font-size:.72rem}
+      .bubble[data-armed="1"] .bubble-label{font-size:.66rem}
+    }
+    @media (max-width:380px){
+      .name{font-size:clamp(1.3rem, 7.4vw, 2rem)}
+      .subtitle{font-size:clamp(.86rem, 3.4vw, 1rem)}
+      .social-link{width:36px; height:36px; font-size:16px}
+      .bubble{width:clamp(80px, 26vw, 110px)}
+      .bubble-label{font-size:.68rem}
+      .bubble[data-armed="1"] .bubble-label{font-size:.62rem}
     }
   </style>
 </head>
@@ -292,6 +292,11 @@
 
       // --- Helpers ----------------------------------------------------------
       function clamp(v, lo, hi){ return Math.max(lo, Math.min(hi, v)); }
+      function clearGapForViewport(){
+        if (innerWidth <= 380) return 56;
+        if (innerWidth <= 560) return 48;
+        return 28;
+      }
 
       function getCenterpieceCenter() {
         const cp = document.getElementById('centerpiece');
@@ -372,7 +377,7 @@
           // Calculate radius with reasonable constraints
           // Ensure clearance from centerpiece bounds by at least bubble radius + gap
           const centerHalfDiag = Math.hypot(center.w/2, center.h/2);
-          const minClear = centerHalfDiag + Math.max(halfW, halfH) + 24;
+          const minClear = centerHalfDiag + Math.max(halfW, halfH) + clearGapForViewport();
           const maxRadiusX = Math.min(center.x - minX, maxX - center.x);
           const maxRadiusY = Math.min(center.y - minY, maxY - center.y);
           const maxRadius = Math.min(maxRadiusX, maxRadiusY);
@@ -456,7 +461,7 @@
           
           // Calculate radius with reasonable constraints and keep clear of centerpiece
           const centerHalfDiag = Math.hypot(center.w/2, center.h/2);
-          const minClear = centerHalfDiag + Math.max(halfW, halfH) + 24;
+          const minClear = centerHalfDiag + Math.max(halfW, halfH) + clearGapForViewport();
           const maxRadiusX = Math.min(center.x - minX, maxX - center.x);
           const maxRadiusY = Math.min(center.y - minY, maxY - center.y);
           const maxRadius = Math.min(maxRadiusX, maxRadiusY);
