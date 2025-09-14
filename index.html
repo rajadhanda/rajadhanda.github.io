@@ -466,8 +466,6 @@
           ty = clamp(ty, minY, maxY);
 
           // Then enforce centerpiece clearance even after clamping
-          const centerHalfDiag = Math.hypot(center.w/2, center.h/2);
-          const minClear = centerHalfDiag + Math.max(halfW, halfH) + 24;
           let dx = tx - center.x;
           let dy = ty - center.y;
           let dist = Math.hypot(dx, dy);
