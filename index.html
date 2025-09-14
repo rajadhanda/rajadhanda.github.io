@@ -269,41 +269,29 @@
       function clamp(v, lo, hi){ return Math.max(lo, Math.min(hi, v)); }
 
       function getCenterpieceCenter() {
+        // For now, let's use viewport center directly to test if this fixes the issue
+        const viewportCenterX = innerWidth / 2;
+        const viewportCenterY = innerHeight / 2;
+        
+        console.log('Using viewport center:', { x: viewportCenterX, y: viewportCenterY });
+        console.log('Viewport dimensions:', { width: innerWidth, height: innerHeight });
+        
+        // Let's also check what the centerpiece actually looks like
         const cp = document.getElementById('centerpiece');
-        if (!cp) return { x: innerWidth/2, y: innerHeight/2, w:0, h:0 };
-        
-        const rect = cp.getBoundingClientRect();
-        // Use viewport center as fallback if layout not ready
-        if (rect.width < 20 || rect.height < 20) {
-          return { x: innerWidth/2, y: innerHeight/2, w:0, h:0 };
+        if (cp) {
+          const rect = cp.getBoundingClientRect();
+          console.log('Centerpiece rect:', rect);
+          console.log('Centerpiece center would be:', { 
+            x: rect.left + rect.width/2, 
+            y: rect.top + rect.height/2 
+          });
         }
         
-        const calculatedX = rect.left + rect.width/2;
-        const calculatedY = rect.top + rect.height/2;
-        const viewportCenterX = innerWidth/2;
-        const viewportCenterY = innerHeight/2;
-        
-        // Debug: log the centerpiece position
-        console.log('Centerpiece rect:', rect);
-        console.log('Calculated center:', { x: calculatedX, y: calculatedY });
-        console.log('Viewport center:', { x: viewportCenterX, y: viewportCenterY });
-        
-        // If the calculated center is too far from viewport center, use viewport center
-        // This handles cases where the grid layout hasn't fully centered the element yet
-        const distanceFromViewportCenter = Math.hypot(calculatedX - viewportCenterX, calculatedY - viewportCenterY);
-        const maxDistance = Math.min(innerWidth, innerHeight) * 0.3; // 30% of viewport
-        
-        if (distanceFromViewportCenter > maxDistance) {
-          console.log('Using viewport center as fallback - centerpiece too far from center');
-          return { x: viewportCenterX, y: viewportCenterY, w: rect.width, h: rect.height };
-        }
-        
-        // Return the actual center position in viewport coordinates
         return { 
-          x: calculatedX, 
-          y: calculatedY, 
-          w: rect.width, 
-          h: rect.height 
+          x: viewportCenterX, 
+          y: viewportCenterY, 
+          w: 0, 
+          h: 0 
         };
       }
 
@@ -346,11 +334,14 @@
       function layoutOnce(center){
         // Use a more reasonable base radius calculation
         const baseR = Math.min(
-          Math.max(180, center.w * 0.8 + 100), // Minimum 180px, or based on centerpiece width
+          Math.max(180, 200), // Fixed base radius since center.w is 0
           Math.min(innerWidth, innerHeight) * 0.3 // But not more than 30% of viewport
         );
         
-        state.forEach(s => {
+        console.log('LayoutOnce - center:', center);
+        console.log('LayoutOnce - baseR:', baseR);
+        
+        state.forEach((s, index) => {
           const rect = s.el.getBoundingClientRect();
           const halfW = rect.width/2;
           const halfH = rect.height/2;
@@ -375,6 +366,20 @@
           // Clamp to safe boundaries
           s.pos.x = clamp(targetX, minX, maxX);
           s.pos.y = clamp(targetY, minY, maxY);
+          
+          // Debug first bubble positioning
+          if (index === 0) {
+            console.log(`Bubble ${index}:`, {
+              angle: s.angle,
+              radiusMul: s.radiusMul,
+              R: R,
+              targetX: targetX,
+              targetY: targetY,
+              finalX: s.pos.x,
+              finalY: s.pos.y,
+              transform: `translate3d(${s.pos.x - halfW}px, ${s.pos.y - halfH}px, 0)`
+            });
+          }
           
           s.el.style.transform = `translate3d(${s.pos.x - halfW}px, ${s.pos.y - halfH}px, 0)`;
         });
@@ -559,4 +564,4 @@
     });
   </script>
 </body>
-</html>
+</html>xw
