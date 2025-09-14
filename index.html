@@ -271,10 +271,20 @@
       function getCenterpieceCenter() {
         const cp = document.getElementById('centerpiece');
         if (!cp) return { x: innerWidth/2, y: innerHeight/2, w:0, h:0 };
-        const r = cp.getBoundingClientRect();
-        // If layout not ready or too small (typing just began), fall back to viewport centre
-        if (r.width < 20 || r.height < 20) return { x: innerWidth/2, y: innerHeight/2, w:0, h:0 };
-        return { x: r.left + r.width/2, y: r.top + r.height/2, w: r.width, h: r.height };
+        
+        const rect = cp.getBoundingClientRect();
+        // Use viewport center as fallback if layout not ready
+        if (rect.width < 20 || rect.height < 20) {
+          return { x: innerWidth/2, y: innerHeight/2, w:0, h:0 };
+        }
+        
+        // Return the actual center position in viewport coordinates
+        return { 
+          x: rect.left + rect.width/2, 
+          y: rect.top + rect.height/2, 
+          w: rect.width, 
+          h: rect.height 
+        };
       }
 
       // Gentle parameters
@@ -314,19 +324,38 @@
       let rafId = 0;
 
       function layoutOnce(center){
-        const baseR = Math.max(200, Math.max(center.w, center.h) * 0.8 + 80);
+        // Use a more reasonable base radius calculation
+        const baseR = Math.min(
+          Math.max(180, center.w * 0.8 + 100), // Minimum 180px, or based on centerpiece width
+          Math.min(innerWidth, innerHeight) * 0.3 // But not more than 30% of viewport
+        );
+        
         state.forEach(s => {
           const rect = s.el.getBoundingClientRect();
-          const halfW = rect.width/2, halfH = rect.height/2, pad = 20;
+          const halfW = rect.width/2;
+          const halfH = rect.height/2;
+          const pad = 40; // Increased padding for better edge handling
 
-          // Available distance to edges from the centre, minus bubble half-size + padding
-          const availX = Math.max(60, Math.min(center.x, innerWidth - center.x)) - (halfW + pad);
-          const availY = Math.max(60, Math.min(center.y, innerHeight - center.y)) - (halfH + pad);
-          const maxRadius = Math.max(120, Math.min(availX, availY));
+          // Calculate safe boundaries - ensure bubbles stay fully visible
+          const minX = halfW + pad;
+          const maxX = innerWidth - halfW - pad;
+          const minY = halfH + pad;
+          const maxY = innerHeight - halfH - pad;
 
-          const R = clamp(baseR * s.radiusMul, 120, maxRadius);
-          s.pos.x = center.x + Math.cos(s.angle) * R;
-          s.pos.y = center.y + Math.sin(s.angle) * R;
+          // Calculate radius with reasonable constraints
+          const maxRadiusX = Math.min(center.x - minX, maxX - center.x);
+          const maxRadiusY = Math.min(center.y - minY, maxY - center.y);
+          const maxRadius = Math.min(maxRadiusX, maxRadiusY);
+          
+          const R = Math.min(baseR * s.radiusMul, Math.max(120, maxRadius));
+          
+          let targetX = center.x + Math.cos(s.angle) * R;
+          let targetY = center.y + Math.sin(s.angle) * R;
+          
+          // Clamp to safe boundaries
+          s.pos.x = clamp(targetX, minX, maxX);
+          s.pos.y = clamp(targetY, minY, maxY);
+          
           s.el.style.transform = `translate3d(${s.pos.x - halfW}px, ${s.pos.y - halfH}px, 0)`;
         });
         initialized = true;
@@ -342,22 +371,36 @@
         filtPointer.y += (rawPointer.y - filtPointer.y) * ALPHA;
 
         const center = getCenterpieceCenter();
-        const baseR = Math.max(200, Math.max(center.w, center.h) * 0.8 + 80);
+        
+        // Use a more reasonable base radius calculation
+        const baseR = Math.min(
+          Math.max(180, center.w * 0.8 + 100),
+          Math.min(innerWidth, innerHeight) * 0.3
+        );
 
         state.forEach(s => {
           const rect = s.el.getBoundingClientRect();
-          const halfW = rect.width/2, halfH = rect.height/2, pad = 20;
+          const halfW = rect.width/2;
+          const halfH = rect.height/2;
+          const pad = 40;
 
-          // stable, symmetric available radius
-          const availX = Math.max(60, Math.min(center.x, innerWidth - center.x)) - (halfW + pad);
-          const availY = Math.max(60, Math.min(center.y, innerHeight - center.y)) - (halfH + pad);
-          const maxRadius = Math.max(120, Math.min(availX, availY));
+          // Calculate safe boundaries
+          const minX = halfW + pad;
+          const maxX = innerWidth - halfW - pad;
+          const minY = halfH + pad;
+          const maxY = innerHeight - halfH - pad;
 
           const spinNow = s.hovering ? SPIN * 0.3 : SPIN;
           s.angle += spinNow * dt;
 
           const drift = Math.sin(t * 0.001 * (DRIFT_FREQ * 2 * Math.PI) + s.driftPhase) * DRIFT_AMP;
-          const R = clamp(baseR * s.radiusMul + drift, 120, maxRadius);
+          
+          // Calculate radius with reasonable constraints
+          const maxRadiusX = Math.min(center.x - minX, maxX - center.x);
+          const maxRadiusY = Math.min(center.y - minY, maxY - center.y);
+          const maxRadius = Math.min(maxRadiusX, maxRadiusY);
+          
+          const R = Math.min(baseR * s.radiusMul + drift, Math.max(120, maxRadius));
 
           let tx = center.x + Math.cos(s.angle) * R;
           let ty = center.y + Math.sin(s.angle) * R;
@@ -366,9 +409,6 @@
             tx += (filtPointer.x - tx) * MAG_PULL;
             ty += (filtPointer.y - ty) * MAG_PULL;
           }
-
-          const minX = halfW + pad, maxX = innerWidth - halfW - pad;
-          const minY = halfH + pad, maxY = innerHeight - halfH - pad;
 
           s.target.x = clamp(tx, minX, maxX);
           s.target.y = clamp(ty, minY, maxY);
@@ -396,33 +436,44 @@
       // --- Start logic: wait for fonts + layout, then place/animate ---------------
       let started = false;
       function start(){
-        if (started) return; started = true;
-        const center = getCenterpieceCenter();
-        layoutOnce(center);
+        if (started) return; 
+        started = true;
+        
+        // Wait a bit longer to ensure centerpiece is properly positioned
+        setTimeout(() => {
+          const center = getCenterpieceCenter();
+          layoutOnce(center);
 
-        if (!reducedMotion){
-          last = performance.now();
-          rafId = requestAnimationFrame(tick);
-        }
+          if (!reducedMotion){
+            last = performance.now();
+            rafId = requestAnimationFrame(tick);
+          }
+        }, 100);
       }
 
-      // Prefer accurate fonts/layout readiness
+      // Multiple fallbacks to ensure proper initialization
       if ('fonts' in document && document.fonts.ready){
-        document.fonts.ready.then(start);
+        document.fonts.ready.then(() => setTimeout(start, 200));
       }
-      // Also ensure we start on full load (images/icons)
-      window.addEventListener('load', start, { once:true });
-
-      // In case neither fires quickly (old browsers), fall back after a tick
-      setTimeout(start, 300);
+      
+      window.addEventListener('load', () => setTimeout(start, 200), { once:true });
+      
+      // Longer fallback timeout
+      setTimeout(start, 800);
 
       // Recenter on layout changes of the centerpiece (typing animation, font swaps)
       if ('ResizeObserver' in window){
-        new ResizeObserver(() => {
-          cancelAnimationFrame(rafId);
-          started = false; initialized = false;
-          start();
-        }).observe(document.getElementById('centerpiece'));
+        const observer = new ResizeObserver(() => {
+          if (initialized) {
+            cancelAnimationFrame(rafId);
+            started = false; 
+            initialized = false;
+            // Shorter delay for resize events since layout is already established
+            setTimeout(start, 50);
+          }
+        });
+        observer.observe(document.getElementById('centerpiece'));
+        observer.observe(document.body);
       }
 
       // Recenter on viewport changes
@@ -431,9 +482,10 @@
         clearTimeout(resizeTimer);
         resizeTimer = setTimeout(() => {
           cancelAnimationFrame(rafId);
-          started = false; initialized = false;
+          started = false; 
+          initialized = false;
           start();
-        }, 120);
+        }, 150);
       }
       window.addEventListener('resize', handleResize);
       window.addEventListener('orientationchange', handleResize);
