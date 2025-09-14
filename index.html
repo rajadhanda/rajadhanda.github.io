@@ -152,6 +152,9 @@
       pointer-events:none; text-align:center; max-width:88%; line-height:1.25; white-space:normal; word-break:break-word
     }
     .bubble:hover .bubble-label,.bubble:focus-within .bubble-label{opacity:1; transform:translate(-50%,0)}
+    /* Armed state on touch: subtle emphasis */
+    .bubble[data-armed="1"]{ border-color:#cfcfcf; box-shadow:0 10px 24px rgba(0,0,0,.08) }
+    .bubble[data-armed="1"] .bubble-label{ font-size:.82rem }
 
     /* Viewport-pinned physics layer */
     .bubble-nav.freeflow{
@@ -191,13 +194,20 @@
 
     /* Mobile typography and bubble size tuning */
     @media (max-width:560px){
-      .name{font-size:clamp(1.9rem, 8.4vw, 3rem)}
-      .subtitle{font-size:clamp(1rem, 4.2vw, 1.2rem)}
-      .bubble{width:clamp(110px, 28vw, 160px)}
+      .name{font-size:clamp(1.6rem, 7.2vw, 2.6rem)}
+      .subtitle{font-size:clamp(.95rem, 3.8vw, 1.1rem)}
+      .social-link{width:44px; height:44px; font-size:20px}
+      .bubble{width:clamp(100px, 26vw, 150px)}
+      .bubble-label{font-size:.78rem}
+      .bubble[data-armed="1"] .bubble-label{font-size:.72rem}
     }
     @media (max-width:380px){
-      .name{font-size:clamp(1.8rem, 8.8vw, 2.6rem)}
-      .bubble{width:clamp(100px, 30vw, 140px)}
+      .name{font-size:clamp(1.5rem, 8vw, 2.2rem)}
+      .subtitle{font-size:clamp(.9rem, 3.6vw, 1.05rem)}
+      .social-link{width:40px; height:40px; font-size:18px}
+      .bubble{width:clamp(92px, 28vw, 132px)}
+      .bubble-label{font-size:.74rem}
+      .bubble[data-armed="1"] .bubble-label{font-size:.68rem}
     }
   </style>
 </head>
@@ -215,9 +225,9 @@
     <nav aria-label="Primary">
       <ul>
         <li><a href="#" id="aboutLink">About</a></li>
-        <li><a href="/blog">Blog</a></li>
-        <li><a href="/projects">Projects</a></li>
-        <li><a href="/photographs">Photographs</a></li>
+        <li><a href="/blog/">Blog</a></li>
+        <li><a href="/projects/">Projects</a></li>
+        <li><a href="/photographs/">Photographs</a></li>
       </ul>
     </nav>
 
@@ -247,19 +257,19 @@
 
   <!-- Bubble navigation (freeflow enables physics) -->
   <nav id="bubbleNav" class="bubble-nav freeflow" aria-label="Primary">
-    <a class="bubble" href="/photographs" data-key="photos" aria-label="Photographs">
+    <a class="bubble" href="/photographs/" data-key="photos" aria-label="Photographs">
       <span class="bubble-title">Photographs</span>
       <em class="bubble-label">frames I liked</em>
     </a>
-    <a class="bubble" href="/blog" data-key="blog" aria-label="Blog">
+    <a class="bubble" href="/blog/" data-key="blog" aria-label="Blog">
       <span class="bubble-title">Blog</span>
       <em class="bubble-label">notes and thought experiments</em>
     </a>
-    <a class="bubble" href="/projects" data-key="projects" aria-label="Projects">
+    <a class="bubble" href="/projects/" data-key="projects" aria-label="Projects">
       <span class="bubble-title">Projects</span>
       <em class="bubble-label">things I've tried</em>
     </a>
-    <a class="bubble" href="/about" data-key="about" aria-label="About">
+    <a class="bubble" href="/about/" data-key="about" aria-label="About">
       <span class="bubble-title">About</span>
       <em class="bubble-label">who I am in 2 mins</em>
     </a>
@@ -519,6 +529,7 @@
       // Mobile: first tap acts like hover, second tap navigates
       const elToState = new Map(state.map(s => [s.el, s]));
       const isTouch = 'ontouchstart' in window || (navigator.maxTouchPoints||0) > 0;
+      function tryVibrate(ms){ try{ if (navigator && typeof navigator.vibrate === 'function') navigator.vibrate(ms); } catch(_){} }
       if (isTouch){
         bubbles.forEach(el => {
           el.addEventListener('click', (e) => {
@@ -529,6 +540,7 @@
               // arm and simulate hover
               el.dataset.armed = '1';
               s.hoverT = 1; s.hover = 1;
+              tryVibrate(25);
               // auto-disarm after a short window if no second tap
               setTimeout(() => { if (el.dataset.armed === '1') { el.dataset.armed = ''; s.hoverT = 0; } }, 1400);
               e.preventDefault(); e.stopPropagation();
