@@ -89,6 +89,10 @@
 
     /* Socials */
     .social-links{margin-top:28px; display:flex; gap:32px; justify-content:center; align-items:center}
+    .social-link{opacity:0; transform:translateY(6px) scale(.94)}
+    .social-links.icons-in .social-link{animation:icon-pop .46s var(--ease-back) forwards}
+    .social-links.icons-in .social-link:nth-child(2){animation-delay:.08s}
+    @keyframes icon-pop{0%{opacity:0; transform:translateY(6px) scale(.94)}60%{opacity:1; transform:translateY(0) scale(1.045)}100%{opacity:1; transform:translateY(0) scale(1)}}
     .social-link{
       display:inline-flex; align-items:center; justify-content:center; text-decoration:none; color:var(--fg);
       font-size:24px; width:56px; height:56px; border:1px solid var(--border); border-radius:50%; background:var(--bg);
@@ -157,6 +161,8 @@
       z-index: 3;            /* above main so bubbles remain hoverable near text */
       display: block;
       margin: 0;
+      opacity: 0;            /* fade in when ready */
+      transition: opacity .5s var(--ease);
     }
     .bubble-nav.freeflow .bubble{
       position: absolute;
@@ -164,11 +170,13 @@
       top: 0;
       pointer-events: auto;
     }
+    .bubble-nav.freeflow.ready{opacity:1}
 
     /* Reduced motion: keep centred positions without animation */
     @media (prefers-reduced-motion: reduce){
       .bubble-nav.freeflow{position:fixed; inset:0; width:100vw; height:100dvh; display:block; pointer-events:none}
       .bubble-nav.freeflow .bubble{position:absolute}
+      .social-link{opacity:1 !important; transform:none !important; animation:none !important}
     }
 
     /* Responsive tweaks */
@@ -291,9 +299,9 @@
       const SPIN        = 0.006; // gentler orbital spin
       const MAG_PULL    = 0.015; // subtle magnetic pull on hover
       const SPRING      = 0.035; // smoother pursuit
-      const SPRING_INIT = 0.08;  // initial settle
+      const SPRING_INIT = 0.12;  // faster initial float-in
       const DAMP        = 0.92;  // higher damping reduces bounce
-      const MAX_VEL     = 3;     // cap speed for smoothness
+      const MAX_VEL     = 5;     // allow brisk but smooth entry
 
       const state = bubbles.map((el, i) => ({
         el,
@@ -323,7 +331,7 @@
       let initialized = false;
       let rafId = 0;
 
-      function layoutOnce(center){
+      function layoutOnce(center, initialPlacement = false){
         // Use a more reasonable base radius calculation
         const baseR = Math.min(
           Math.max(180, 220),
@@ -345,27 +353,36 @@
           const maxY = innerHeight - halfH - pad;
 
           // Calculate radius with reasonable constraints
+          // Ensure clearance from centerpiece bounds by at least bubble radius + gap
+          const centerHalfDiag = Math.hypot(center.w/2, center.h/2);
+          const minClear = centerHalfDiag + Math.max(halfW, halfH) + 24;
           const maxRadiusX = Math.min(center.x - minX, maxX - center.x);
           const maxRadiusY = Math.min(center.y - minY, maxY - center.y);
           const maxRadius = Math.min(maxRadiusX, maxRadiusY);
-          
-          const R = Math.min(baseR * s.radiusMul, Math.max(120, maxRadius));
-          
+          const R = clamp(baseR * s.radiusMul, Math.max(120, minClear), maxRadius);
+
           let targetX = center.x + Math.cos(s.angle) * R;
           let targetY = center.y + Math.sin(s.angle) * R;
-          
-          // Clamp to safe boundaries
-          s.pos.x = clamp(targetX, minX, maxX);
-          s.pos.y = clamp(targetY, minY, maxY);
+
+          if (initialPlacement) {
+            // Start slightly outside target ring along the radial line, then spring inward
+            const offR = R + 220;
+            s.pos.x = center.x + Math.cos(s.angle) * offR;
+            s.pos.y = center.y + Math.sin(s.angle) * offR;
+          } else {
+            // Clamp to safe boundaries
+            s.pos.x = clamp(targetX, minX, maxX);
+            s.pos.y = clamp(targetY, minY, maxY);
+          }
           
           //
           
           s.vel.x = 0; s.vel.y = 0;     // reset velocities to avoid bounce on re-layout
-          s.target.x = s.pos.x;         // align target with position initially
-          s.target.y = s.pos.y;
+          s.target.x = clamp(targetX, minX, maxX);
+          s.target.y = clamp(targetY, minY, maxY);
           s.el.style.transform = `translate3d(${s.pos.x - halfW}px, ${s.pos.y - halfH}px, 0)`;
         });
-        initialized = true;
+        // leave `initialized` false so first tick uses SPRING_INIT
       }
 
       function tick(t){
@@ -403,12 +420,13 @@
 
           const drift = Math.sin(t * 0.001 * (DRIFT_FREQ * 2 * Math.PI) + s.driftPhase) * DRIFT_AMP;
           
-          // Calculate radius with reasonable constraints
+          // Calculate radius with reasonable constraints and keep clear of centerpiece
+          const centerHalfDiag = Math.hypot(center.w/2, center.h/2);
+          const minClear = centerHalfDiag + Math.max(halfW, halfH) + 24;
           const maxRadiusX = Math.min(center.x - minX, maxX - center.x);
           const maxRadiusY = Math.min(center.y - minY, maxY - center.y);
           const maxRadius = Math.min(maxRadiusX, maxRadiusY);
-          
-          const R = Math.min(baseR * s.radiusMul + drift, Math.max(120, maxRadius));
+          const R = clamp(baseR * s.radiusMul + drift, Math.max(120, minClear), maxRadius);
 
           let tx = center.x + Math.cos(s.angle) * R;
           let ty = center.y + Math.sin(s.angle) * R;
@@ -442,33 +460,21 @@
         rafId = requestAnimationFrame(tick);
       }
 
-      // --- Start logic: wait for fonts + layout, then place/animate ---------------
+      // --- Start logic: orchestrated to begin after icons pop in ---------------
       let started = false;
-      function start(){
-        if (started) return; 
+      function start(initialPlacement = false){
+        if (started) return;
         started = true;
-        
-        // Wait longer to ensure centerpiece is properly positioned and grid layout is complete
-        setTimeout(() => {
-          const center = getCenterpieceCenter();
-          layoutOnce(center);
-
-          if (!reducedMotion){
-            last = performance.now();
-            rafId = requestAnimationFrame(tick);
-          }
-        }, 300);
+        const center = getCenterpieceCenter();
+        layoutOnce(center, initialPlacement);
+        nav.classList.add('ready');
+        if (!reducedMotion){
+          last = performance.now();
+          rafId = requestAnimationFrame(tick);
+        }
       }
-
-      // Multiple fallbacks to ensure proper initialization
-      if ('fonts' in document && document.fonts.ready){
-        document.fonts.ready.then(() => setTimeout(start, 200));
-      }
-      
-      window.addEventListener('load', () => setTimeout(start, 200), { once:true });
-      
-      // Longer fallback timeout
-      setTimeout(start, 800);
+      // Allow external trigger after icons reveal
+      window.addEventListener('bubbles:start', () => start(true), { once:true });
 
       // Removed ResizeObserver on centerpiece/body to avoid re-initialization
       // while typing (which caused a visible re-spread/bounce). Viewport
@@ -482,7 +488,7 @@
           cancelAnimationFrame(rafId);
           started = false; 
           initialized = false;
-          start();
+          start(false);
         }, 150);
       }
       window.addEventListener('resize', handleResize);
@@ -511,6 +517,7 @@
     // Typing (~5s total, natural jitter)
     const nameEl = document.getElementById('name');
     const subtitleEl = document.getElementById('subtitle');
+    const socialLinksEl = document.querySelector('.social-links');
     const fullText = nameEl.dataset.text;
     const totalMs = 5000;
     const stepMs = Math.max(30, Math.floor(totalMs / Math.max(1, fullText.length)));
@@ -521,7 +528,15 @@
         idx++; setTimeout(typeNext, stepMs + Math.random()*40);
       } else {
         nameEl.innerHTML = fullText + '<span class="typing-cursor"></span>';
-        setTimeout(()=> subtitleEl.classList.add('show'), 400);
+        setTimeout(()=> {
+          subtitleEl.classList.add('show');
+          // Pop in icons just after subtitle reveal
+          setTimeout(()=>{
+            socialLinksEl?.classList.add('icons-in');
+            // After icons pop, start bubbles with initial offscreen placement
+            setTimeout(()=>{ window.dispatchEvent(new Event('bubbles:start')); }, 620);
+          }, 180);
+        }, 400);
       }
     }
     window.addEventListener('load', ()=>{ nameEl.textContent=''; setTimeout(typeNext, 500); });
