@@ -279,11 +279,13 @@
 
       <p>Here's the workflow they used:</p>
 
-      <p><strong>Quantum transformation</strong>: This experiment used a quantum algorithm to transform/analyze the noisy market data in a way that highlights hidden predictive signals that classical algorithms might miss. The output of IBM's Heron quantum processor—essentially new features extracted from the data—was then fed into standard machine-learning models (probably something like logistic regression or SVMs).<sup>2</sup><sup>3</sup></p>
+      <ol>
+        <li><strong>Quantum transformation</strong>: This experiment used a quantum algorithm to transform/analyze the noisy market data in a way that highlights hidden predictive signals that classical algorithms might miss. The output of IBM's Heron quantum processor—essentially new features extracted from the data—was then fed into standard machine-learning models (probably something like logistic regression or SVMs).<sup>2</sup><sup>,</sup><sup>3</sup></li>
 
-      <p><strong>Classical prediction</strong>: Those quantum-derived features got fed into regular ML models, which outputted the "fill probability" of a given bond quote.</p>
+        <li><strong>Classical prediction</strong>: Those quantum-derived features got fed into regular ML models, which outputted the "fill probability" of a given bond quote.</li>
 
-      <p><strong>Backtesting</strong>: Testing these probabilities on historical European corporate bond trades showed that the models augmented with these quantum-derived features scored 34% better than those using purely classical approaches.<sup>1</sup><sup>2</sup></p>
+        <li><strong>Backtesting</strong>: Testing these probabilities on historical European corporate bond trades showed that the models augmented with these quantum-derived features scored 34% better than those using purely classical approaches.<sup>1</sup><sup>,</sup><sup>2</sup></li>
+      </ol>
 
       <p>But here's where it gets interesting—and weird.</p>
 
@@ -301,11 +303,11 @@
 
       <p>IBM's Heron processor—like all current quantum computers—is inherently noisy. This noise comes from three main sources:</p>
 
-      <ul>
+      <ol>
         <li><strong>Environmental decoherence</strong>: Qubits are stupidly sensitive to any environmental interference (electromagnetic radiation, tiny temperature changes), causing quantum states to decay</li>
         <li><strong>Gate errors</strong>: The control pulses aren't perfect, so quantum operations don't execute exactly as intended</li>
         <li><strong>Measurement errors</strong>: Reading qubit states introduces additional uncertainty</li>
-      </ul>
+      </ol>
 
       <p>This noise means quantum calculations accumulate errors, which kind of introduces the need for classical computers to clean everything up before it's outputted as probabilities. Today's quantum computers can't handle end-to-end complex workflows—hence the hybrid approach.</p>
 
@@ -325,7 +327,7 @@
 
       <p>The truth is, quantum computing is still very early stage. This was a successful experiment, but it was much more a research proof-of-concept than something HSBC can just deploy for use today.</p>
 
-      <p><strong>The noise paradox</strong>: The most striking thing? The HSBC-IBM paper itself acknowledges that the quantum advantage <strong>disappeared when the quantum algorithm was run without hardware noise on a simulator</strong>.<sup>3</sup><sup>5</sup> Computer scientist Scott Aaronson jumped on this, noting: "They see a quantum advantage… but only because of the noise in their quantum hardware. When they simulate the noiseless quantum computation, the advantage disappears."<sup>5</sup></p>
+      <p><strong>The noise paradox</strong>: The most striking thing? The HSBC-IBM paper itself acknowledges that the quantum advantage <strong>disappeared when the quantum algorithm was run without hardware noise on a simulator</strong>.<sup>3</sup><sup>,</sup><sup>5</sup> Computer scientist Scott Aaronson jumped on this, noting: "They see a quantum advantage… but only because of the noise in their quantum hardware. When they simulate the noiseless quantum computation, the advantage disappears."<sup>5</sup></p>
 
       <p>Simply put, a quirk of the current technology rather than a fundamental leap in computing power may have helped the results. Aaronson argues this is "an admission that the 'advantage' is just a strange artifact…nothing to do with quantum mechanics or quantum speedup." He warns that we shouldn't declare true quantum supremacy for finance based on such results, as the gain might not generalize or persist once quantum hardware improves (and the "noise" disappears). Which would be ironic.</p>
 
