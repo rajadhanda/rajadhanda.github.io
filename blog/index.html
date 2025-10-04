@@ -55,19 +55,28 @@
     .nav-back i{font-size:18px; transition:transform .2s var(--ease)}
     .nav-back:hover i{transform:translateX(-2px)}
 
-    /* Hero Section */
+    /* Hero Section - Bubble Style */
     .hero{
       text-align:center; padding:120px 20px 80px; position:relative; z-index:2;
     }
-    .hero h1{
-      font-size:clamp(2.8rem,6vw,4.2rem); line-height:1.08; margin:0 0 16px 0;
-      letter-spacing:-.02em; font-weight:400; opacity:0; transform:translateY(20px);
+    .hero-bubble{
+      display:inline-block; background:var(--blog-card-bg); border:2px solid var(--blog-border);
+      border-radius:50%; padding:60px 80px; backdrop-filter:blur(20px);
+      box-shadow:var(--shadow-soft); transition:all .4s var(--ease);
+      opacity:0; transform:translateY(30px);
       animation:slideInUp 0.8s var(--ease) 0.2s forwards;
     }
+    .hero-bubble:hover{
+      transform:translateY(-8px); box-shadow:var(--shadow-medium);
+      border-color:var(--border-hover);
+    }
+    .hero h1{
+      font-size:clamp(2.2rem,5vw,3.2rem); line-height:1.08; margin:0 0 16px 0;
+      letter-spacing:-.02em; font-weight:400; color:var(--blog-text);
+    }
     .hero .subtitle{
-      font-size:clamp(1.2rem,2.4vw,1.6rem); color:var(--muted); font-weight:400; font-style:italic;
-      margin:0; opacity:0; transform:translateY(20px);
-      animation:slideInUp 0.8s var(--ease) 0.4s forwards;
+      font-size:clamp(1.1rem,2.2vw,1.4rem); color:var(--muted); font-weight:400; font-style:italic;
+      margin:0; letter-spacing:.01em;
     }
 
     /* Blog Grid */
@@ -177,8 +186,12 @@
       .blog-card{padding:24px}
       .nav-back{top:20px; left:20px; width:46px; height:46px}
       .hero{padding:100px 20px 60px}
+      .hero-bubble{padding:40px 50px}
       .article-title-section{flex-direction:column; align-items:flex-start; gap:12px}
       .company-logos{order:2}
+    }
+    @media (max-width:560px){
+      .hero-bubble{padding:30px 40px}
     }
 
     /* Coming Soon State */
@@ -210,8 +223,10 @@
 
   <!-- Hero Section -->
   <section class="hero">
-    <h1>Thoughts & Experiments</h1>
-    <p class="subtitle">notes and thought experiments</p>
+    <div class="hero-bubble">
+      <h1>Blog</h1>
+      <p class="subtitle">notes and thought experiments</p>
+    </div>
   </section>
 
   <!-- Blog Content -->
