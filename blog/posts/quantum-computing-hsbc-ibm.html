@@ -60,16 +60,28 @@
     .nav-back i{font-size:18px; transition:transform .2s var(--ease)}
     .nav-back:hover i{transform:translateX(-2px)}
 
-    /* Reading Progress */
+    /* Reading Progress - Elegant Side Indicator */
     .reading-progress{
-      position:fixed; top:0; left:0; height:6px; background:linear-gradient(90deg, var(--accent), var(--pastel-lavender-dark));
-      z-index:1002; transition:width .1s ease; border-radius:0 3px 3px 0;
-      box-shadow:0 2px 8px rgba(0,0,0,0.1);
+      position:fixed; top:50%; left:20px; width:4px; height:200px;
+      background:var(--border); border-radius:2px; z-index:1002;
+      transform:translateY(-50%); transition:all .3s var(--ease);
+    }
+    .reading-progress::before{
+      content:''; position:absolute; top:0; left:0; width:100%;
+      background:linear-gradient(180deg, var(--accent), var(--pastel-lavender-dark));
+      border-radius:2px; transition:height .1s ease;
+      height: var(--progress-height, 0%);
+    }
+    .reading-progress::after{
+      content:''; position:absolute; top:0; left:-4px; width:12px; height:12px;
+      background:var(--accent); border-radius:50%; transform:translateY(-6px);
+      transition:top .1s ease; box-shadow:0 2px 8px rgba(0,0,0,0.2);
+      top: var(--dot-position, 0px);
     }
 
     /* Article Container */
     .article-container{
-      max-width:900px; margin:0 auto; padding:120px 20px 80px;
+      max-width:1000px; margin:0 auto; padding:120px 20px 80px;
     }
 
     /* Article Header */
@@ -223,6 +235,7 @@
       .nav-back{top:20px; left:20px; width:46px; height:46px}
       .toc{display:none}
       .share-buttons{bottom:20px; right:20px}
+      .reading-progress{left:10px; height:150px}
     }
   </style>
 </head>
@@ -385,7 +398,7 @@
   </div>
 
   <script>
-    // Reading progress
+    // Reading progress - elegant side indicator
     function updateReadingProgress() {
       const article = document.querySelector('.article-content');
       const progress = document.getElementById('readingProgress');
@@ -398,7 +411,16 @@
         ((scrollTop - articleTop + windowHeight) / articleHeight) * 100
       ));
       
-      progress.style.width = progressPercent + '%';
+      // Update the progress bar height and position
+      const progressBar = progress.querySelector('::before');
+      const progressDot = progress.querySelector('::after');
+      
+      // Update the filled portion
+      progress.style.setProperty('--progress-height', progressPercent + '%');
+      
+      // Update the dot position
+      const dotPosition = (progressPercent / 100) * 200; // 200px is the height
+      progress.style.setProperty('--dot-position', dotPosition + 'px');
     }
 
     // TOC and Share buttons visibility
