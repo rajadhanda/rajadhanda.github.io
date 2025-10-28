@@ -44,7 +44,7 @@
     
     /* Photo Gallery Grid - 2 Column Layout */
     .photo-gallery{
-      display:grid; grid-template-columns:repeat(2, 1fr); gap:24px 32px;
+      display:grid; grid-template-columns:repeat(2, 1fr); gap:12px 16px;
       margin-bottom:80px;
     }
     
@@ -71,7 +71,7 @@
     }
     
     .photo-item:hover::before{
-      background:rgba(0,0,0,0.6);
+      background:rgba(0,0,0,0.3);
     }
     
     .photo-caption{
@@ -88,7 +88,7 @@
     /* Mobile Experience - Single Column, No Overlays */
     @media (max-width:768px){
       .photo-gallery{
-        grid-template-columns:1fr; gap:16px; margin-bottom:60px;
+        grid-template-columns:1fr; gap:8px; margin-bottom:60px;
       }
       
       main{padding:32px 16px 20px}
@@ -104,7 +104,7 @@
     @media (max-width:480px){
       h1{font-size:1.6rem}
       .subtitle{font-size:1rem; margin-bottom:40px}
-      .photo-gallery{gap:12px}
+      .photo-gallery{gap:6px}
     }
     
     /* Reduced Motion Support */
@@ -206,14 +206,16 @@
     };
 
     const observer = new IntersectionObserver((entries) => {
-      entries.forEach((entry, index) => {
+      entries.forEach((entry) => {
         if (entry.isIntersecting) {
           // Staggered animation based on column position
           const delay = entry.target.dataset.column === 'left' ? 0 : 100;
           setTimeout(() => {
             entry.target.classList.add('visible');
           }, delay);
-          observer.unobserve(entry.target);
+        } else {
+          // Remove visible class when out of view to allow re-animation
+          entry.target.classList.remove('visible');
         }
       });
     }, observerOptions);
