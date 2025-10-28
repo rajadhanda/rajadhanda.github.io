@@ -79,9 +79,14 @@
       margin:0; letter-spacing:.01em;
     }
 
+    /* Main Container */
+    main{
+      max-width:1200px; width:100%; margin:0 auto; padding:48px 20px 20px;
+    }
+    
     /* Blog Grid */
     .blog-container{
-      max-width:1600px; margin:0 auto; padding:0 20px 80px;
+      margin-bottom:80px;
     }
     .blog-grid{
       display:grid; grid-template-columns:repeat(auto-fit, minmax(350px, 1fr));
@@ -131,7 +136,7 @@
       display:flex; gap:12px; align-items:center;
     }
     .logo{
-      transition:all .3s var(--ease); border-radius:6px; overflow:hidden;
+      transition:all .3s var(--ease);
     }
     .logo img{
       transition:all .3s var(--ease);
@@ -213,7 +218,7 @@
 <body>
   <!-- Navigation -->
   <a href="/" class="nav-back" aria-label="Back to home">
-    <i class="fa-solid fa-arrow-left" aria-hidden="true"></i>
+    <i class="fa-solid fa-house" aria-hidden="true"></i>
   </a>
 
   <!-- Floating Elements -->
