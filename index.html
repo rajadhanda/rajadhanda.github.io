@@ -97,8 +97,8 @@
       opacity:1; transform:translateY(0) scale(1);
     }
     .profile-photo{
-      width:120px; height:120px;
-      border-radius:16px; object-fit:contain; object-position:center;
+      width:180px; height:207px;
+      border-radius:20px; object-fit:contain; object-position:center;
       border:2px solid var(--border);
       background: var(--bg);
       max-width: 100%; max-height: 100%;
@@ -298,7 +298,7 @@
 
     /* Mobile typography and bubble size tuning */
     @media (max-width:560px){
-      .profile-photo{width:100px; height:100px; border-radius:12px; object-fit:contain; max-width: 100%; max-height: 100%;}
+      .profile-photo{width:140px; height:161px; border-radius:16px; object-fit:contain; max-width: 100%; max-height: 100%;}
       .name{font-size:clamp(1.4rem, 6.6vw, 2.2rem)}
       .subtitle{font-size:clamp(.9rem, 3.6vw, 1.05rem)}
       .social-link{width:40px; height:40px; font-size:18px}
@@ -307,7 +307,7 @@
       .bubble[data-armed="1"] .bubble-label{font-size:.66rem}
     }
     @media (max-width:380px){
-      .profile-photo{width:90px; height:90px; border-radius:10px; object-fit:contain; max-width: 100%; max-height: 100%;}
+      .profile-photo{width:120px; height:138px; border-radius:14px; object-fit:contain; max-width: 100%; max-height: 100%;}
       .name{font-size:clamp(1.3rem, 7.4vw, 2rem)}
       .subtitle{font-size:clamp(.86rem, 3.4vw, 1rem)}
       .social-link{width:36px; height:36px; font-size:16px}
