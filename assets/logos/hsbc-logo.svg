@@ -1,9 +1,0 @@
-<svg width="120" height="60" viewBox="0 0 120 60" fill="none" xmlns="http://www.w3.org/2000/svg">
-  <!-- HSBC Logo - Simplified but recognizable -->
-  <rect width="120" height="60" fill="#DB0011"/>
-  <rect x="0" y="0" width="30" height="60" fill="#FFFFFF"/>
-  <rect x="90" y="0" width="30" height="60" fill="#FFFFFF"/>
-  <polygon points="30,0 60,30 30,60" fill="#DB0011"/>
-  <polygon points="90,0 60,30 90,60" fill="#DB0011"/>
-  <text x="60" y="35" text-anchor="middle" fill="#FFFFFF" font-family="Arial, sans-serif" font-size="12" font-weight="bold">HSBC</text>
-</svg>
