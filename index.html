@@ -90,6 +90,11 @@
     /* Profile Photo */
     .profile-photo-container{
       margin:0 0 24px 0; display:flex; justify-content:center; align-items:center;
+      opacity:0; transform:translateY(20px) scale(0.9);
+      transition:opacity 1.2s var(--ease), transform 1.2s var(--ease);
+    }
+    .profile-photo-container.show{
+      opacity:1; transform:translateY(0) scale(1);
     }
     .profile-photo{
       width:120px; height:120px;
@@ -722,13 +727,17 @@
       } else {
         nameEl.innerHTML = fullText + '<span class="typing-cursor"></span>';
         setTimeout(()=> {
-          subtitleEl.classList.add('show');
-          // Pop in icons after a larger gap
-          setTimeout(()=>{
-            socialLinksEl?.classList.add('icons-in');
-            // After icons pop, start bubbles with initial offscreen placement
-            setTimeout(()=>{ window.dispatchEvent(new Event('bubbles:start')); }, 450);
-          }, 600);
+          // Show profile photo first
+          profilePhotoContainer?.classList.add('show');
+          setTimeout(()=> {
+            subtitleEl.classList.add('show');
+            // Pop in icons after a larger gap
+            setTimeout(()=>{
+              socialLinksEl?.classList.add('icons-in');
+              // After icons pop, start bubbles with initial offscreen placement
+              setTimeout(()=>{ window.dispatchEvent(new Event('bubbles:start')); }, 450);
+            }, 600);
+          }, 300);
         }, 400);
       }
     }
@@ -737,6 +746,9 @@
     window.addEventListener('load', ()=>{ if (!nameEl.textContent) { nameEl.textContent=''; setTimeout(typeNext, 300); } });
 
     // Absolute fallbacks so page never feels blank if something blocks animations
+    setTimeout(()=>{
+      if (!profilePhotoContainer?.classList.contains('show')) profilePhotoContainer?.classList.add('show');
+    }, 1200);
     setTimeout(()=>{
       if (!subtitleEl.classList.contains('show')) subtitleEl.classList.add('show');
     }, 1800);
