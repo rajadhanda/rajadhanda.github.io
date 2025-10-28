@@ -87,6 +87,26 @@
     /* Main */
     main{width:100%; max-width:var(--maxw); text-align:center; padding:40px 20px; align-self:center; justify-self:center; position:relative; z-index:2}
     #centerpiece{display:inline-block}
+    /* Profile Photo */
+    .profile-photo-container{
+      margin:0 0 32px 0; display:flex; justify-content:center; align-items:center;
+      opacity:0; transform:translateY(20px) scale(0.9);
+      transition:opacity 1.2s var(--ease), transform 1.2s var(--ease);
+    }
+    .profile-photo-container.show{
+      opacity:1; transform:translateY(0) scale(1);
+    }
+    .profile-photo{
+      width:clamp(120px,20vw,160px); height:clamp(120px,20vw,160px);
+      border-radius:50%; object-fit:cover; object-position:center;
+      border:3px solid var(--border); box-shadow:var(--shadow-soft);
+      transition:all .3s var(--ease); cursor:pointer;
+    }
+    .profile-photo:hover{
+      transform:scale(1.05); border-color:var(--border-hover);
+      box-shadow:var(--shadow-medium);
+    }
+
     .name{
       font-size:clamp(2.8rem,6vw,5.2rem); line-height:1.08; margin:0 0 16px 0; min-height:1.2em;
       letter-spacing:-.02em; font-weight:400; position:relative
@@ -281,6 +301,7 @@
 
     /* Mobile typography and bubble size tuning */
     @media (max-width:560px){
+      .profile-photo{width:clamp(100px,18vw,140px); height:clamp(100px,18vw,140px)}
       .name{font-size:clamp(1.4rem, 6.6vw, 2.2rem)}
       .subtitle{font-size:clamp(.9rem, 3.6vw, 1.05rem)}
       .social-link{width:40px; height:40px; font-size:18px}
@@ -289,6 +310,7 @@
       .bubble[data-armed="1"] .bubble-label{font-size:.66rem}
     }
     @media (max-width:380px){
+      .profile-photo{width:clamp(90px,16vw,120px); height:clamp(90px,16vw,120px)}
       .name{font-size:clamp(1.3rem, 7.4vw, 2rem)}
       .subtitle{font-size:clamp(.86rem, 3.4vw, 1rem)}
       .social-link{width:36px; height:36px; font-size:16px}
@@ -330,6 +352,9 @@
   <!-- Main -->
   <main>
     <div id="centerpiece">
+      <div class="profile-photo-container">
+        <img src="http://localhost:8000/profile-photo" alt="Raja Dhanda" class="profile-photo" id="profilePhoto">
+      </div>
       <h1 class="name" id="name" data-text="Raja Dhanda"></h1>
       <div class="subtitle" id="subtitle">experimenting with intention</div>
 
@@ -694,6 +719,8 @@
     const nameEl = document.getElementById('name');
     const subtitleEl = document.getElementById('subtitle');
     const socialLinksEl = document.querySelector('.social-links');
+    const profilePhotoEl = document.getElementById('profilePhoto');
+    const profilePhotoContainer = document.querySelector('.profile-photo-container');
     const fullText = nameEl.dataset.text;
     const totalMs = 2200; // faster typing again
     const stepMs = Math.max(30, Math.floor(totalMs / Math.max(1, fullText.length)));
@@ -705,13 +732,17 @@
       } else {
         nameEl.innerHTML = fullText + '<span class="typing-cursor"></span>';
         setTimeout(()=> {
-          subtitleEl.classList.add('show');
-          // Pop in icons after a larger gap
-          setTimeout(()=>{
-            socialLinksEl?.classList.add('icons-in');
-            // After icons pop, start bubbles with initial offscreen placement
-            setTimeout(()=>{ window.dispatchEvent(new Event('bubbles:start')); }, 450);
-          }, 600);
+          // Show profile photo first
+          profilePhotoContainer?.classList.add('show');
+          setTimeout(()=> {
+            subtitleEl.classList.add('show');
+            // Pop in icons after a larger gap
+            setTimeout(()=>{
+              socialLinksEl?.classList.add('icons-in');
+              // After icons pop, start bubbles with initial offscreen placement
+              setTimeout(()=>{ window.dispatchEvent(new Event('bubbles:start')); }, 450);
+            }, 600);
+          }, 300);
         }, 400);
       }
     }
@@ -720,6 +751,9 @@
     window.addEventListener('load', ()=>{ if (!nameEl.textContent) { nameEl.textContent=''; setTimeout(typeNext, 300); } });
 
     // Absolute fallbacks so page never feels blank if something blocks animations
+    setTimeout(()=>{
+      if (!profilePhotoContainer?.classList.contains('show')) profilePhotoContainer?.classList.add('show');
+    }, 1200);
     setTimeout(()=>{
       if (!subtitleEl.classList.contains('show')) subtitleEl.classList.add('show');
     }, 1800);
