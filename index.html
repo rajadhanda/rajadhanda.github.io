@@ -174,17 +174,37 @@
     .bubble[data-armed="1"]{ border-color:#cfcfcf; box-shadow:0 10px 24px rgba(0,0,0,.08) }
     .bubble[data-armed="1"] .bubble-label{ font-size:.82rem }
 
-    /* Special styling for blog bubble - make it more prominent */
+    /* Populated bubble styles - Photos (warm tones) */
+    .photos-bubble{
+      background:linear-gradient(135deg, var(--pastel-peach), var(--pastel-cream));
+      border:2px solid var(--pastel-peach-dark);
+      box-shadow:0 4px 20px rgba(255, 212, 194, 0.25), 0 8px 40px rgba(255, 230, 184, 0.15);
+      animation:gentlePulse 4s ease-in-out infinite;
+    }
+    .photos-bubble:hover{
+      background:linear-gradient(135deg, var(--pastel-peach-dark), var(--pastel-cream-dark));
+      border-color:var(--accent);
+      box-shadow:0 6px 30px rgba(255, 212, 194, 0.35), 0 12px 50px rgba(255, 230, 184, 0.25);
+    }
+    .photos-bubble .bubble-title{
+      color:var(--accent);
+      font-weight:600;
+    }
+    .photos-bubble .bubble-label{
+      color:var(--fg-light);
+    }
+
+    /* Populated bubble styles - Blog (cool tones) */
     .blog-bubble{
-      background:linear-gradient(135deg, var(--pastel-lavender), var(--pastel-mint));
-      border:2px solid var(--pastel-lavender-dark);
-      box-shadow:0 4px 20px rgba(212, 194, 240, 0.3), 0 8px 40px rgba(184, 230, 217, 0.2);
-      animation:blogPulse 3s ease-in-out infinite;
+      background:linear-gradient(135deg, var(--pastel-mint), var(--pastel-sky));
+      border:2px solid var(--pastel-mint-dark);
+      box-shadow:0 4px 20px rgba(184, 230, 217, 0.25), 0 8px 40px rgba(184, 217, 240, 0.15);
+      animation:gentlePulse 4s ease-in-out infinite;
     }
     .blog-bubble:hover{
-      background:linear-gradient(135deg, var(--pastel-lavender-dark), var(--pastel-mint-dark));
+      background:linear-gradient(135deg, var(--pastel-mint-dark), var(--pastel-sky-dark));
       border-color:var(--accent);
-      box-shadow:0 6px 30px rgba(212, 194, 240, 0.4), 0 12px 50px rgba(184, 230, 217, 0.3);
+      box-shadow:0 6px 30px rgba(184, 230, 217, 0.35), 0 12px 50px rgba(184, 217, 240, 0.25);
     }
     .blog-bubble .bubble-title{
       color:var(--accent);
@@ -194,10 +214,30 @@
       color:var(--fg-light);
     }
 
-    /* Blog bubble pulse animation */
-    @keyframes blogPulse{
-      0%, 100%{box-shadow:0 4px 20px rgba(212, 194, 240, 0.3), 0 8px 40px rgba(184, 230, 217, 0.2)}
-      50%{box-shadow:0 6px 25px rgba(212, 194, 240, 0.4), 0 12px 45px rgba(184, 230, 217, 0.3)}
+    /* Unpopulated bubble styles - muted and dimmed */
+    .unpopulated-bubble{
+      background:rgba(255, 255, 255, 0.3);
+      border:2px solid var(--border);
+      opacity:0.7;
+      transition:opacity .3s var(--ease), border-color .3s var(--ease);
+    }
+    .unpopulated-bubble:hover{
+      opacity:0.85;
+      border-color:var(--border-hover);
+    }
+    .unpopulated-bubble .bubble-title{
+      color:var(--muted);
+      font-weight:400;
+    }
+    .unpopulated-bubble .bubble-label{
+      color:var(--muted);
+      opacity:0.8;
+    }
+
+    /* Gentle pulse animation for populated bubbles */
+    @keyframes gentlePulse{
+      0%, 100%{box-shadow:0 4px 20px rgba(184, 230, 217, 0.15), 0 8px 40px rgba(184, 217, 240, 0.1)}
+      50%{box-shadow:0 6px 25px rgba(184, 230, 217, 0.2), 0 12px 45px rgba(184, 217, 240, 0.15)}
     }
 
     /* Viewport-pinned physics layer */
@@ -303,7 +343,7 @@
 
   <!-- Bubble navigation (freeflow enables physics) -->
   <nav id="bubbleNav" class="bubble-nav freeflow" aria-label="Primary">
-    <a class="bubble" href="/photographs/" data-key="photos" aria-label="Photographs">
+    <a class="bubble photos-bubble" href="/photographs/" data-key="photos" aria-label="Photographs">
       <span class="bubble-title">Photographs</span>
       <em class="bubble-label">frames I liked</em>
     </a>
@@ -311,11 +351,11 @@
       <span class="bubble-title">Blog</span>
       <em class="bubble-label">notes and thought experiments</em>
     </a>
-    <a class="bubble" href="/projects/" data-key="projects" aria-label="Projects">
+    <a class="bubble unpopulated-bubble" href="/projects/" data-key="projects" aria-label="Projects">
       <span class="bubble-title">Projects</span>
       <em class="bubble-label">things I've tried</em>
     </a>
-    <a class="bubble" href="/about/" data-key="about" aria-label="About">
+    <a class="bubble unpopulated-bubble" href="/about/" data-key="about" aria-label="About">
       <span class="bubble-title">About</span>
       <em class="bubble-label">who I am in 2 mins</em>
     </a>
