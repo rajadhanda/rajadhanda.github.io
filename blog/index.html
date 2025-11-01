@@ -204,9 +204,25 @@
       opacity:0; transform:translateY(20px);
       animation:slideInUp 0.8s var(--ease) 0.4s forwards;
     }
+    
+    /* Page Transition Overlay */
+    .page-transition{
+      position:fixed; inset:0; background:var(--blog-bg);
+      opacity:0; pointer-events:none; z-index:1500;
+      transition:opacity 0.4s var(--ease);
+    }
+    .page-transition.active{
+      opacity:1; pointer-events:all;
+    }
+    @media (prefers-reduced-motion: reduce){
+      .page-transition{display:none}
+    }
   </style>
 </head>
 <body>
+  <!-- Page Transition Overlay -->
+  <div class="page-transition" id="pageTransition"></div>
+
   <!-- Navigation -->
   <a href="/" class="nav-back" aria-label="Back to home">
     <i class="fa-solid fa-house" aria-hidden="true"></i>
@@ -274,6 +290,41 @@
         });
       });
     });
+
+    // Page transition on navigation link click
+    (function(){
+      const pageTransition = document.getElementById('pageTransition');
+      const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      
+      if (!pageTransition || reducedMotion) return;
+      
+      // Handle internal navigation links
+      const navLinks = document.querySelectorAll('a[href^="/"], a[href^="./"], a.nav-back');
+      navLinks.forEach(link => {
+        link.addEventListener('click', function(e){
+          const href = this.getAttribute('href');
+          if (!href || href === '#' || href.startsWith('mailto:') || href.startsWith('tel:')) return;
+          
+          // Only intercept internal links
+          try {
+            const url = new URL(href, window.location.origin);
+            if (url.hostname !== window.location.hostname && url.hostname !== '') return;
+          } catch(err) {
+            // Relative URL - allow
+          }
+          
+          e.preventDefault();
+          
+          // Activate fade transition
+          pageTransition.classList.add('active');
+          
+          // Navigate after animation
+          setTimeout(() => {
+            window.location.href = href;
+          }, 300);
+        });
+      });
+    })();
   </script>
 </body>
 </html>

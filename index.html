@@ -92,15 +92,65 @@
       margin:0 0 24px 0; display:flex; justify-content:center; align-items:center;
       opacity:0; transform:translateY(20px) scale(0.9);
       transition:opacity 1.2s var(--ease), transform 1.2s var(--ease);
+      position:relative;
     }
     .profile-photo-container.show{
       opacity:1; transform:translateY(0) scale(1);
+    }
+    
+    /* Lightbox */
+    .lightbox{
+      position:fixed; inset:0; background:rgba(0,0,0,.85); backdrop-filter:blur(8px);
+      display:none; align-items:center; justify-content:center; z-index:2000;
+      opacity:0; transition:opacity 0.4s var(--ease);
+      cursor:pointer;
+    }
+    .lightbox.active{
+      display:flex; opacity:1;
+    }
+    .lightbox img{
+      max-width:90vw; max-height:90vh; border-radius:12px;
+      box-shadow:0 20px 60px rgba(0,0,0,.3);
+      transform:scale(0.95); transition:transform 0.4s var(--ease);
+      pointer-events:none;
+    }
+    .lightbox.active img{
+      transform:scale(1);
+    }
+    .lightbox-close{
+      position:absolute; top:28px; right:28px; width:48px; height:48px;
+      border-radius:50%; border:1px solid rgba(255,255,255,.3);
+      background:rgba(255,255,255,.1); backdrop-filter:blur(8px);
+      display:grid; place-items:center; cursor:pointer; color:white;
+      transition:all 0.3s var(--ease); font-size:20px;
+    }
+    .lightbox-close:hover{
+      background:rgba(255,255,255,.2); transform:scale(1.1);
+    }
+    @media (prefers-reduced-motion: reduce){
+      .lightbox{transition:none}
+      .lightbox img{transition:none}
+      .lightbox-close{transition:none}
     }
     .profile-photo{
       width:180px; height:207px;
       border-radius:20px; object-fit:contain; object-position:center;
       background: var(--bg);
       max-width: 100%; max-height: 100%;
+      cursor:pointer; transition:transform 0.4s var(--ease), box-shadow 0.4s var(--ease);
+      will-change: transform;
+    }
+    .profile-photo:hover{
+      transform:scale(1.05);
+      box-shadow:0 8px 30px rgba(0,0,0,.08);
+    }
+    @media (prefers-reduced-motion: reduce){
+      .profile-photo{
+        transition:none;
+      }
+      .profile-photo:hover{
+        transform:none;
+      }
     }
 
     .name{
@@ -126,12 +176,43 @@
     .social-link{
       display:inline-flex; align-items:center; justify-content:center; text-decoration:none; color:var(--fg);
       font-size:24px; width:56px; height:56px; border:1px solid var(--border); border-radius:50%; background:var(--bg);
-      transition: border-color .18s var(--ease), box-shadow .18s var(--ease), background .18s var(--ease);
+      transition: border-color .18s var(--ease), box-shadow .18s var(--ease), background .18s var(--ease), color .18s var(--ease);
       position:relative; overflow:hidden
     }
     .social-link::before{content:''; position:absolute; inset:0; background:var(--fg); border-radius:50%; transform:scale(0); transition:transform .3s var(--ease-back); z-index:-1}
     .social-link:hover::before{transform:scale(1)}
     .social-link:hover{color:var(--bg); transform:translateY(-3px); box-shadow:var(--shadow-medium); border-color:var(--fg)}
+    
+    /* Platform-specific brand colors */
+    .social-link[aria-label="LinkedIn"]:hover{
+      border-color:#0077b5; background:#0077b5; color:white;
+    }
+    .social-link[aria-label="LinkedIn"]:hover::before{
+      background:#0077b5;
+    }
+    .social-link[aria-label="Email"]:hover{
+      border-color:#ea4335; background:linear-gradient(135deg, #ea4335, #fbbc05); color:white;
+    }
+    .social-link[aria-label="Email"]:hover::before{
+      background:linear-gradient(135deg, #ea4335, #fbbc05);
+    }
+    
+    /* Subtle ripple effect */
+    .social-link::after{
+      content:''; position:absolute; top:50%; left:50%; width:0; height:0;
+      border-radius:50%; background:rgba(255,255,255,.3); transform:translate(-50%, -50%) scale(0);
+      pointer-events:none; z-index:1;
+    }
+    .social-link:active::after{
+      animation:ripple 0.5s var(--ease-back) forwards;
+    }
+    @keyframes ripple{
+      0%{width:0; height:0; opacity:1}
+      100%{width:120px; height:120px; opacity:0}
+    }
+    @media (prefers-reduced-motion: reduce){
+      .social-link::after{display:none}
+    }
 
     /* Subtle ornaments */
     .floating-element{position:absolute; pointer-events:none; opacity:.15; color:var(--muted); font-size:12px; animation:float 8s ease-in-out infinite; z-index:-1}
@@ -177,6 +258,38 @@
     }
     .bubble:hover{border-color:#cfcfcf; box-shadow:0 10px 24px rgba(0,0,0,.08)}
     .bubble:focus-visible{outline:none; box-shadow:0 0 0 3px rgba(0,0,0,.10), 0 10px 24px rgba(0,0,0,.08); border-color:#cfcfcf}
+    
+    /* Subtle pulse animation on hover */
+    .bubble::before{
+      content:''; position:absolute; inset:-4px; border-radius:50%; border:2px solid transparent;
+      pointer-events:none; opacity:0; transition:opacity 0.3s var(--ease);
+    }
+    .bubble:hover::before{
+      opacity:1; animation:gentle-pulse 2s ease-in-out infinite;
+      border-color:rgba(255,255,255,0.4);
+    }
+    @keyframes gentle-pulse{
+      0%, 100%{transform:scale(1); opacity:0.4}
+      50%{transform:scale(1.05); opacity:0.6}
+    }
+    @media (prefers-reduced-motion: reduce){
+      .bubble::before{display:none}
+    }
+    
+    /* Page transition overlay */
+    .page-transition{
+      position:fixed; top:0; left:0; width:0; height:0; border-radius:50%;
+      background:var(--accent-soft); transform:translate(-50%, -50%);
+      opacity:0; pointer-events:none; z-index:1500; transition:width 0.6s var(--ease-back), height 0.6s var(--ease-back), opacity 0.3s var(--ease);
+      will-change: width, height;
+    }
+    .page-transition.active{
+      opacity:1; pointer-events:all;
+      width:200vw; height:200vh;
+    }
+    @media (prefers-reduced-motion: reduce){
+      .page-transition{display:none}
+    }
 
     .bubble-title{font-size:clamp(1.05rem,2.2vw,1.4rem); font-weight:500; line-height:1.2; text-align:center; pointer-events:none; color:#8c8c8c}
     .bubble-label{
@@ -345,6 +458,14 @@
     </section>
   </aside>
 
+  <!-- Lightbox -->
+  <div class="lightbox" id="lightbox" aria-hidden="true" role="dialog" aria-modal="true" aria-label="Profile photo">
+    <button class="lightbox-close" aria-label="Close lightbox">
+      <i class="fa-solid fa-xmark" aria-hidden="true"></i>
+    </button>
+    <img src="assets/images/IMG_6767.jpeg" alt="Raja Dhanda">
+  </div>
+
   <!-- Main -->
   <main>
     <div id="centerpiece">
@@ -364,6 +485,9 @@
       </div>
     </div>
   </main>
+
+  <!-- Page Transition Overlay -->
+  <div class="page-transition" id="pageTransition"></div>
 
   <!-- Bubble navigation (freeflow enables physics) -->
   <nav id="bubbleNav" class="bubble-nav freeflow" aria-label="Primary">
@@ -919,6 +1043,116 @@
         el.style.transform = `translateY(${scrollPos*speed}px)`;
       });
     });
+
+    // Profile Photo Lightbox
+    (function(){
+      const photo = document.getElementById('profilePhoto');
+      const lightbox = document.getElementById('lightbox');
+      const closeBtn = lightbox.querySelector('.lightbox-close');
+      
+      if (!photo || !lightbox) return;
+      
+      function openLightbox(){
+        lightbox.classList.add('active');
+        lightbox.setAttribute('aria-hidden', 'false');
+        document.body.style.overflow = 'hidden';
+      }
+      
+      function closeLightbox(){
+        lightbox.classList.remove('active');
+        lightbox.setAttribute('aria-hidden', 'true');
+        document.body.style.overflow = '';
+      }
+      
+      photo.addEventListener('click', openLightbox);
+      closeBtn.addEventListener('click', (e)=>{
+        e.stopPropagation();
+        closeLightbox();
+      });
+      lightbox.addEventListener('click', (e)=>{
+        if (e.target === lightbox) closeLightbox();
+      });
+      
+      // Close on Escape key
+      window.addEventListener('keydown', (e)=>{
+        if (e.key === 'Escape' && lightbox.classList.contains('active')){
+          closeLightbox();
+        }
+      });
+    })();
+
+    // Gentle parallax on profile photo
+    (function(){
+      const photoContainer = document.querySelector('.profile-photo-container');
+      if (!photoContainer || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+      
+      // Wait for initial animation to complete
+      setTimeout(()=>{
+        let ticking = false;
+        window.addEventListener('scroll', ()=>{
+          if (!ticking){
+            window.requestAnimationFrame(()=>{
+              const scrolled = window.pageYOffset;
+              const rate = scrolled * 0.15; // Gentle parallax speed
+              // Only apply parallax after initial animation
+              if (photoContainer.classList.contains('show')){
+                photoContainer.style.transform = `translateY(${rate}px)`;
+              }
+              ticking = false;
+            });
+            ticking = true;
+          }
+        }, {passive:true});
+      }, 1500); // After initial animation completes
+    })();
+
+    // Page transition on bubble click (for desktop/non-touch)
+    (function(){
+      const bubbles = document.querySelectorAll('.bubble');
+      const pageTransition = document.getElementById('pageTransition');
+      const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      const isTouch = 'ontouchstart' in window || (navigator.maxTouchPoints||0) > 0;
+      
+      if (!bubbles.length || !pageTransition || reducedMotion || isTouch) return;
+      
+      bubbles.forEach(bubble => {
+        // Only add transition for non-touch devices
+        bubble.addEventListener('click', function(e){
+          const href = this.getAttribute('href');
+          if (!href || href === '#' || href.startsWith('mailto:') || href.startsWith('tel:')) return;
+          
+          // Check if it's an internal link
+          try {
+            const url = new URL(href, window.location.origin);
+            if (url.hostname !== window.location.hostname) return;
+          } catch(err) {
+            // Relative URL
+          }
+          
+          e.preventDefault();
+          
+          // Get bubble position at click time
+          const rect = this.getBoundingClientRect();
+          const x = rect.left + rect.width / 2;
+          const y = rect.top + rect.height / 2;
+          
+          // Position transition overlay at bubble center
+          pageTransition.style.left = x + 'px';
+          pageTransition.style.top = y + 'px';
+          pageTransition.style.transform = 'translate(-50%, -50%)';
+          
+          // Activate transition
+          requestAnimationFrame(() => {
+            pageTransition.classList.add('active');
+          });
+          
+          // Navigate after animation
+          setTimeout(() => {
+            window.location.href = href;
+          }, 400);
+        });
+      });
+    })();
   </script>
 </body>
 </html>
