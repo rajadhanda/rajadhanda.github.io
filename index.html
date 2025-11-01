@@ -6,6 +6,16 @@
   <title>Raja Dhanda</title>
   <!-- Pastel elements updated -->
 
+  <!-- Theme Script (inline to prevent FOUC) -->
+  <script>
+    (function(){
+      const savedTheme = localStorage.getItem('theme') || 'light';
+      if (savedTheme === 'midnight') {
+        document.documentElement.setAttribute('data-theme', 'midnight');
+      }
+    })();
+  </script>
+
   <!-- Type -->
   <link href="https://fonts.googleapis.com/css2?family=Crimson+Text:ital,wght@0,400;0,600;1,400&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
 
@@ -36,6 +46,28 @@
       --blog-accent:var(--pastel-lavender-dark); --blog-text:var(--fg);
       --blog-meta:var(--muted); --blog-border:rgba(184,230,217,0.3);
     }
+    
+    /* Midnight Mode */
+    [data-theme="midnight"]{
+      --bg:#0a0e27; --fg:#e8ecf4; --fg-light:#b8c5d9; --muted:#7a8ca8;
+      --accent:#a8b8d9; --accent-soft:#141b33;
+      --border:#1a2340; --border-hover:#243155;
+      --shadow-soft:0 2px 20px rgba(0,0,0,.3);
+      --shadow-medium:0 8px 30px rgba(0,0,0,.5);
+      
+      /* Midnight Pastel Palette (darker, muted versions) */
+      --pastel-mint:#1a2833; --pastel-mint-dark:#2a3d4d;
+      --pastel-lavender:#1f1f33; --pastel-lavender-dark:#2d2d4a;
+      --pastel-peach:#332020; --pastel-peach-dark:#4a2d2d;
+      --pastel-sky:#1a2433; --pastel-sky-dark:#2a3547;
+      --pastel-rose:#331f28; --pastel-rose-dark:#4a2d3a;
+      --pastel-cream:#332d1f; --pastel-cream-dark:#4a4230;
+      
+      /* Midnight Blog colors */
+      --blog-bg:#0f1524; --blog-card-bg:rgba(26,30,47,0.6);
+      --blog-accent:#7a8ca8; --blog-text:#e8ecf4;
+      --blog-meta:#7a8ca8; --blog-border:rgba(122,140,168,0.2);
+    }
 
     *{box-sizing:border-box}
     html,body{height:100%}
@@ -45,12 +77,44 @@
       overflow-x:hidden; line-height:1.6;
     }
 
+    /* Theme Toggle Button */
+    .theme-toggle{
+      position:fixed; top:28px; right:28px; width:52px; height:52px; border-radius:50%;
+      border:1px solid var(--border); display:grid; place-items:center;
+      background:rgba(254,254,254,.92); backdrop-filter:blur(12px);
+      cursor:pointer; transition:all .3s var(--ease); z-index:1001; box-shadow:var(--shadow-soft);
+    }
+    [data-theme="midnight"] .theme-toggle{
+      background:rgba(26,30,47,.92);
+    }
+    .theme-toggle:hover{
+      transform:scale(1.05) translateY(-1px); border-color:var(--border-hover); box-shadow:var(--shadow-medium);
+    }
+    .theme-toggle i{
+      font-size:18px; color:var(--fg); transition:transform .4s var(--ease-back), opacity .3s var(--ease);
+    }
+    .theme-toggle:hover i{
+      transform:rotate(15deg);
+    }
+    .theme-toggle .fa-moon{opacity:1}
+    .theme-toggle .fa-sun{opacity:0; position:absolute}
+    [data-theme="midnight"] .theme-toggle .fa-moon{opacity:0}
+    [data-theme="midnight"] .theme-toggle .fa-sun{opacity:1}
+    
+    /* Smooth theme transition */
+    body{
+      transition:background-color 0.5s var(--ease), color 0.5s var(--ease);
+    }
+
     /* Top-left menu */
     .menu-toggle{
       position:fixed; top:28px; left:28px; width:52px; height:52px; border-radius:50%;
       border:1px solid var(--border); display:grid; place-items:center;
       background:rgba(254,254,254,.92); backdrop-filter:blur(12px);
       cursor:pointer; transition:all .3s var(--ease); z-index:1001; box-shadow:var(--shadow-soft)
+    }
+    [data-theme="midnight"] .menu-toggle{
+      background:rgba(26,30,47,.92);
     }
     .menu-toggle:hover{transform:scale(1.05) translateY(-1px); border-color:var(--border-hover); box-shadow:var(--shadow-medium)}
     .menu-toggle i{font-size:18px; color:var(--fg); transition:transform .2s var(--ease)}
@@ -414,6 +478,7 @@
     /* Responsive tweaks */
     @media (max-width:768px){
       .menu-toggle{top:20px; left:20px; width:46px; height:46px}
+      .theme-toggle{top:20px; right:20px; width:46px; height:46px}
       .panel{padding:24px}
       .about{max-width:100%}
       .social-links{margin-top:16px; gap:24px}
@@ -443,6 +508,12 @@
   </style>
 </head>
 <body>
+
+  <!-- Theme Toggle Button -->
+  <button class="theme-toggle" id="themeToggle" aria-label="Toggle midnight mode">
+    <i class="fa-solid fa-moon" aria-hidden="true"></i>
+    <i class="fa-solid fa-sun" aria-hidden="true"></i>
+  </button>
 
   <!-- Ornaments -->
   <div class="floating-element">✦</div>
@@ -527,6 +598,32 @@
   <footer style="font-size: 0.7rem; color: var(--muted);">© 2025 Raja Dhanda – Crafted with care</footer>
 
   <script>
+    // ===== Theme Toggle (load first to prevent flash) =====
+    (function(){
+      const themeToggle = document.getElementById('themeToggle');
+      const html = document.documentElement;
+      
+      // Load saved theme or default to light
+      const savedTheme = localStorage.getItem('theme') || 'light';
+      if (savedTheme === 'midnight') {
+        html.setAttribute('data-theme', 'midnight');
+      }
+      
+      // Theme toggle handler
+      if (themeToggle) {
+        themeToggle.addEventListener('click', ()=>{
+          const currentTheme = html.getAttribute('data-theme');
+          if (currentTheme === 'midnight') {
+            html.removeAttribute('data-theme');
+            localStorage.setItem('theme', 'light');
+          } else {
+            html.setAttribute('data-theme', 'midnight');
+            localStorage.setItem('theme', 'midnight');
+          }
+        });
+      }
+    })();
+
     // ===== Bubble freeflow — robust centreing and mobile-safe viewport =====
     (function () {
       const nav = document.getElementById('bubbleNav');
