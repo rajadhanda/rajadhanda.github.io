@@ -499,90 +499,116 @@
         return bounds;
       }
 
-      // Calculate soft repulsion force from collisions (gentle bounce)
-      function calculateSoftRepulsion(currentIndex, x, y, halfW, halfH) {
+      // Calculate natural collision response - check predicted position for smooth physics
+      function calculateCollisionResponse(currentIndex, posX, posY, velX, velY, halfW, halfH, dt) {
+        // Predict next position
+        const nextX = posX + velX;
+        const nextY = posY + velY;
+        
         let forceX = 0;
         let forceY = 0;
-        let minOverlapDepth = Infinity;
-        let pushDirX = 0;
-        let pushDirY = 0;
+        let collisionDepth = 0;
+        let collisionNormalX = 0;
+        let collisionNormalY = 0;
         
-        // Check collision with centerpiece elements
+        // Check collision with centerpiece elements (using predicted position)
         const elementBounds = getCenterpieceElementBounds();
         elementBounds.forEach(bounds => {
-          const bubbleLeft = x - halfW;
-          const bubbleRight = x + halfW;
-          const bubbleTop = y - halfH;
-          const bubbleBottom = y + halfH;
+          const bubbleLeft = nextX - halfW;
+          const bubbleRight = nextX + halfW;
+          const bubbleTop = nextY - halfH;
+          const bubbleBottom = nextY + halfH;
           
-          // Check if bubble overlaps with element
+          // Check if bubble would overlap with element
           const overlapX = Math.min(bubbleRight - bounds.left, bounds.right - bubbleLeft);
           const overlapY = Math.min(bubbleBottom - bounds.top, bounds.bottom - bubbleTop);
           
           if (overlapX > 0 && overlapY > 0) {
-            // Calculate repulsion direction (away from element center)
-            const dx = x - bounds.centerX;
-            const dy = y - bounds.centerY;
+            // Calculate collision normal (away from element center)
+            const dx = nextX - bounds.centerX;
+            const dy = nextY - bounds.centerY;
             const dist = Math.hypot(dx, dy);
             
             if (dist > 0.0001) {
-              // Gentle repulsion force - stronger when deeper in collision
               const overlapDepth = Math.min(overlapX, overlapY);
               
-              // Track the deepest overlap for gentle position correction
-              if (overlapDepth < minOverlapDepth) {
-                minOverlapDepth = overlapDepth;
-                pushDirX = dx / dist;
-                pushDirY = dy / dist;
+              // Track the most significant collision
+              if (overlapDepth > collisionDepth) {
+                collisionDepth = overlapDepth;
+                collisionNormalX = dx / dist;
+                collisionNormalY = dy / dist;
               }
               
-              const repulsionStrength = overlapDepth * 0.20; // Moderate bounce - prevents overlap
-              
-              forceX += (dx / dist) * repulsionStrength;
-              forceY += (dy / dist) * repulsionStrength;
+              // Natural repulsion force - proportional to overlap depth
+              const repulsionStrength = overlapDepth * 0.15;
+              forceX += collisionNormalX * repulsionStrength;
+              forceY += collisionNormalY * repulsionStrength;
             }
           }
         });
         
-        // Check collisions with other bubbles
+        // Check collisions with other bubbles (using predicted position)
         for (let i = 0; i < state.length; i++) {
           if (i === currentIndex) continue;
           
           const otherBubble = state[i];
-          const otherX = otherBubble.pos.x;
-          const otherY = otherBubble.pos.y;
+          // Use predicted position of other bubble for more accurate collision
+          const otherNextX = otherBubble.pos.x + otherBubble.vel.x;
+          const otherNextY = otherBubble.pos.y + otherBubble.vel.y;
           const otherRect = otherBubble.el.getBoundingClientRect();
           const otherHalfW = otherRect.width / 2;
           const otherHalfH = otherRect.height / 2;
           
-          const dx = x - otherX;
-          const dy = y - otherY;
+          const dx = nextX - otherNextX;
+          const dy = nextY - otherNextY;
           const dist = Math.hypot(dx, dy);
-          const minDist = Math.max(halfW, halfH) + Math.max(otherHalfW, otherHalfH) + 12; // Gap between bubbles
+          const minDist = Math.max(halfW, halfH) + Math.max(otherHalfW, otherHalfH) + 12;
           
           if (dist < minDist && dist > 0.0001) {
-            // Gentle repulsion from other bubble
             const overlapDepth = minDist - dist;
-            const repulsionStrength = overlapDepth * 0.15; // Moderate bounce between bubbles
             
-            forceX += (dx / dist) * repulsionStrength;
-            forceY += (dy / dist) * repulsionStrength;
-            
-            // Track deepest bubble collision for gentle position correction
-            if (overlapDepth < minOverlapDepth) {
-              minOverlapDepth = overlapDepth;
-              pushDirX = dx / dist;
-              pushDirY = dy / dist;
+            // Track the most significant collision
+            if (overlapDepth > collisionDepth) {
+              collisionDepth = overlapDepth;
+              collisionNormalX = dx / dist;
+              collisionNormalY = dy / dist;
             }
+            
+            // Natural repulsion force
+            const repulsionStrength = overlapDepth * 0.12;
+            forceX += collisionNormalX * repulsionStrength;
+            forceY += collisionNormalY * repulsionStrength;
           }
         }
         
-        // Return moderate position correction for the deepest overlap to prevent overlap
-        // Smooth enough to avoid vibration but strong enough to prevent overlap
-        const posCorrectionX = minOverlapDepth < Infinity ? pushDirX * minOverlapDepth * 0.6 : 0;
-        const posCorrectionY = minOverlapDepth < Infinity ? pushDirY * minOverlapDepth * 0.6 : 0;
+        // Apply natural bounce: reflect velocity along collision normal if collision detected
+        if (collisionDepth > 0) {
+          // Calculate velocity component along collision normal
+          const velAlongNormal = velX * collisionNormalX + velY * collisionNormalY;
+          
+          // If moving into collision, apply bounce (elastic collision response)
+          if (velAlongNormal < 0) {
+            // Reflect velocity with some damping for natural feel
+            const bounceFactor = 0.6; // Less than 1.0 for slightly inelastic bounce
+            const reflectedVelX = velX - 2 * velAlongNormal * collisionNormalX * bounceFactor;
+            const reflectedVelY = velY - 2 * velAlongNormal * collisionNormalY * bounceFactor;
+            
+            // Blend between current and reflected velocity for smooth response
+            forceX += (reflectedVelX - velX) * 0.3;
+            forceY += (reflectedVelY - velY) * 0.3;
+          }
+          
+          // Gentle position correction to prevent overlap
+          const correctionAmount = collisionDepth * 0.5;
+          return {
+            forceX,
+            forceY,
+            posCorrectionX: collisionNormalX * correctionAmount,
+            posCorrectionY: collisionNormalY * correctionAmount
+          };
+        }
         
-        return { forceX, forceY, posCorrectionX, posCorrectionY };
+        return { forceX, forceY, posCorrectionX: 0, posCorrectionY: 0 };
       }
 
       // Gentle parameters
@@ -757,36 +783,41 @@
           s.vel.x = (s.vel.x + (s.target.x - s.pos.x) * k) * DAMP;
           s.vel.y = (s.vel.y + (s.target.y - s.pos.y) * k) * DAMP;
 
+          // Apply natural collision response - check predicted position for smooth physics
+          // Only apply collision detection after initial load animation (preserve smooth entry)
+          let collision = null;
+          if (initialized) {
+            collision = calculateCollisionResponse(
+              idx,
+              s.pos.x,
+              s.pos.y,
+              s.vel.x,
+              s.vel.y,
+              halfW,
+              halfH,
+              dt
+            );
+            
+            // Apply collision forces to velocity BEFORE position update for natural physics
+            s.vel.x += collision.forceX * dt * 35; // Natural force application
+            s.vel.y += collision.forceY * dt * 35;
+          }
+
           const speed = Math.hypot(s.vel.x, s.vel.y);
           if (speed > MAX_VEL){
             const scale = MAX_VEL / speed;
             s.vel.x *= scale; s.vel.y *= scale;
           }
 
+          // Update position with velocity
           s.pos.x += s.vel.x;
           s.pos.y += s.vel.y;
 
-          // Apply soft repulsion forces from collisions (gentle bounce)
-          // Apply collision detection after velocity update for accurate position
-          // Only apply collision repulsion after initial load animation (preserve smooth entry)
-          if (initialized) {
-            const repulsion = calculateSoftRepulsion(
-              idx,
-              s.pos.x,
-              s.pos.y,
-              halfW,
-              halfH
-            );
-            
-            // Apply moderate repulsion to velocity with smooth easing
-            // Balanced to prevent overlap while maintaining natural movement
-            s.vel.x += repulsion.forceX * dt * 50; // Moderate force application
-            s.vel.y += repulsion.forceY * dt * 50;
-            
-            // Apply smooth position correction to prevent overlap
-            // Strong enough to prevent overlap, smooth enough to avoid vibration
-            s.pos.x += repulsion.posCorrectionX * 0.7; // Moderate correction for natural feel
-            s.pos.y += repulsion.posCorrectionY * 0.7;
+          // Apply gentle position correction AFTER position update if collision detected
+          // This prevents overlap without fighting the natural physics
+          if (collision && (collision.posCorrectionX !== 0 || collision.posCorrectionY !== 0)) {
+            s.pos.x += collision.posCorrectionX * 0.6; // Gentle correction
+            s.pos.y += collision.posCorrectionY * 0.6;
           }
           
           // Final clamp to ensure we stay in bounds
