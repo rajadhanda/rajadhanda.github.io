@@ -28,6 +28,17 @@
     .nav-back:hover{transform:scale(1.05) translateY(-1px); border-color:var(--border-hover); box-shadow:var(--shadow-medium)}
     .nav-back i{font-size:18px; transition:transform .2s var(--ease)}
     .nav-back:hover i{transform:translateX(2px)}
+    
+    /* Global button press animations */
+    button, .nav-back{
+      transition:transform 0.15s var(--ease), box-shadow 0.15s var(--ease);
+    }
+    button:active, .nav-back:active{
+      transform:scale(0.97) translateY(1px);
+    }
+    @media (prefers-reduced-motion: reduce){
+      button:active, .nav-back:active{transform:none}
+    }
 
     /* Floating Elements */
     .floating-element{

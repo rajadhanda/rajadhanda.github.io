@@ -214,6 +214,19 @@
       .social-link::after{display:none}
     }
 
+    /* Global button press animations */
+    button, .nav-back, .lightbox-close, .lightbox-nav, .scroll-to-top{
+      transition:transform 0.15s var(--ease), box-shadow 0.15s var(--ease);
+    }
+    button:active, .nav-back:active, .lightbox-close:active, .lightbox-nav:active, .scroll-to-top:active{
+      transform:scale(0.97) translateY(1px);
+    }
+    @media (prefers-reduced-motion: reduce){
+      button:active, .nav-back:active, .lightbox-close:active, .lightbox-nav:active, .scroll-to-top:active{
+        transform:none;
+      }
+    }
+
     /* Subtle ornaments */
     .floating-element{position:absolute; pointer-events:none; opacity:.15; color:var(--muted); font-size:12px; animation:float 8s ease-in-out infinite; z-index:-1}
     .floating-element.pastel-1{color:var(--pastel-lavender-dark); opacity:.4; font-size:16px; animation:float 10s ease-in-out infinite}

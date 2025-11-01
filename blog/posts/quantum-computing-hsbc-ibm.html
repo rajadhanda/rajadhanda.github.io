@@ -154,6 +154,12 @@
     }
     .article-content p{
       margin:0 0 24px 0; font-size:1.1rem; line-height:1.7;
+      transition:background-color 0.6s var(--ease), padding 0.3s var(--ease);
+      padding:0; border-radius:4px;
+    }
+    .article-content p.highlight{
+      background-color:rgba(240, 232, 255, 0.3);
+      padding:4px 8px;
     }
     .article-content blockquote{
       border-left:4px solid var(--pastel-mint-dark); padding-left:24px;
@@ -226,6 +232,32 @@
     .share-btn:hover{
       transform:translateY(-2px); box-shadow:var(--shadow-medium);
       background:var(--pastel-lavender); color:var(--pastel-lavender-dark);
+    }
+    
+    /* Scroll to Top Button */
+    .scroll-to-top{
+      position:fixed; bottom:40px; left:40px; width:48px; height:48px;
+      border-radius:50%; border:1px solid var(--blog-border);
+      background:var(--blog-card-bg); backdrop-filter:blur(20px);
+      display:grid; place-items:center; text-decoration:none; color:var(--fg);
+      transition:all .3s var(--ease); box-shadow:var(--shadow-soft);
+      opacity:0; visibility:hidden; z-index:1000;
+      cursor:pointer;
+    }
+    .scroll-to-top.visible{
+      opacity:1; visibility:visible;
+    }
+    .scroll-to-top:hover{
+      transform:translateY(-2px) scale(1.05);
+      box-shadow:var(--shadow-medium);
+      background:var(--pastel-lavender); color:var(--pastel-lavender-dark);
+    }
+    @media (max-width:768px){
+      .scroll-to-top{bottom:20px; left:20px}
+      .share-buttons{bottom:20px; right:20px}
+    }
+    @media (prefers-reduced-motion: reduce){
+      .scroll-to-top{transition:none}
     }
 
     /* Floating Elements */
@@ -410,6 +442,11 @@
     </ul>
   </nav>
 
+  <!-- Scroll to Top Button -->
+  <button class="scroll-to-top" id="scrollToTop" aria-label="Scroll to top">
+    <i class="fa-solid fa-arrow-up" aria-hidden="true"></i>
+  </button>
+
   <!-- Share Buttons -->
   <div class="share-buttons" id="shareButtons">
     <a href="#" class="share-btn" aria-label="Share on Twitter">
@@ -499,12 +536,25 @@
       });
     });
 
+    // Scroll to top button visibility update
+    function updateScrollToTopVisibility(){
+      const scrollToTop = document.getElementById('scrollToTop');
+      if (!scrollToTop) return;
+      const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+      if (scrollTop > 400) {
+        scrollToTop.classList.add('visible');
+      } else {
+        scrollToTop.classList.remove('visible');
+      }
+    }
+
     // Event listeners
     window.addEventListener('scroll', () => {
       updateReadingProgress();
       updateSidebarVisibility();
       updateActiveTocSection();
-    });
+      updateScrollToTopVisibility();
+    }, {passive:true});
 
     // Copy link functionality
     document.querySelector('.share-btn[aria-label="Copy link"]').addEventListener('click', (e) => {
@@ -521,6 +571,51 @@
 
     // Smooth scroll behavior
     document.documentElement.style.scrollBehavior = 'smooth';
+
+    // Scroll to top button click handler
+    (function(){
+      const scrollToTop = document.getElementById('scrollToTop');
+      if (!scrollToTop) return;
+      
+      scrollToTop.addEventListener('click', ()=>{
+        window.scrollTo({
+          top: 0,
+          behavior: 'smooth'
+        });
+      });
+      
+      // Initial visibility check
+      updateScrollToTopVisibility();
+    })();
+
+    // Paragraph highlights as user reads
+    (function(){
+      const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      if (reducedMotion) return;
+      
+      const paragraphs = document.querySelectorAll('.article-content p');
+      if (!paragraphs.length) return;
+      
+      const observerOptions = {
+        root: null,
+        rootMargin: '-20% 0px -60% 0px',
+        threshold: 0.3
+      };
+      
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('highlight');
+          } else {
+            entry.target.classList.remove('highlight');
+          }
+        });
+      }, observerOptions);
+      
+      paragraphs.forEach(paragraph => {
+        observer.observe(paragraph);
+      });
+    })();
   </script>
 </body>
 </html>
