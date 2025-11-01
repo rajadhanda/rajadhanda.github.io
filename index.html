@@ -414,22 +414,26 @@
         if (!cp) return null;
         
         const rect = cp.getBoundingClientRect();
-        // Add some padding around the centerpiece
-        const padding = 20;
+        // Add padding around the centerpiece for better collision detection
+        const padding = 30;
         return {
           left: rect.left - padding,
           right: rect.right + padding,
           top: rect.top - padding,
           bottom: rect.bottom + padding,
           centerX: rect.left + rect.width / 2,
-          centerY: rect.top + rect.height / 2
+          centerY: rect.top + rect.height / 2,
+          width: rect.width + padding * 2,
+          height: rect.height + padding * 2
         };
       }
 
-      // Calculate smooth repulsion force from collisions
+      // Calculate strong repulsion force from collisions
       function calculateRepulsionForces(currentIndex, x, y, velX, velY, halfW, halfH) {
         let forceX = 0;
         let forceY = 0;
+        let posCorrectionX = 0;
+        let posCorrectionY = 0;
         const currentBubble = state[currentIndex];
         
         // Check collision with centerpiece
@@ -451,12 +455,23 @@
             const dist = Math.hypot(dx, dy);
             
             if (dist > 0.0001) {
-              // Smooth repulsion force - stronger when deeper in collision
+              // Strong repulsion force - much stronger when deeper in collision
               const overlapDepth = Math.min(overlapX, overlapY);
-              const repulsionStrength = overlapDepth * 0.25; // Smooth bounce strength
+              const repulsionStrength = overlapDepth * REPULSION_STRENGTH * 1.5; // Strong bounce off centerpiece
               
-              forceX += (dx / dist) * repulsionStrength;
-              forceY += (dy / dist) * repulsionStrength;
+              const normX = dx / dist;
+              const normY = dy / dist;
+              
+              forceX += normX * repulsionStrength;
+              forceY += normY * repulsionStrength;
+              
+              // Also apply direct position correction to prevent overlap
+              posCorrectionX += normX * overlapDepth * 0.8;
+              posCorrectionY += normY * overlapDepth * 0.8;
+            } else {
+              // If at center, push outward
+              posCorrectionX += 1;
+              posCorrectionY += 1;
             }
           }
         }
@@ -475,19 +490,26 @@
           const dx = x - otherX;
           const dy = y - otherY;
           const dist = Math.hypot(dx, dy);
-          const minDist = Math.max(halfW, halfH) + Math.max(otherHalfW, otherHalfH);
+          const minDist = Math.max(halfW, halfH) + Math.max(otherHalfW, otherHalfH) + 5; // Small gap between bubbles
           
           if (dist < minDist && dist > 0.0001) {
-            // Smooth repulsion from other bubble
+            // Strong repulsion from other bubble
             const overlapDepth = minDist - dist;
-            const repulsionStrength = overlapDepth * 0.18; // Smooth bounce between bubbles
+            const repulsionStrength = overlapDepth * REPULSION_STRENGTH; // Strong bounce between bubbles
             
-            forceX += (dx / dist) * repulsionStrength;
-            forceY += (dy / dist) * repulsionStrength;
+            const normX = dx / dist;
+            const normY = dy / dist;
+            
+            forceX += normX * repulsionStrength;
+            forceY += normY * repulsionStrength;
+            
+            // Direct position correction
+            posCorrectionX += normX * overlapDepth * 0.6;
+            posCorrectionY += normY * overlapDepth * 0.6;
           }
         }
         
-        return { forceX, forceY };
+        return { forceX, forceY, posCorrectionX, posCorrectionY };
       }
 
       function getCenterpieceCenter() {
@@ -505,18 +527,18 @@
         return { x: innerWidth / 2, y: innerHeight / 2, w: 0, h: 0 };
       }
 
-      // Faster but elegant parameters
-      const DRIFT_AMP   = 24;    // increased ambient drift
-      const DRIFT_FREQ  = 0.22;  // slightly faster drift cycle
-      const BOUNCE_AMP  = 12;    // increased radial bounce
-      const BOUNCE_FREQ = 0.10;
-      const SPIN        = 0.018; // faster orbit
+      // Much faster and more responsive parameters
+      const DRIFT_AMP   = 32;    // increased ambient drift
+      const DRIFT_FREQ  = 0.28;  // faster drift cycle
+      const BOUNCE_AMP  = 16;    // increased radial bounce
+      const BOUNCE_FREQ = 0.12;
+      const SPIN        = 0.028; // much faster orbit
       const MAG_PULL    = 0.015; // subtle magnetic pull on hover
-      const SPRING      = 0.048; // faster, more responsive pursuit
-      const SPRING_INIT = 0.15;  // faster initial float-in
-      const DAMP        = 0.88;  // slightly less damping for more movement
-      const MAX_VEL     = 7;     // allow faster but still smooth movement
-      const REPULSION_DAMP = 0.92; // damping for repulsion to keep it smooth
+      const SPRING      = 0.065; // faster, more responsive pursuit
+      const SPRING_INIT = 0.18;  // faster initial float-in
+      const DAMP        = 0.85;  // less damping for more movement
+      const MAX_VEL     = 10;    // allow much faster but still smooth movement
+      const REPULSION_STRENGTH = 2.5; // Strong repulsion force multiplier
 
       const state = bubbles.map((el, i) => ({
         el,
@@ -664,10 +686,12 @@
           s.vel.x = (s.vel.x + (s.target.x - s.pos.x) * k) * DAMP;
           s.vel.y = (s.vel.y + (s.target.y - s.pos.y) * k) * DAMP;
 
-          // Apply repulsion forces from collisions (smooth bounce)
+          // Apply repulsion forces from collisions (strong bounce) - calculate before velocity update
           const repulsion = calculateRepulsionForces(idx, s.pos.x, s.pos.y, s.vel.x, s.vel.y, halfW, halfH);
-          s.vel.x += repulsion.forceX * dt * 50; // Scale by dt for frame-rate independence
-          s.vel.y += repulsion.forceY * dt * 50;
+          
+          // Apply strong repulsion forces to velocity
+          s.vel.x += repulsion.forceX * dt * 120; // Much stronger force application
+          s.vel.y += repulsion.forceY * dt * 120;
 
           const speed = Math.hypot(s.vel.x, s.vel.y);
           if (speed > MAX_VEL){
@@ -675,8 +699,27 @@
             s.vel.x *= scale; s.vel.y *= scale;
           }
 
+          // Update position with velocity
           s.pos.x += s.vel.x;
           s.pos.y += s.vel.y;
+          
+          // Apply direct position correction to prevent overlap (after velocity update)
+          s.pos.x += repulsion.posCorrectionX;
+          s.pos.y += repulsion.posCorrectionY;
+          
+          // Re-check collisions after movement and apply additional correction if needed
+          const postMoveRepulsion = calculateRepulsionForces(idx, s.pos.x, s.pos.y, s.vel.x, s.vel.y, halfW, halfH);
+          if (postMoveRepulsion.posCorrectionX !== 0 || postMoveRepulsion.posCorrectionY !== 0) {
+            s.pos.x += postMoveRepulsion.posCorrectionX * 0.5;
+            s.pos.y += postMoveRepulsion.posCorrectionY * 0.5;
+            // Reverse velocity slightly if still overlapping
+            s.vel.x -= postMoveRepulsion.forceX * dt * 60;
+            s.vel.y -= postMoveRepulsion.forceY * dt * 60;
+          }
+          
+          // Final position clamp to ensure we stay in bounds
+          s.pos.x = clamp(s.pos.x, minX, maxX);
+          s.pos.y = clamp(s.pos.y, minY, maxY);
           const scaleStr = s.hover > 0.001 ? ` scale(${1 + 0.05 * s.hover})` : '';
           s.el.style.transform = `translate3d(${s.pos.x - halfW}px, ${s.pos.y - halfH}px, 0)${scaleStr}`;
         });
