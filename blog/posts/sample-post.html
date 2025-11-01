@@ -205,7 +205,7 @@
     @media (max-width:768px){
       .article-container{padding:100px 20px 60px}
       .article-content{padding:32px}
-      .nav-back{top:20px; left:20px; width:46px; height:46px}
+      .nav-back{top:28px; left:20px; width:46px; height:46px}
       .toc{display:none}
       .share-buttons{bottom:20px; right:20px}
     }
@@ -330,14 +330,22 @@ function calculateTotalPrice(basePrice, taxRate, shippingCost) {
     function updateReadingProgress() {
       const article = document.querySelector('.article-content');
       const progress = document.getElementById('readingProgress');
+      
+      if (!article || !progress) return;
+      
       const articleTop = article.offsetTop;
       const articleHeight = article.offsetHeight;
       const windowHeight = window.innerHeight;
-      const scrollTop = window.pageYOffset;
+      const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
       
-      const progressPercent = Math.min(100, Math.max(0, 
-        ((scrollTop - articleTop + windowHeight) / articleHeight) * 100
-      ));
+      // Calculate scroll progress: how much of the article has been scrolled through
+      // Start at 0% when article top reaches viewport top
+      // Reach 100% when article bottom reaches viewport top
+      const scrollableHeight = articleHeight - windowHeight;
+      const scrolled = Math.max(0, scrollTop - articleTop);
+      const progressPercent = scrollableHeight > 0 
+        ? Math.min(100, Math.max(0, (scrolled / scrollableHeight) * 100))
+        : 0;
       
       progress.style.width = progressPercent + '%';
     }
