@@ -102,7 +102,7 @@
     
     /* Theme Toggle Button */
     .theme-toggle{
-      position:fixed; top:28px; right:28px; width:52px; height:52px; border-radius:50%;
+      position:fixed; top:28px; left:28px; width:52px; height:52px; border-radius:50%;
       border:1px solid var(--blog-border); display:grid; place-items:center;
       background:rgba(255,255,255,.9); backdrop-filter:blur(12px);
       cursor:pointer; transition:all .3s var(--ease); z-index:1001; box-shadow:var(--shadow-soft);
@@ -123,33 +123,17 @@
     .theme-toggle .fa-sun{opacity:0; position:absolute}
     [data-theme="midnight"] .theme-toggle .fa-moon{opacity:0}
     [data-theme="midnight"] .theme-toggle .fa-sun{opacity:1}
-    @media (max-width:768px){
-      .theme-toggle{top:20px; right:20px; width:46px; height:46px}
-      .nav-back{top:20px; left:20px; width:46px; height:46px}
-    }
 
-    /* Reading Progress - Elegant Side Indicator */
-    .reading-progress{
-      position:fixed; top:50%; left:20px; width:4px; height:200px;
-      background:var(--border); border-radius:2px; z-index:1002;
-      transform:translateY(-50%); transition:all .3s var(--ease);
-    }
-    .reading-progress::before{
-      content:''; position:absolute; top:0; left:0; width:100%;
-      background:linear-gradient(180deg, var(--accent), var(--pastel-lavender-dark));
-      border-radius:2px; transition:height .1s ease;
-      height: var(--progress-height, 0%);
-    }
-    .reading-progress::after{
-      content:''; position:absolute; top:0; left:-4px; width:12px; height:12px;
-      background:var(--accent); border-radius:50%; transform:translateY(-6px);
-      transition:top .1s ease; box-shadow:0 2px 8px rgba(0,0,0,0.2);
-      top: var(--dot-position, 0px);
-    }
 
     /* Article Container */
     .article-container{
       max-width:1000px; margin:0 auto; padding:120px 20px 80px;
+    }
+    
+    /* Responsive adjustments for smaller windows */
+    @media (max-width:1024px){
+      .article-container{padding:100px 20px 60px}
+      .article-header h1{padding-top:20px}
     }
 
     /* Article Header */
@@ -350,19 +334,29 @@
 
     /* Responsive */
     @media (max-width:768px){
-      .article-container{padding:100px 20px 60px}
+      .article-container{padding:90px 20px 60px}
       .article-content{padding:32px}
-      .nav-back{top:20px; left:20px; width:46px; height:46px}
+      .article-header h1{padding-top:16px; font-size:clamp(1.4rem,5vw,2rem)}
+      .theme-toggle{top:20px; left:20px; width:46px; height:46px}
+      .nav-back{top:20px; right:20px; width:46px; height:46px}
       .toc{display:none}
       .share-buttons{bottom:20px; right:20px}
-      .reading-progress{left:10px; height:150px}
+    }
+    
+    @media (max-width:560px){
+      .article-container{padding:80px 16px 40px}
+      .article-header h1{font-size:clamp(1.3rem,5vw,1.8rem); padding-top:12px}
+    }
+    
+    @media (max-width:480px){
+      .article-container{padding:75px 16px 40px}
+      .article-header h1{font-size:1.5rem; padding-top:10px}
+      .theme-toggle{top:16px; left:16px; width:42px; height:42px}
+      .nav-back{top:16px; right:16px; width:42px; height:42px}
     }
   </style>
 </head>
 <body>
-  <!-- Reading Progress -->
-  <div class="reading-progress" id="readingProgress"></div>
-
   <!-- Theme Toggle Button -->
   <button class="theme-toggle" id="themeToggle" aria-label="Toggle midnight mode">
     <i class="fa-solid fa-moon" aria-hidden="true"></i>
@@ -554,30 +548,6 @@
       }
     })();
 
-    // Reading progress - elegant side indicator
-    function updateReadingProgress() {
-      const article = document.querySelector('.article-content');
-      const progress = document.getElementById('readingProgress');
-      const articleTop = article.offsetTop;
-      const articleHeight = article.offsetHeight;
-      const windowHeight = window.innerHeight;
-      const scrollTop = window.pageYOffset;
-      
-      const progressPercent = Math.min(100, Math.max(0, 
-        ((scrollTop - articleTop + windowHeight) / articleHeight) * 100
-      ));
-      
-      // Update the progress bar height and position
-      const progressBar = progress.querySelector('::before');
-      const progressDot = progress.querySelector('::after');
-      
-      // Update the filled portion
-      progress.style.setProperty('--progress-height', progressPercent + '%');
-      
-      // Update the dot position
-      const dotPosition = (progressPercent / 100) * 200; // 200px is the height
-      progress.style.setProperty('--dot-position', dotPosition + 'px');
-    }
 
     // TOC and Share buttons visibility
     function updateSidebarVisibility() {
@@ -643,7 +613,6 @@
 
     // Event listeners
     window.addEventListener('scroll', () => {
-      updateReadingProgress();
       updateSidebarVisibility();
       updateActiveTocSection();
       updateScrollToTopVisibility();

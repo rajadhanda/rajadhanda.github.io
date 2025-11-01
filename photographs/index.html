@@ -80,13 +80,28 @@
     .theme-toggle .fa-sun{opacity:0; position:absolute}
     [data-theme="midnight"] .theme-toggle .fa-moon{opacity:0}
     [data-theme="midnight"] .theme-toggle .fa-sun{opacity:1}
+    /* Responsive adjustments for smaller windows */
+    @media (max-width:1024px){
+      main{padding:80px 20px 20px}
+      h1{padding-top:16px}
+    }
+    
     @media (max-width:768px){
       .theme-toggle{top:48px; left:20px; width:46px; height:46px}
-      .nav-back{top:48px; right:20px}
+      .nav-back{top:48px; right:20px; width:46px; height:46px}
+      main{padding:80px 20px 20px}
+      h1{font-size:clamp(1.4rem,5vw,2rem); padding-top:12px}
+    }
+    @media (max-width:560px){
+      main{padding:72px 20px 20px}
+      h1{font-size:clamp(1.3rem,5vw,1.8rem); padding-top:10px}
+      .subtitle{font-size:1rem; margin-bottom:40px}
     }
     @media (max-width:480px){
       .theme-toggle{top:48px; left:16px; width:42px; height:42px}
-      .nav-back{top:48px; right:16px}
+      .nav-back{top:48px; right:16px; width:42px; height:42px}
+      main{padding:68px 16px 20px}
+      h1{font-size:1.5rem; padding-top:8px}
     }
     
     /* Global button press animations */
@@ -127,8 +142,9 @@
     }
     
     h1{
-      font-weight:400; font-size:clamp(1.8rem,4vw,2.5rem); margin:0 0 8px;
+      font-weight:400; font-size:clamp(1.5rem,4vw,2.5rem); margin:0 0 8px;
       letter-spacing:-.01em;
+      padding-top:20px; /* Space for fixed buttons */
     }
     
     .subtitle{
@@ -183,57 +199,55 @@
       filter:blur(0);
     }
     
-    /* Hover Overlay - Desktop Only */
-    .photo-item::before{
-      content:''; position:absolute; inset:0; background:rgba(0,0,0,0);
-      transition:background 0.3s ease-out; z-index:1; pointer-events:none;
-      will-change: background;
-    }
-    
-    .photo-item:hover::before{
-      background:rgba(0,0,0,0.3);
+    /* Hover Overlay - Desktop Only (touch devices show caption by default) */
+    @media (hover: hover) and (pointer: fine) {
+      .photo-item::before{
+        content:''; position:absolute; inset:0; background:rgba(0,0,0,0);
+        transition:background 0.3s ease-out; z-index:1; pointer-events:none;
+        will-change: background;
+      }
+      
+      .photo-item:hover::before{
+        background:rgba(0,0,0,0.3);
+      }
     }
     
     .photo-caption{
       position:absolute; bottom:20px; left:20px; right:20px;
-      color:rgba(255,255,255,0); font-size:0.9rem; font-weight:400;
+      font-size:0.9rem; font-weight:400;
       line-height:1.4; z-index:2; pointer-events:none;
       transition:color 0.3s ease-out;
       will-change: color;
+      color:rgba(255,255,255,0); /* Hidden by default */
     }
     
-    .photo-item:hover .photo-caption{
-      color:rgba(255,255,255,0.9);
+    /* Show caption on hover for desktop */
+    @media (hover: hover) and (pointer: fine) {
+      .photo-item:hover .photo-caption{
+        color:rgba(255,255,255,0.9);
+      }
     }
     
-    /* Mobile Experience - Single Column, No Overlays */
+    /* On touch devices, show caption when active/touched */
+    @media (hover: none) or (pointer: coarse) {
+      .photo-item:active .photo-caption,
+      .photo-item.touched .photo-caption{
+        color:rgba(255,255,255,0.9);
+      }
+    }
+    
+    /* Mobile Experience - Single Column */
     @media (max-width:768px){
       .photo-gallery{
         grid-template-columns:1fr; gap:8px; margin-bottom:60px;
       }
-      
-      main{padding:48px 16px 20px}
-      .nav-back{top:48px; right:20px; width:46px; height:46px}
-      
-      .photo-item::before{display:none}
-      .photo-caption{display:none}
       
       .photo-item{
         opacity:1; transform:none;
       }
     }
     
-    @media (max-width:560px){
-      main{padding:48px 20px 20px}
-      h1{font-size:1.6rem}
-      .subtitle{font-size:1rem; margin-bottom:40px}
-    }
-    
-    @media (max-width:480px){
-      main{padding:48px 16px 20px}
-      .nav-back{top:48px; right:16px; width:42px; height:42px}
-      .photo-gallery{gap:6px}
-    }
+    /* Photo gallery responsive - already handled above */
     
     /* Reduced Motion Support */
     @media (prefers-reduced-motion: reduce){
@@ -440,6 +454,33 @@
             html.setAttribute('data-theme', 'midnight');
             localStorage.setItem('theme', 'midnight');
           }
+        });
+      }
+    })();
+
+    // Touch support for photo captions
+    (function(){
+      const photoItems = document.querySelectorAll('.photo-item');
+      const isTouch = 'ontouchstart' in window || (navigator.maxTouchPoints || 0) > 0;
+      
+      if (isTouch) {
+        photoItems.forEach(item => {
+          let touchTimeout;
+          item.addEventListener('touchstart', function(){
+            this.classList.add('touched');
+            clearTimeout(touchTimeout);
+          }, {passive:true});
+          
+          item.addEventListener('touchend', function(){
+            touchTimeout = setTimeout(() => {
+              this.classList.remove('touched');
+            }, 200);
+          }, {passive:true});
+          
+          item.addEventListener('touchcancel', function(){
+            this.classList.remove('touched');
+            clearTimeout(touchTimeout);
+          }, {passive:true});
         });
       }
     })();
