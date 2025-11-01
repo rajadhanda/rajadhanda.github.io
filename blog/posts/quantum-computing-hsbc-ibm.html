@@ -207,12 +207,6 @@
     }
     .article-content p{
       margin:0 0 24px 0; font-size:1.1rem; line-height:1.7;
-      transition:background-color 0.6s var(--ease), padding 0.3s var(--ease);
-      padding:0; border-radius:4px;
-    }
-    .article-content p.highlight{
-      background-color:rgba(240, 232, 255, 0.3);
-      padding:4px 8px;
     }
     .article-content blockquote{
       border-left:4px solid var(--pastel-mint-dark); padding-left:24px;
@@ -354,10 +348,33 @@
       .article-header h1{font-size:1.5rem; padding-top:58px} /* Button: 16px top + 42px height = 58px */
       .theme-toggle{top:16px; left:16px; width:42px; height:42px}
       .nav-back{top:16px; right:16px; width:42px; height:42px}
+      .reading-progress{left:10px; height:150px}
+    }
+    
+    /* Reading Progress - Elegant Side Indicator */
+    .reading-progress{
+      position:fixed; top:50%; left:20px; width:4px; height:200px;
+      background:var(--border); border-radius:2px; z-index:1002;
+      transform:translateY(-50%); transition:all .3s var(--ease);
+    }
+    .reading-progress::before{
+      content:''; position:absolute; top:0; left:0; width:100%;
+      background:linear-gradient(180deg, var(--accent), var(--pastel-lavender-dark));
+      border-radius:2px; transition:height .1s ease;
+      height: var(--progress-height, 0%);
+    }
+    .reading-progress::after{
+      content:''; position:absolute; top:0; left:-4px; width:12px; height:12px;
+      background:var(--accent); border-radius:50%; transform:translateY(-6px);
+      transition:top .1s ease; box-shadow:0 2px 8px rgba(0,0,0,0.2);
+      top: var(--dot-position, 0px);
     }
   </style>
 </head>
 <body>
+  <!-- Reading Progress -->
+  <div class="reading-progress" id="readingProgress"></div>
+
   <!-- Theme Toggle Button -->
   <button class="theme-toggle" id="themeToggle" aria-label="Toggle midnight mode">
     <i class="fa-solid fa-moon" aria-hidden="true"></i>
@@ -614,6 +631,7 @@
 
     // Event listeners
     window.addEventListener('scroll', () => {
+      updateReadingProgress();
       updateSidebarVisibility();
       updateActiveTocSection();
       updateScrollToTopVisibility();
@@ -651,34 +669,36 @@
       updateScrollToTopVisibility();
     })();
 
-    // Paragraph highlights as user reads
-    (function(){
-      const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-      if (reducedMotion) return;
+    // Reading progress - elegant side indicator
+    function updateReadingProgress() {
+      const article = document.querySelector('.article-content');
+      const progress = document.getElementById('readingProgress');
+      const articleTop = article.offsetTop;
+      const articleHeight = article.offsetHeight;
+      const windowHeight = window.innerHeight;
+      const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
       
-      const paragraphs = document.querySelectorAll('.article-content p');
-      if (!paragraphs.length) return;
+      if (!article || !progress) return;
       
-      const observerOptions = {
-        root: null,
-        rootMargin: '-20% 0px -60% 0px',
-        threshold: 0.3
-      };
+      const articleBottom = articleTop + articleHeight;
+      const viewportTop = scrollTop;
+      const viewportBottom = viewportTop + windowHeight;
       
-      const observer = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-          if (entry.isIntersecting) {
-            entry.target.classList.add('highlight');
-          } else {
-            entry.target.classList.remove('highlight');
-          }
-        });
-      }, observerOptions);
+      // Calculate how much of the article is visible
+      const visibleTop = Math.max(viewportTop, articleTop);
+      const visibleBottom = Math.min(viewportBottom, articleBottom);
+      const visibleHeight = Math.max(0, visibleBottom - visibleTop);
+      const totalVisible = Math.min(windowHeight, articleHeight);
+      const progressPercent = totalVisible > 0 ? (visibleHeight / totalVisible) * 100 : 0;
       
-      paragraphs.forEach(paragraph => {
-        observer.observe(paragraph);
-      });
-    })();
+      // Update progress bar
+      progress.style.setProperty('--progress-height', progressPercent + '%');
+      progress.style.setProperty('--dot-position', (progressPercent / 100) * 200 + 'px');
+    }
+    
+    window.addEventListener('scroll', updateReadingProgress, {passive:true});
+    window.addEventListener('resize', updateReadingProgress, {passive:true});
+    updateReadingProgress();
   </script>
 </body>
 </html>
