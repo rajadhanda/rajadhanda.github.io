@@ -503,6 +503,8 @@
       function calculateSoftRepulsion(currentIndex, x, y, halfW, halfH) {
         let forceX = 0;
         let forceY = 0;
+        let posCorrectionX = 0;
+        let posCorrectionY = 0;
         
         // Check collision with centerpiece elements
         const elementBounds = getCenterpieceElementBounds();
@@ -523,12 +525,19 @@
             const dist = Math.hypot(dx, dy);
             
             if (dist > 0.0001) {
-              // Gentle repulsion force - stronger when deeper in collision
+              // Stronger repulsion force - stronger when deeper in collision
               const overlapDepth = Math.min(overlapX, overlapY);
-              const repulsionStrength = overlapDepth * 0.08; // Gentle bounce
+              const repulsionStrength = overlapDepth * 0.35; // Stronger bounce
               
-              forceX += (dx / dist) * repulsionStrength;
-              forceY += (dy / dist) * repulsionStrength;
+              const normX = dx / dist;
+              const normY = dy / dist;
+              
+              forceX += normX * repulsionStrength;
+              forceY += normY * repulsionStrength;
+              
+              // Also apply immediate position correction to prevent overlap
+              posCorrectionX += normX * overlapDepth * 1.2;
+              posCorrectionY += normY * overlapDepth * 1.2;
             }
           }
         });
@@ -547,19 +556,26 @@
           const dx = x - otherX;
           const dy = y - otherY;
           const dist = Math.hypot(dx, dy);
-          const minDist = Math.max(halfW, halfH) + Math.max(otherHalfW, otherHalfH) + 8; // Small gap
+          const minDist = Math.max(halfW, halfH) + Math.max(otherHalfW, otherHalfH) + 10; // Gap between bubbles
           
           if (dist < minDist && dist > 0.0001) {
-            // Gentle repulsion from other bubble
+            // Stronger repulsion from other bubble
             const overlapDepth = minDist - dist;
-            const repulsionStrength = overlapDepth * 0.06; // Gentle bounce between bubbles
+            const repulsionStrength = overlapDepth * 0.25; // Stronger bounce between bubbles
             
-            forceX += (dx / dist) * repulsionStrength;
-            forceY += (dy / dist) * repulsionStrength;
+            const normX = dx / dist;
+            const normY = dy / dist;
+            
+            forceX += normX * repulsionStrength;
+            forceY += normY * repulsionStrength;
+            
+            // Position correction for bubbles
+            posCorrectionX += normX * overlapDepth * 1.0;
+            posCorrectionY += normY * overlapDepth * 1.0;
           }
         }
         
-        return { forceX, forceY };
+        return { forceX, forceY, posCorrectionX, posCorrectionY };
       }
 
       // Gentle parameters
@@ -734,8 +750,18 @@
           s.vel.x = (s.vel.x + (s.target.x - s.pos.x) * k) * DAMP;
           s.vel.y = (s.vel.y + (s.target.y - s.pos.y) * k) * DAMP;
 
+          const speed = Math.hypot(s.vel.x, s.vel.y);
+          if (speed > MAX_VEL){
+            const scale = MAX_VEL / speed;
+            s.vel.x *= scale; s.vel.y *= scale;
+          }
+
+          s.pos.x += s.vel.x;
+          s.pos.y += s.vel.y;
+
           // Apply soft repulsion forces from collisions (gentle bounce)
-          // Only apply after initial load to avoid interfering with smooth entry
+          // Apply collision detection after velocity update for accurate position
+          // Only apply collision repulsion after initial load animation (preserve smooth entry)
           if (initialized) {
             const repulsion = calculateSoftRepulsion(
               idx,
@@ -745,19 +771,14 @@
               halfH
             );
             
-            // Apply gentle repulsion to velocity (not position correction)
-            s.vel.x += repulsion.forceX * dt * 40; // Gentle force application
-            s.vel.y += repulsion.forceY * dt * 40;
+            // Apply stronger repulsion to velocity
+            s.vel.x += repulsion.forceX * dt * 80; // Stronger force application
+            s.vel.y += repulsion.forceY * dt * 80;
+            
+            // Apply immediate position correction to prevent overlap
+            s.pos.x += repulsion.posCorrectionX;
+            s.pos.y += repulsion.posCorrectionY;
           }
-
-          const speed = Math.hypot(s.vel.x, s.vel.y);
-          if (speed > MAX_VEL){
-            const scale = MAX_VEL / speed;
-            s.vel.x *= scale; s.vel.y *= scale;
-          }
-
-          s.pos.x += s.vel.x;
-          s.pos.y += s.vel.y;
           
           // Final clamp to ensure we stay in bounds
           s.pos.x = clamp(s.pos.x, minX, maxX);
