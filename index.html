@@ -403,9 +403,91 @@
       // --- Helpers ----------------------------------------------------------
       function clamp(v, lo, hi){ return Math.max(lo, Math.min(hi, v)); }
       function clearGapForViewport(){
-        if (innerWidth <= 380) return 56;
-        if (innerWidth <= 560) return 48;
-        return 28;
+        if (innerWidth <= 380) return 64;
+        if (innerWidth <= 560) return 56;
+        return 40; // increased clearance for profile image
+      }
+
+      // Detect collision with centerpiece elements (image, text, etc.)
+      function getCenterpieceBounds() {
+        const cp = document.getElementById('centerpiece');
+        if (!cp) return null;
+        
+        const rect = cp.getBoundingClientRect();
+        // Add some padding around the centerpiece
+        const padding = 20;
+        return {
+          left: rect.left - padding,
+          right: rect.right + padding,
+          top: rect.top - padding,
+          bottom: rect.bottom + padding,
+          centerX: rect.left + rect.width / 2,
+          centerY: rect.top + rect.height / 2
+        };
+      }
+
+      // Calculate smooth repulsion force from collisions
+      function calculateRepulsionForces(currentIndex, x, y, velX, velY, halfW, halfH) {
+        let forceX = 0;
+        let forceY = 0;
+        const currentBubble = state[currentIndex];
+        
+        // Check collision with centerpiece
+        const centerBounds = getCenterpieceBounds();
+        if (centerBounds) {
+          const bubbleLeft = x - halfW;
+          const bubbleRight = x + halfW;
+          const bubbleTop = y - halfH;
+          const bubbleBottom = y + halfH;
+          
+          // Check if bubble overlaps with centerpiece
+          const overlapX = Math.min(bubbleRight - centerBounds.left, centerBounds.right - bubbleLeft);
+          const overlapY = Math.min(bubbleBottom - centerBounds.top, centerBounds.bottom - bubbleTop);
+          
+          if (overlapX > 0 && overlapY > 0) {
+            // Calculate repulsion direction (away from centerpiece center)
+            const dx = x - centerBounds.centerX;
+            const dy = y - centerBounds.centerY;
+            const dist = Math.hypot(dx, dy);
+            
+            if (dist > 0.0001) {
+              // Smooth repulsion force - stronger when deeper in collision
+              const overlapDepth = Math.min(overlapX, overlapY);
+              const repulsionStrength = overlapDepth * 0.25; // Smooth bounce strength
+              
+              forceX += (dx / dist) * repulsionStrength;
+              forceY += (dy / dist) * repulsionStrength;
+            }
+          }
+        }
+        
+        // Check collisions with other bubbles
+        for (let i = 0; i < state.length; i++) {
+          if (i === currentIndex) continue;
+          
+          const otherBubble = state[i];
+          const otherX = otherBubble.pos.x;
+          const otherY = otherBubble.pos.y;
+          const otherRect = otherBubble.el.getBoundingClientRect();
+          const otherHalfW = otherRect.width / 2;
+          const otherHalfH = otherRect.height / 2;
+          
+          const dx = x - otherX;
+          const dy = y - otherY;
+          const dist = Math.hypot(dx, dy);
+          const minDist = Math.max(halfW, halfH) + Math.max(otherHalfW, otherHalfH);
+          
+          if (dist < minDist && dist > 0.0001) {
+            // Smooth repulsion from other bubble
+            const overlapDepth = minDist - dist;
+            const repulsionStrength = overlapDepth * 0.18; // Smooth bounce between bubbles
+            
+            forceX += (dx / dist) * repulsionStrength;
+            forceY += (dy / dist) * repulsionStrength;
+          }
+        }
+        
+        return { forceX, forceY };
       }
 
       function getCenterpieceCenter() {
@@ -423,17 +505,18 @@
         return { x: innerWidth / 2, y: innerHeight / 2, w: 0, h: 0 };
       }
 
-      // Gentle parameters
-      const DRIFT_AMP   = 16;    // lively ambient drift
-      const DRIFT_FREQ  = 0.18;  // drift cycle
-      const BOUNCE_AMP  = 8;     // soft radial bounce
-      const BOUNCE_FREQ = 0.08;
-      const SPIN        = 0.010; // slightly faster orbit
+      // Faster but elegant parameters
+      const DRIFT_AMP   = 24;    // increased ambient drift
+      const DRIFT_FREQ  = 0.22;  // slightly faster drift cycle
+      const BOUNCE_AMP  = 12;    // increased radial bounce
+      const BOUNCE_FREQ = 0.10;
+      const SPIN        = 0.018; // faster orbit
       const MAG_PULL    = 0.015; // subtle magnetic pull on hover
-      const SPRING      = 0.035; // smoother pursuit
-      const SPRING_INIT = 0.12;  // faster initial float-in
-      const DAMP        = 0.90;  // softer, more organic motion
-      const MAX_VEL     = 5;     // allow brisk but smooth entry
+      const SPRING      = 0.048; // faster, more responsive pursuit
+      const SPRING_INIT = 0.15;  // faster initial float-in
+      const DAMP        = 0.88;  // slightly less damping for more movement
+      const MAX_VEL     = 7;     // allow faster but still smooth movement
+      const REPULSION_DAMP = 0.92; // damping for repulsion to keep it smooth
 
       const state = bubbles.map((el, i) => ({
         el,
@@ -484,14 +567,11 @@
           const minY = halfH + pad;
           const maxY = innerHeight - halfH - pad;
 
-          // Calculate radius with reasonable constraints
-          // Ensure clearance from centerpiece bounds by at least bubble radius + gap
-          const centerHalfDiag = Math.hypot(center.w/2, center.h/2);
-          const minClear = centerHalfDiag + Math.max(halfW, halfH) + clearGapForViewport();
+          // Calculate radius - allow bubbles to get closer (collisions will bounce)
           const maxRadiusX = Math.min(center.x - minX, maxX - center.x);
           const maxRadiusY = Math.min(center.y - minY, maxY - center.y);
           const maxRadius = Math.min(maxRadiusX, maxRadiusY);
-          const R = clamp(baseR * s.radiusMul, Math.max(120, minClear), maxRadius);
+          const R = clamp(baseR * s.radiusMul, 80, maxRadius); // Lower min radius to allow closer approach
 
           let targetX = center.x + Math.cos(s.angle) * R;
           let targetY = center.y + Math.sin(s.angle) * R;
@@ -510,21 +590,10 @@
           //
           
           s.vel.x = 0; s.vel.y = 0;     // reset velocities to avoid bounce on re-layout
-          // Clamp and enforce centerpiece clearance on initial placement
+          // Clamp to safe boundaries (collisions will bounce during movement)
           let tx = clamp(targetX, minX, maxX);
           let ty = clamp(targetY, minY, maxY);
-          const dx0 = tx - center.x;
-          const dy0 = ty - center.y;
-          const dist0 = Math.hypot(dx0, dy0);
-          const centerHalfDiag2 = Math.hypot(center.w/2, center.h/2);
-          const minClear2 = centerHalfDiag2 + Math.max(halfW, halfH) + 24;
-          if (dist0 < minClear2 && dist0 > 0.0001){
-            const sc = minClear2 / dist0;
-            tx = center.x + dx0 * sc;
-            ty = center.y + dy0 * sc;
-            tx = clamp(tx, minX, maxX);
-            ty = clamp(ty, minY, maxY);
-          }
+          
           s.target.x = tx;
           s.target.y = ty;
           s.el.style.transform = `translate3d(${s.pos.x - halfW}px, ${s.pos.y - halfH}px, 0)`;
@@ -548,7 +617,7 @@
           Math.min(innerWidth, innerHeight) * 0.3
         );
 
-        state.forEach(s => {
+        state.forEach((s, idx) => {
           const rect = s.el.getBoundingClientRect();
           const halfW = rect.width/2;
           const halfH = rect.height/2;
@@ -569,13 +638,11 @@
           const drift = Math.sin(time * (DRIFT_FREQ * 2 * Math.PI) + s.driftPhase) * DRIFT_AMP
                        + Math.sin(time * (BOUNCE_FREQ * 2 * Math.PI) + s.driftPhase*0.7) * BOUNCE_AMP;
           
-          // Calculate radius with reasonable constraints and keep clear of centerpiece
-          const centerHalfDiag = Math.hypot(center.w/2, center.h/2);
-          const minClear = centerHalfDiag + Math.max(halfW, halfH) + clearGapForViewport();
+          // Calculate radius - allow bubbles to get closer (collisions will bounce)
           const maxRadiusX = Math.min(center.x - minX, maxX - center.x);
           const maxRadiusY = Math.min(center.y - minY, maxY - center.y);
           const maxRadius = Math.min(maxRadiusX, maxRadiusY);
-          const R = clamp(baseR * s.radiusMul + drift, Math.max(120, minClear), maxRadius);
+          const R = clamp(baseR * s.radiusMul + drift, 80, maxRadius); // Lower min radius to allow closer approach
 
           let tx = center.x + Math.cos(s.angle) * R;
           let ty = center.y + Math.sin(s.angle) * R;
@@ -586,21 +653,9 @@
             ty += (filtPointer.y - ty) * pull;
           }
 
-          // First, clamp to viewport safe bounds
+          // Clamp to viewport safe bounds
           tx = clamp(tx, minX, maxX);
           ty = clamp(ty, minY, maxY);
-
-          // Then enforce centerpiece clearance even after clamping
-          let dx = tx - center.x;
-          let dy = ty - center.y;
-          let dist = Math.hypot(dx, dy);
-          if (dist < minClear && dist > 0.0001){
-            const scale = minClear / dist;
-            tx = center.x + dx * scale;
-            ty = center.y + dy * scale;
-            tx = clamp(tx, minX, maxX);
-            ty = clamp(ty, minY, maxY);
-          }
 
           s.target.x = tx;
           s.target.y = ty;
@@ -608,6 +663,11 @@
           const k = initialized ? SPRING : SPRING_INIT;
           s.vel.x = (s.vel.x + (s.target.x - s.pos.x) * k) * DAMP;
           s.vel.y = (s.vel.y + (s.target.y - s.pos.y) * k) * DAMP;
+
+          // Apply repulsion forces from collisions (smooth bounce)
+          const repulsion = calculateRepulsionForces(idx, s.pos.x, s.pos.y, s.vel.x, s.vel.y, halfW, halfH);
+          s.vel.x += repulsion.forceX * dt * 50; // Scale by dt for frame-rate independence
+          s.vel.y += repulsion.forceY * dt * 50;
 
           const speed = Math.hypot(s.vel.x, s.vel.y);
           if (speed > MAX_VEL){
