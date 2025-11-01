@@ -133,7 +133,7 @@
     /* Responsive adjustments for smaller windows */
     @media (max-width:1024px){
       .article-container{padding:100px 20px 60px}
-      .article-header h1{padding-top:20px}
+      .article-header h1{padding-top:70px}
     }
 
     /* Article Header */
@@ -164,6 +164,7 @@
       font-size:clamp(2.2rem,5vw,3.2rem); line-height:1.1; margin:0 0 20px 0;
       letter-spacing:-.02em; font-weight:400; opacity:0; transform:translateY(20px);
       animation:slideInUp 0.8s var(--ease) 0.2s forwards;
+      padding-top:80px; /* Space for fixed buttons */
     }
     .article-meta{
       display:flex; align-items:center; justify-content:center; gap:24px;
@@ -336,7 +337,7 @@
     @media (max-width:768px){
       .article-container{padding:90px 20px 60px}
       .article-content{padding:32px}
-      .article-header h1{padding-top:16px; font-size:clamp(1.4rem,5vw,2rem)}
+      .article-header h1{padding-top:66px; font-size:clamp(1.4rem,5vw,2rem)} /* Button: 20px top + 46px height = 66px */
       .theme-toggle{top:20px; left:20px; width:46px; height:46px}
       .nav-back{top:20px; right:20px; width:46px; height:46px}
       .toc{display:none}
@@ -345,12 +346,12 @@
     
     @media (max-width:560px){
       .article-container{padding:80px 16px 40px}
-      .article-header h1{font-size:clamp(1.3rem,5vw,1.8rem); padding-top:12px}
+      .article-header h1{font-size:clamp(1.3rem,5vw,1.8rem); padding-top:66px}
     }
     
     @media (max-width:480px){
       .article-container{padding:75px 16px 40px}
-      .article-header h1{font-size:1.5rem; padding-top:10px}
+      .article-header h1{font-size:1.5rem; padding-top:58px} /* Button: 16px top + 42px height = 58px */
       .theme-toggle{top:16px; left:16px; width:42px; height:42px}
       .nav-back{top:16px; right:16px; width:42px; height:42px}
     }

@@ -83,25 +83,25 @@
     /* Responsive adjustments for smaller windows */
     @media (max-width:1024px){
       main{padding:80px 20px 20px}
-      h1{padding-top:16px}
+      h1{padding-top:70px} /* Button: 48px top + 52px height = 100px, reduce padding */
     }
     
     @media (max-width:768px){
       .theme-toggle{top:48px; left:20px; width:46px; height:46px}
       .nav-back{top:48px; right:20px; width:46px; height:46px}
       main{padding:80px 20px 20px}
-      h1{font-size:clamp(1.4rem,5vw,2rem); padding-top:12px}
+      h1{font-size:clamp(1.4rem,5vw,2rem); padding-top:66px} /* Button: 48px top + 46px height = 94px */
     }
     @media (max-width:560px){
       main{padding:72px 20px 20px}
-      h1{font-size:clamp(1.3rem,5vw,1.8rem); padding-top:10px}
+      h1{font-size:clamp(1.3rem,5vw,1.8rem); padding-top:66px}
       .subtitle{font-size:1rem; margin-bottom:40px}
     }
     @media (max-width:480px){
       .theme-toggle{top:48px; left:16px; width:42px; height:42px}
       .nav-back{top:48px; right:16px; width:42px; height:42px}
       main{padding:68px 16px 20px}
-      h1{font-size:1.5rem; padding-top:8px}
+      h1{font-size:1.5rem; padding-top:62px} /* Button: 48px top + 42px height = 90px */
     }
     
     /* Global button press animations */
@@ -144,7 +144,7 @@
     h1{
       font-weight:400; font-size:clamp(1.5rem,4vw,2.5rem); margin:0 0 8px;
       letter-spacing:-.01em;
-      padding-top:20px; /* Space for fixed buttons */
+      padding-top:80px; /* Space for fixed buttons (48px top + 52px height + 20px margin) */
     }
     
     .subtitle{
