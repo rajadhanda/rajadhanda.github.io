@@ -536,7 +536,7 @@
                 pushDirY = dy / dist;
               }
               
-              const repulsionStrength = overlapDepth * 0.12; // Gentle bounce
+              const repulsionStrength = overlapDepth * 0.20; // Moderate bounce - prevents overlap
               
               forceX += (dx / dist) * repulsionStrength;
               forceY += (dy / dist) * repulsionStrength;
@@ -563,7 +563,7 @@
           if (dist < minDist && dist > 0.0001) {
             // Gentle repulsion from other bubble
             const overlapDepth = minDist - dist;
-            const repulsionStrength = overlapDepth * 0.08; // Gentle bounce between bubbles
+            const repulsionStrength = overlapDepth * 0.15; // Moderate bounce between bubbles
             
             forceX += (dx / dist) * repulsionStrength;
             forceY += (dy / dist) * repulsionStrength;
@@ -577,9 +577,10 @@
           }
         }
         
-        // Only return gentle position correction for the deepest overlap (to prevent vibration)
-        const posCorrectionX = minOverlapDepth < Infinity ? pushDirX * minOverlapDepth * 0.3 : 0;
-        const posCorrectionY = minOverlapDepth < Infinity ? pushDirY * minOverlapDepth * 0.3 : 0;
+        // Return moderate position correction for the deepest overlap to prevent overlap
+        // Smooth enough to avoid vibration but strong enough to prevent overlap
+        const posCorrectionX = minOverlapDepth < Infinity ? pushDirX * minOverlapDepth * 0.6 : 0;
+        const posCorrectionY = minOverlapDepth < Infinity ? pushDirY * minOverlapDepth * 0.6 : 0;
         
         return { forceX, forceY, posCorrectionX, posCorrectionY };
       }
@@ -777,15 +778,15 @@
               halfH
             );
             
-            // Apply gentle repulsion to velocity with smooth easing
-            // Use lower force multiplier for smoother, more elegant bouncing
-            s.vel.x += repulsion.forceX * dt * 30; // Gentle force application
-            s.vel.y += repulsion.forceY * dt * 30;
+            // Apply moderate repulsion to velocity with smooth easing
+            // Balanced to prevent overlap while maintaining natural movement
+            s.vel.x += repulsion.forceX * dt * 50; // Moderate force application
+            s.vel.y += repulsion.forceY * dt * 50;
             
-            // Apply gentle, smoothed position correction to prevent overlap (much reduced)
-            // Only apply a small amount to prevent vibration
-            s.pos.x += repulsion.posCorrectionX * 0.5; // Smooth correction
-            s.pos.y += repulsion.posCorrectionY * 0.5;
+            // Apply smooth position correction to prevent overlap
+            // Strong enough to prevent overlap, smooth enough to avoid vibration
+            s.pos.x += repulsion.posCorrectionX * 0.7; // Moderate correction for natural feel
+            s.pos.y += repulsion.posCorrectionY * 0.7;
           }
           
           // Final clamp to ensure we stay in bounds
