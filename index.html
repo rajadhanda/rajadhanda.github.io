@@ -513,7 +513,7 @@
       text-align:center;
     }
     .about-lede{
-      font-size:clamp(0.95rem, 2vw, 1.05rem); line-height:1.6; color:var(--fg-light);
+      font-size:clamp(0.85rem, 1.8vw, 0.95rem); line-height:1.6; color:var(--fg-light);
       margin:0; font-weight:400;
     }
 
@@ -554,7 +554,7 @@
     /* Timeline Section - Subtle Horizontal Line */
     #timeline{
       margin-top:56px; max-width:600px; margin-left:auto; margin-right:auto;
-      padding:0 20px; display:block !important; visibility:visible !important; opacity:1 !important;
+      padding:0 20px; 
     }
     .timeline-line{
       width:100%; height:1px; background:var(--border);
@@ -721,11 +721,6 @@
         </a>
       </div>
 
-      <!-- Inline About Section -->
-      <section id="about-inline" class="about-inline">
-        <p class="about-lede">Innovation consultant in UBS Group Internal Consulting, working at the intersection of finance, technology, and product thinking. I prototype quickly, validate with real teams, and turn concepts into tools that get used.</p>
-      </section>
-
       <!-- Contact Intent Section - HIDDEN FOR REDESIGN -->
       <section id="contact-intent" class="section contact-intent" style="display:none;">
         <p class="contact-intent-label">Talk to me about</p>
@@ -767,6 +762,7 @@
             <span>LinkedIn</span>
           </a>
         </div>
+      </section>
       <!-- Timeline Section -->
       <section id="timeline" class="timeline">
         <div class="timeline-line"></div>
@@ -832,6 +828,11 @@
             <i class="fa-solid fa-camera" aria-hidden="true"></i>
           </a>
         </div>
+      </section>
+
+      <!-- Inline About Section - After timeline and hobbies, before bubbles -->
+      <section id="about-inline" class="about-inline">
+        <p class="about-lede">Innovation consultant in UBS Group Internal Consulting, working at the intersection of finance, technology, and product thinking. I prototype quickly, validate with real teams, and turn concepts into tools that get used.</p>
       </section>
     </div>
   </main>
