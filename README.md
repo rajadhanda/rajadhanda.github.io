@@ -19,16 +19,12 @@ Personal website showcasing projects, blog posts, and photographs.
 - **Accessibility** - Full keyboard navigation, prefers-reduced-motion support
 - **Consistency** - Unified design language across all pages
 
-## Features
+## Features (e.g.)
 
 - Interactive homepage with physics-based bubble navigation
 - Smooth page transitions
 - Blog with card-based layout
 - Photo gallery with lazy loading
-- Responsive design (mobile-first approach)
-- Lightbox for images
-- Reading progress indicators
-- Dark mode ready (structure in place)
 
 ## Setup
 
@@ -66,12 +62,6 @@ rajadhanda.me/
 └── assets/
     └── images/              # Site assets
 ```
-
-## Browser Support
-
-- Modern browsers (Chrome, Firefox, Safari, Edge)
-- Graceful degradation for older browsers
-- Responsive design for mobile devices
 
 ## Performance
 
