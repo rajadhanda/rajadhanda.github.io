@@ -487,40 +487,24 @@
       .section{transform:none; transition:opacity .3s var(--ease)}
     }
 
-    /* Inline About Section */
+    /* Inline About Section - Minimal Typography */
     #about-inline{
-      margin-top:40px; max-width:680px; margin-left:auto; margin-right:auto;
+      margin-top:32px; max-width:600px; margin-left:auto; margin-right:auto;
+      text-align:center;
     }
-    .about-inline-content{
-      display:grid; grid-template-columns:1fr auto; gap:32px 24px;
-      align-items:start; text-align:left;
+    .about-lede{
+      font-size:clamp(0.95rem, 2vw, 1.05rem); line-height:1.6; color:var(--fg-light);
+      margin:0 0 20px 0; font-weight:400;
     }
-    .about-inline .lede{
-      font-size:1.05rem; line-height:1.65; color:var(--fg-light);
-      margin:0; grid-column:1/-1;
+    .about-facts{
+      display:flex; flex-wrap:wrap; gap:8px; justify-content:center;
+      margin-top:16px;
     }
-    .about-inline .facts{
-      display:flex; flex-wrap:wrap; gap:12px; grid-column:1/-1;
-    }
-    .about-inline .chip{
-      display:inline-block; padding:6px 14px; border-radius:20px;
-      background:var(--accent-soft); border:1px solid var(--border);
-      font-family:'Inter',sans-serif; font-size:.85rem; color:var(--fg-light);
-      white-space:nowrap; transition:all .2s var(--ease);
-    }
-    .about-inline .chip:hover{
-      background:var(--border); border-color:var(--border-hover);
-    }
-    .about-inline .portrait{
-      width:160px; height:160px; border-radius:50%; object-fit:cover;
-      border:2px solid var(--border); opacity:.85; transition:opacity .2s var(--ease);
-      grid-column:2; justify-self:end;
-    }
-    .about-inline .portrait:hover{opacity:1}
-    @media (max-width:640px){
-      .about-inline-content{grid-template-columns:1fr; gap:24px}
-      .about-inline .portrait{grid-column:1; justify-self:center; width:140px; height:140px}
-      .about-inline .facts{justify-content:center}
+    .about-chip{
+      display:inline-block; padding:4px 12px; border-radius:16px;
+      background:transparent; border:none;
+      font-family:'Inter',sans-serif; font-size:0.75rem; color:var(--muted);
+      white-space:nowrap; font-weight:400;
     }
 
     /* Contact Intent Section */
@@ -557,76 +541,55 @@
       .contact-chip:hover{transform:none}
     }
 
-    /* Timeline Section */
+    /* Timeline Section - Subtle Horizontal Line */
     #timeline{
-      margin-top:64px; max-width:680px; margin-left:auto; margin-right:auto;
+      margin-top:48px; max-width:600px; margin-left:auto; margin-right:auto;
       padding:0 20px;
     }
-    .timeline-heading{
-      font-size:1.3rem; font-weight:400; margin:0 0 32px 0;
-      color:var(--fg); text-align:center; font-family:'Inter',sans-serif;
-      letter-spacing:-.01em;
-    }
-    .timeline-content{
-      position:relative;
+    .timeline-line{
+      width:100%; height:1px; background:var(--border);
+      margin-bottom:32px; opacity:0.5;
     }
     .timeline-items{
-      display:flex; flex-direction:column; gap:20px;
+      display:flex; flex-direction:column; gap:24px;
     }
     .timeline-item{
-      display:grid; grid-template-columns:auto 1fr; gap:16px 20px;
-      padding:16px 0; border-bottom:1px solid var(--border);
-      align-items:start;
+      display:flex; flex-direction:column; gap:8px;
     }
-    .timeline-item:last-child{
-      border-bottom:none;
+    .timeline-basic{
+      display:flex; align-items:baseline; gap:12px; flex-wrap:wrap;
+      justify-content:center;
     }
     .timeline-year{
-      font-family:'Inter',sans-serif; font-size:.85rem; font-weight:500;
+      font-family:'Inter',sans-serif; font-size:0.75rem; font-weight:400;
       color:var(--muted); white-space:nowrap;
-      min-width:80px;
     }
     .timeline-org{
-      font-family:'Inter',sans-serif; font-size:.9rem; font-weight:500;
-      color:var(--fg); margin-bottom:4px; grid-column:2;
+      font-family:'Inter',sans-serif; font-size:0.85rem; font-weight:400;
+      color:var(--fg-light);
+    }
+    .timeline-detailed{
+      opacity:0; max-height:0; overflow:hidden;
+      transition:opacity 0.4s var(--ease), max-height 0.4s var(--ease), margin-top 0.4s var(--ease);
+      margin-top:0;
+      text-align:center;
+    }
+    .timeline-item.revealed .timeline-detailed{
+      opacity:1; max-height:200px; margin-top:8px;
     }
     .timeline-desc{
-      font-size:.95rem; line-height:1.5; color:var(--fg-light);
-      grid-column:2;
-    }
-    .timeline-toggle{
-      display:none; margin-top:24px; padding:10px 16px;
-      background:transparent; border:1px solid var(--border);
-      border-radius:20px; color:var(--fg-light);
-      font-family:'Inter',sans-serif; font-size:.85rem;
-      cursor:pointer; transition:all .2s var(--ease);
-      width:100%; justify-content:center; align-items:center; gap:8px;
-    }
-    .timeline-toggle:hover{
-      background:var(--accent-soft); border-color:var(--border-hover);
-    }
-    .timeline-toggle i{
-      transition:transform .2s var(--ease); font-size:.7rem;
-    }
-    .timeline-toggle[aria-expanded="false"] i{
-      transform:rotate(180deg);
+      font-size:0.85rem; line-height:1.5; color:var(--fg-light);
+      font-weight:400;
     }
     @media (max-width:768px){
-      #timeline{margin-top:48px}
-      .timeline-item{grid-template-columns:1fr; gap:8px}
-      .timeline-year{grid-column:1; min-width:auto}
-      .timeline-org{grid-column:1}
-      .timeline-desc{grid-column:1}
-      .timeline-toggle{display:flex}
-      .timeline-items.collapsed .timeline-item:nth-child(n+3){
-        display:none;
-      }
+      #timeline{margin-top:40px}
+      .timeline-items{gap:20px}
+      .timeline-basic{flex-direction:column; align-items:center; gap:4px}
     }
     @media (max-width:560px){
-      .timeline-item{padding:12px 0}
-      .timeline-year{font-size:.8rem}
-      .timeline-org{font-size:.85rem}
-      .timeline-desc{font-size:.9rem}
+      .timeline-year{font-size:0.7rem}
+      .timeline-org{font-size:0.8rem}
+      .timeline-desc{font-size:0.8rem}
     }
 
     /* Responsive tweaks */
@@ -717,21 +680,18 @@
       </div>
 
       <!-- Inline About Section -->
-      <section id="about-inline" class="section about-inline">
-        <div class="about-inline-content">
-          <p class="lede">Innovation consultant in UBS Group Internal Consulting, working at the intersection of finance, technology, and product thinking. I prototype quickly, validate with real teams, and turn concepts into tools that get used.</p>
-          <div class="facts">
-            <span class="chip">London, UK</span>
-            <span class="chip">UBS · Group Internal Consulting</span>
-            <span class="chip">Focus: blockchain · AI tooling · applied experiments</span>
-            <span class="chip">Currently building: Leave Now</span>
-          </div>
-          <img src="assets/images/IMG_6767.jpeg" alt="Portrait of Raja Dhanda" class="portrait" loading="lazy">
+      <section id="about-inline" class="about-inline">
+        <p class="about-lede">Innovation consultant in UBS Group Internal Consulting, working at the intersection of finance, technology, and product thinking. I prototype quickly, validate with real teams, and turn concepts into tools that get used.</p>
+        <div class="about-facts">
+          <span class="about-chip">London, UK</span>
+          <span class="about-chip">UBS · Group Internal Consulting</span>
+          <span class="about-chip">Focus: blockchain · AI tooling · applied experiments</span>
+          <span class="about-chip">Currently building: Leave Now</span>
         </div>
       </section>
 
-      <!-- Contact Intent Section -->
-      <section id="contact-intent" class="section contact-intent">
+      <!-- Contact Intent Section - HIDDEN FOR REDESIGN -->
+      <section id="contact-intent" class="section contact-intent" style="display:none;">
         <p class="contact-intent-label">Talk to me about</p>
         <div class="contact-chips">
           <a href="mailto:hello@rajadhanda.me?subject=Hello%20Raja%20%E2%80%94%20Travel%20%26%20photography" class="contact-chip">
@@ -771,41 +731,49 @@
             <span>LinkedIn</span>
           </a>
         </div>
+      <!-- Timeline Section -->
+      <section id="timeline" class="timeline">
+        <div class="timeline-line"></div>
+        <div class="timeline-items">
+          <div class="timeline-item">
+            <div class="timeline-basic">
+              <span class="timeline-year">2025</span>
+              <span class="timeline-org">UBS · Group Internal Consulting</span>
+            </div>
+            <div class="timeline-detailed">
+              <span class="timeline-desc">Innovation consultant across fintech, AI tooling, and tokenization PoCs; fast prototyping and internal adoption.</span>
+            </div>
+          </div>
+          <div class="timeline-item">
+            <div class="timeline-basic">
+              <span class="timeline-year">2024</span>
+              <span class="timeline-org">UBS · Global Markets (QIS) COO (Secondment)</span>
+            </div>
+            <div class="timeline-detailed">
+              <span class="timeline-desc">Supported index trading workflows; built operational tooling and automation.</span>
+            </div>
+          </div>
+          <div class="timeline-item">
+            <div class="timeline-basic">
+              <span class="timeline-year">2024</span>
+              <span class="timeline-org">University of Warwick</span>
+            </div>
+            <div class="timeline-detailed">
+              <span class="timeline-desc">BEng Systems Engineering (First).</span>
+            </div>
+          </div>
+          <div class="timeline-item">
+            <div class="timeline-basic">
+              <span class="timeline-year">2018–Present</span>
+              <span class="timeline-org">Independent</span>
+            </div>
+            <div class="timeline-detailed">
+              <span class="timeline-desc">Tutoring, reselling, and small digital projects; long-term self-directed initiative and iteration.</span>
+            </div>
+          </div>
+        </div>
       </section>
     </div>
-
-    <!-- Timeline Section -->
-    <section id="timeline" class="section timeline">
-    <h2 class="timeline-heading">Background</h2>
-    <div class="timeline-content">
-      <div class="timeline-items">
-        <div class="timeline-item">
-          <span class="timeline-year">2025</span>
-          <span class="timeline-org">UBS · Group Internal Consulting</span>
-          <span class="timeline-desc">Innovation consultant across fintech, AI tooling, and tokenization PoCs; fast prototyping and internal adoption.</span>
-        </div>
-        <div class="timeline-item">
-          <span class="timeline-year">2024</span>
-          <span class="timeline-org">UBS · Global Markets (QIS) COO (Secondment)</span>
-          <span class="timeline-desc">Supported index trading workflows; built operational tooling and automation.</span>
-        </div>
-        <div class="timeline-item">
-          <span class="timeline-year">2024</span>
-          <span class="timeline-org">University of Warwick</span>
-          <span class="timeline-desc">BEng Systems Engineering (First).</span>
-        </div>
-        <div class="timeline-item">
-          <span class="timeline-year">2018–Present</span>
-          <span class="timeline-org">Independent</span>
-          <span class="timeline-desc">Tutoring, reselling, and small digital projects; long-term self-directed initiative and iteration.</span>
-        </div>
-      </div>
-      <button class="timeline-toggle" aria-label="Toggle timeline" aria-expanded="true">
-        <span class="toggle-text">Show less</span>
-        <i class="fa-solid fa-chevron-up" aria-hidden="true"></i>
-      </button>
-    </div>
-    </section>
   </main>
 
   <!-- Page Transition Overlay -->
@@ -963,6 +931,22 @@
             });
           }
         });
+        
+        // About section (lede and chips)
+        const aboutInline = document.getElementById('about-inline');
+        if (aboutInline) {
+          const rect = aboutInline.getBoundingClientRect();
+          if (rect.width > 0 && rect.height > 0) {
+            bounds.push({
+              left: rect.left - padding,
+              right: rect.right + padding,
+              top: rect.top - padding,
+              bottom: rect.bottom + padding,
+              centerX: rect.left + rect.width / 2,
+              centerY: rect.top + rect.height / 2
+            });
+          }
+        }
         
         return bounds;
       }
@@ -1527,58 +1511,38 @@
       });
     })();
 
-    // ===== Timeline collapse toggle (mobile) =====
+    // ===== Timeline reveal on scroll =====
     (function(){
-      const toggle = document.querySelector('.timeline-toggle');
-      const items = document.querySelector('.timeline-items');
+      const timelineItems = document.querySelectorAll('.timeline-item');
+      if (!timelineItems.length) return;
+
+      const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
       
-      if (!toggle || !items) return;
+      const observerOptions = {
+        root: null,
+        rootMargin: '0px',
+        threshold: 0.3
+      };
 
-      const isMobile = window.matchMedia('(max-width: 768px)').matches;
-      if (!isMobile) {
-        // Desktop: always expanded
-        toggle.style.display = 'none';
-        return;
-      }
-
-      // Mobile: start collapsed
-      items.classList.add('collapsed');
-      toggle.setAttribute('aria-expanded', 'false');
-      toggle.querySelector('.toggle-text').textContent = 'Show more';
-
-      toggle.addEventListener('click', () => {
-        const isExpanded = toggle.getAttribute('aria-expanded') === 'true';
-        if (isExpanded) {
-          items.classList.add('collapsed');
-          toggle.setAttribute('aria-expanded', 'false');
-          toggle.querySelector('.toggle-text').textContent = 'Show more';
-        } else {
-          items.classList.remove('collapsed');
-          toggle.setAttribute('aria-expanded', 'true');
-          toggle.querySelector('.toggle-text').textContent = 'Show less';
-        }
-      });
-
-      // Handle resize
-      let resizeTimer;
-      window.addEventListener('resize', () => {
-        clearTimeout(resizeTimer);
-        resizeTimer = setTimeout(() => {
-          const nowMobile = window.matchMedia('(max-width: 768px)').matches;
-          if (nowMobile && !isMobile) {
-            // Switched to mobile
-            items.classList.add('collapsed');
-            toggle.setAttribute('aria-expanded', 'false');
-            toggle.querySelector('.toggle-text').textContent = 'Show more';
-            toggle.style.display = 'flex';
-          } else if (!nowMobile && isMobile) {
-            // Switched to desktop
-            items.classList.remove('collapsed');
-            toggle.setAttribute('aria-expanded', 'true');
-            toggle.style.display = 'none';
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('revealed');
+            observer.unobserve(entry.target);
           }
-        }, 150);
+        });
+      }, observerOptions);
+
+      timelineItems.forEach(item => {
+        observer.observe(item);
       });
+
+      // If reduced motion, show all immediately
+      if (reducedMotion) {
+        timelineItems.forEach(item => {
+          item.classList.add('revealed');
+        });
+      }
     })();
   </script>
 </body>
