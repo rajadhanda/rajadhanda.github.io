@@ -749,7 +749,7 @@
                 <div class="timeline-basic">
                   <span class="timeline-year">Since March 2018</span>
                   <div class="timeline-icons">
-                    <img src="assets/icons/timeline/R&R-private-tutors.png" width="48" height="48" alt="" aria-hidden="true" class="timeline-icon">
+                    <img src="assets/icons/timeline/R%26R-private-tutors.png" width="48" height="48" alt="" aria-hidden="true" class="timeline-icon">
                     <img src="assets/icons/timeline/snkrwrld.png" width="48" height="48" alt="" aria-hidden="true" class="timeline-icon">
                   </div>
                   <span class="sr-only">Independent ventures</span>
@@ -1602,6 +1602,21 @@
           if (d) d.setAttribute('aria-hidden','false');
         });
       }
+
+      // Fallback: if no items revealed after 1200ms (IO blocked), reveal first two
+      setTimeout(()=>{
+        const anyVisible = items.some(it => it.classList.contains('revealed'));
+        if (!anyVisible){
+          items.slice(0,2).forEach(item => {
+            item.style.opacity = '1';
+            item.classList.add('revealed');
+            const t = item.querySelector('.timeline-toggle');
+            const d = item.querySelector('.timeline-detailed');
+            if (t) t.setAttribute('aria-expanded','true');
+            if (d) d.setAttribute('aria-hidden','false');
+          });
+        }
+      }, 1200);
     })();
 
     // ===== Summary + Timeline simultaneous reveal + mobile toggle =====
