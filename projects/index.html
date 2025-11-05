@@ -120,6 +120,26 @@
     a{color:inherit}
     footer{padding:24px; text-align:center; color:var(--muted); font-size:.9rem; border-top:1px solid var(--border); margin-top:40px;}
 
+    /* Projects */
+    .projects-grid{display:grid; grid-template-columns:repeat(3, 1fr); gap:20px; margin-top:20px}
+    .project-card{
+      border:1px solid var(--border); border-radius:14px; padding:18px; background:rgba(255,255,255,.75);
+      box-shadow:var(--shadow-soft); transition:transform .18s var(--ease), box-shadow .18s var(--ease), border-color .18s var(--ease);
+      position:relative; overflow:hidden
+    }
+    [data-theme="midnight"] .project-card{background:rgba(10,14,39,.6)}
+    .project-card:hover{transform:translateY(-2px); box-shadow:var(--shadow-medium); border-color:var(--border-hover)}
+    .project-title{margin:0 0 6px; font-weight:600; font-size:1.1rem}
+    .project-meta{display:flex; gap:10px; align-items:center; color:var(--muted); font-size:.9rem; margin-bottom:8px}
+    .project-desc{margin:0 0 14px; color:var(--muted)}
+    .project-actions{display:flex; gap:10px; flex-wrap:wrap}
+    .btn{display:inline-flex; align-items:center; gap:8px; padding:8px 12px; border-radius:10px; border:1px solid var(--border); background:transparent; cursor:pointer; text-decoration:none; color:inherit}
+    .btn:hover{border-color:var(--border-hover)}
+    .btn.primary{background:var(--fg); color:var(--bg); border-color:transparent}
+    .btn[aria-disabled="true"], .btn.disabled{opacity:.6; cursor:not-allowed}
+    @media (max-width:1024px){.projects-grid{grid-template-columns:repeat(2, 1fr)}}
+    @media (max-width:640px){.projects-grid{grid-template-columns:1fr}}
+
     /* Responsive */
     /* Responsive adjustments for smaller windows */
     @media (max-width:1024px){
@@ -182,7 +202,16 @@
   <main>
     <h1>Projects</h1>
     <p class="subtitle">things I've built</p>
-    <p>Coming soon.</p>
+    <section class="projects-grid" aria-label="Projects">
+      <article class="project-card">
+        <h2 class="project-title">Leave Now? — Commute Decision Engine</h2>
+        <p class="project-desc">iOS app that tells you exactly when to leave with confidence. No maps — one clear recommendation.</p>
+        <div class="project-actions">
+          <a class="btn primary" href="https://github.com/rajadhanda/leave-now-ios" target="_blank" rel="noopener noreferrer" aria-label="View Leave Now repository"><i class="fa-brands fa-github" aria-hidden="true"></i> GitHub</a>
+          <a class="btn disabled" href="#" aria-disabled="true" title="Coming soon" aria-label="App Store (coming soon)"><i class="fa-brands fa-apple" aria-hidden="true"></i> App Store (soon)</a>
+        </div>
+      </article>
+    </section>
   </main>
   <footer>© 2025 Raja Dhanda – Crafted with care</footer>
 
