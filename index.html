@@ -563,20 +563,24 @@
     /* Timeline Section - Horizontal interactive, details on scroll */
     #timeline{margin-top:48px; max-width:900px; margin-left:auto; margin-right:auto; padding:0 20px; position:relative;}
     .timeline-line{position:absolute; top:50%; transform:translateY(-50%); width:100%; height:3px; background:var(--border); left:0; opacity:0.5; z-index:1;}
-    .timeline-items{display:flex; flex-direction:row; gap:0; position:relative; justify-content:space-between; align-items:flex-start; padding:48px 0 32px 0;}
-    .timeline-item{display:flex; flex-direction:column; align-items:center; position:relative; flex:1; transition:transform 0.2s var(--ease); max-width:180px; opacity:0;}
-    .timeline-item::before{content:''; position:absolute; top:50%; transform:translateY(-50%); width:18px; height:18px; border-radius:50%; background:var(--bg); border:3px solid var(--accent); z-index:3; transition:all 0.3s var(--ease); box-shadow:0 0 0 4px var(--bg), 0 2px 8px rgba(0,0,0,0.1);}    
+    .timeline-items{display:grid; grid-template-columns:repeat(4, 1fr); gap:24px; position:relative; align-items:start; padding:48px 0 32px 0;}
+    .timeline-item{display:flex; flex-direction:column; align-items:center; position:relative; transition:transform 0.2s var(--ease); opacity:0;}
+    .timeline-item::before{content:''; position:absolute; top:50%; left:50%; transform:translate(-50%, -50%); width:18px; height:18px; border-radius:50%; background:var(--bg); border:3px solid var(--accent); z-index:3; transition:all 0.3s var(--ease); box-shadow:0 0 0 4px var(--bg), 0 2px 8px rgba(0,0,0,0.1);}    
     .timeline-item:hover::before{transform:translateY(-50%) scale(1.08);}    
     .timeline-content{display:flex; flex-direction:column; gap:8px; margin-top:32px; text-align:center; width:100%;}
+    .timeline-toggle{appearance:none; background:none; border:none; padding:0; margin:0; cursor:pointer; text-align:center;}
+    .timeline-toggle:focus-visible{outline:2px solid var(--accent); outline-offset:4px; border-radius:6px}
     .timeline-basic{display:flex; flex-direction:column; align-items:center; gap:6px;}
     .timeline-year{font-family:'Inter',sans-serif; font-size:0.8rem; font-weight:600; color:var(--accent); white-space:nowrap; letter-spacing:0.02em; text-transform:uppercase;}
     .timeline-org{font-family:'Inter',sans-serif; font-size:0.9rem; font-weight:500; color:var(--fg); text-align:center; line-height:1.4;}
     .timeline-detailed{opacity:0; max-height:0; overflow:hidden; transition:opacity 0.5s var(--ease), max-height 0.5s var(--ease), margin-top 0.5s var(--ease); margin-top:0; text-align:center;}
     .timeline-item.revealed{opacity:1;}
     .timeline-item.revealed .timeline-detailed{opacity:1; max-height:200px; margin-top:16px;}
+    /* Also reveal when explicitly expanded */
+    .timeline-toggle[aria-expanded="true"] + .timeline-detailed{opacity:1; max-height:220px; margin-top:16px;}
     .timeline-desc{font-family:'Inter',sans-serif; font-size:0.85rem; line-height:1.6; color:var(--fg-light); font-weight:400; text-align:center; max-width:180px; margin:0 auto;}
-    @media (max-width:768px){#timeline{margin-top:40px; max-width:100%} .timeline-items{flex-wrap:wrap; gap:24px; justify-content:center; padding:40px 0 24px 0} .timeline-item{flex:none; max-width:140px} .timeline-line{top:24px; height:3px} .timeline-item::before{top:24px; transform:translateY(-50%); width:16px; height:16px; border-width:2.5px} .timeline-content{margin-top:32px} .timeline-basic{flex-direction:column; align-items:center; gap:6px}}
-    @media (max-width:560px){.timeline-items{flex-direction:column; gap:32px; padding:32px 0} .timeline-line{left:20px; top:0; width:3px; height:100%} .timeline-item{max-width:100%; flex-direction:row; align-items:flex-start; text-align:left} .timeline-item::before{left:20px; top:0; transform:translateX(-50%); width:16px; height:16px; border-width:2.5px} .timeline-content{margin-top:0; margin-left:40px; text-align:left; width:auto} .timeline-basic{flex-direction:column; align-items:flex-start; gap:6px} .timeline-year{font-size:0.75rem} .timeline-org{font-size:0.85rem; text-align:left; font-weight:500} .timeline-desc{font-size:0.8rem; text-align:left; max-width:100%}}
+    @media (max-width:768px){#timeline{margin-top:40px; max-width:100%} .timeline-items{grid-template-columns:repeat(2, 1fr); gap:24px; padding:40px 0 24px 0} .timeline-line{top:24px; height:3px} .timeline-item::before{top:24px; transform:translate(-50%, -50%); width:16px; height:16px; border-width:2.5px} .timeline-content{margin-top:32px} .timeline-basic{flex-direction:column; align-items:center; gap:6px}}
+    @media (max-width:560px){.timeline-items{grid-template-columns:1fr; gap:32px; padding:32px 0} .timeline-line{left:20px; top:0; width:3px; height:100%} .timeline-item{flex-direction:row; align-items:flex-start; text-align:left} .timeline-item::before{left:20px; top:0; transform:translate(-50%, -50%); width:16px; height:16px; border-width:2.5px} .timeline-content{margin-top:0; margin-left:40px; text-align:left; width:auto} .timeline-basic{flex-direction:column; align-items:flex-start; gap:6px} .timeline-year{font-size:0.75rem} .timeline-org{font-size:0.85rem; text-align:left; font-weight:500} .timeline-desc{font-size:0.8rem; text-align:left; max-width:100%}}
 
     /* Hobby Icons Section */
     #hobbies{
@@ -715,44 +719,52 @@
         <div class="timeline-items">
           <div class="timeline-item">
             <div class="timeline-content">
-              <div class="timeline-basic">
-                <span class="timeline-year">2025</span>
-                <span class="timeline-org">UBS · Group Internal Consulting</span>
-              </div>
-              <div class="timeline-detailed">
+              <button class="timeline-toggle" type="button" aria-expanded="false" aria-controls="tld-1">
+                <div class="timeline-basic">
+                  <span class="timeline-year">2025</span>
+                  <span class="timeline-org">UBS · Group Internal Consulting</span>
+                </div>
+              </button>
+              <div class="timeline-detailed" id="tld-1">
                 <span class="timeline-desc">Innovation consultant across fintech, AI tooling, and tokenization PoCs; fast prototyping and internal adoption.</span>
               </div>
             </div>
           </div>
           <div class="timeline-item">
             <div class="timeline-content">
-              <div class="timeline-basic">
-                <span class="timeline-year">April 2024 to November 2024</span>
-                <span class="timeline-org">UBS · Global Markets (QIS) COO (Secondment)</span>
-              </div>
-              <div class="timeline-detailed">
+              <button class="timeline-toggle" type="button" aria-expanded="false" aria-controls="tld-2">
+                <div class="timeline-basic">
+                  <span class="timeline-year">April 2024 to November 2024</span>
+                  <span class="timeline-org">UBS · Global Markets (QIS) COO (Secondment)</span>
+                </div>
+              </button>
+              <div class="timeline-detailed" id="tld-2">
                 <span class="timeline-desc">Supported index trading workflows; built operational tooling and automation.</span>
               </div>
             </div>
           </div>
           <div class="timeline-item">
             <div class="timeline-content">
-              <div class="timeline-basic">
-                <span class="timeline-year">June 2024</span>
-                <span class="timeline-org">University of Warwick</span>
-              </div>
-              <div class="timeline-detailed">
+              <button class="timeline-toggle" type="button" aria-expanded="false" aria-controls="tld-3">
+                <div class="timeline-basic">
+                  <span class="timeline-year">June 2024</span>
+                  <span class="timeline-org">University of Warwick</span>
+                </div>
+              </button>
+              <div class="timeline-detailed" id="tld-3">
                 <span class="timeline-desc">BEng Systems Engineering (First).</span>
               </div>
             </div>
           </div>
           <div class="timeline-item">
             <div class="timeline-content">
-              <div class="timeline-basic">
-                <span class="timeline-year">Since March 2018</span>
-                <span class="timeline-org">Independent</span>
-              </div>
-              <div class="timeline-detailed">
+              <button class="timeline-toggle" type="button" aria-expanded="false" aria-controls="tld-4">
+                <div class="timeline-basic">
+                  <span class="timeline-year">Since March 2018</span>
+                  <span class="timeline-org">Independent</span>
+                </div>
+              </button>
+              <div class="timeline-detailed" id="tld-4">
                 <span class="timeline-desc">Tutoring, reselling, and small digital projects; long-term self-directed initiative and iteration.</span>
               </div>
             </div>
@@ -760,7 +772,24 @@
         </div>
       </section>
 
-      <!-- Hobbies removed per feedback -->
+      <!-- Hobby Icons Section - At bottom after timeline -->
+      <section id="hobbies" class="hobbies section">
+        <p class="hobbies-label">always happy to chat about</p>
+        <div class="hobby-icons">
+          <a href="mailto:hello@rajadhanda.me?subject=Hello%20Raja%20%E2%80%94%20Coffee" class="hobby-icon" aria-label="Coffee">
+            <i class="fa-solid fa-mug-hot" aria-hidden="true"></i>
+          </a>
+          <a href="mailto:hello@rajadhanda.me?subject=Hello%20Raja%20%E2%80%94%20Football" class="hobby-icon" aria-label="Football">
+            <i class="fa-solid fa-futbol" aria-hidden="true"></i>
+          </a>
+          <a href="mailto:hello@rajadhanda.me?subject=Hello%20Raja%20%E2%80%94%20F1" class="hobby-icon" aria-label="F1">
+            <i class="fa-solid fa-car-side" aria-hidden="true"></i>
+          </a>
+          <a href="mailto:hello@rajadhanda.me?subject=Hello%20Raja%20%E2%80%94%20Basketball" class="hobby-icon" aria-label="Basketball">
+            <i class="fa-solid fa-basketball" aria-hidden="true"></i>
+          </a>
+        </div>
+      </section>
     </div>
   </main>
 
@@ -1538,43 +1567,46 @@
 
     // ===== Timeline scroll-based reveal =====
     (function(){
-      const timelineItems = document.querySelectorAll('.timeline-item');
-      if (!timelineItems.length) return;
+      const items = Array.from(document.querySelectorAll('.timeline-item'));
+      if (!items.length) return;
 
-      const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-      
-      // Intersection observer for revealing details below when scrolling
-      const observerOptions = {
-        root: null,
-        rootMargin: '-20% 0px -20% 0px', // Trigger when item is in middle 60% of viewport
-        threshold: 0.5
-      };
-
-      const observer = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-          if (entry.isIntersecting) {
-            entry.target.classList.add('revealed');
-            // Also fade in the item itself
-            entry.target.style.opacity = '1';
-          } else {
-            // Keep revealed state when scrolling past (optional - remove if you want it to hide)
-            // entry.target.classList.remove('revealed');
+      const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      const io = new IntersectionObserver((entries)=>{
+        entries.forEach(e=>{
+          const item = e.target;
+          if (e.isIntersecting){
+            // Reveal the item container
+            item.classList.add('revealed');
+            item.style.opacity = '1';
+            // Expand details via the toggle for accessibility parity
+            const toggle = item.querySelector('.timeline-toggle');
+            if (toggle){ toggle.setAttribute('aria-expanded', 'true'); }
+            io.unobserve(item);
           }
         });
-      }, observerOptions);
+      }, { root:null, rootMargin:'-15% 0px -15% 0px', threshold:0.55 });
 
-      // Initialize items with opacity 0 for fade-in
-      timelineItems.forEach((item, index) => {
+      items.forEach((item, i)=>{
         item.style.opacity = '0';
-        item.style.transition = `opacity 0.5s var(--ease) ${index * 0.1}s`;
-        observer.observe(item);
+        item.style.transition = `opacity .4s var(--ease) ${i*0.06}s`;
+        io.observe(item);
+        // Also wire up click/keyboard toggle to manually expand/collapse if desired
+        const btn = item.querySelector('.timeline-toggle');
+        const details = item.querySelector('.timeline-detailed');
+        if (btn && details){
+          btn.addEventListener('click', ()=>{
+            const exp = btn.getAttribute('aria-expanded') === 'true';
+            btn.setAttribute('aria-expanded', (!exp).toString());
+          });
+        }
       });
 
-      // If reduced motion, show all immediately
-      if (reducedMotion) {
-        timelineItems.forEach(item => {
+      if (reduced){
+        items.forEach(item=>{
           item.style.opacity = '1';
           item.classList.add('revealed');
+          const t = item.querySelector('.timeline-toggle');
+          if (t) t.setAttribute('aria-expanded','true');
         });
       }
     })();
