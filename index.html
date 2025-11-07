@@ -175,69 +175,15 @@
       opacity:1; transform:translateY(0) scale(1);
     }
     
-    /* Lightbox */
-    .lightbox{
-      position:fixed; inset:0; background:rgba(0,0,0,.85); backdrop-filter:blur(8px);
-      display:none; align-items:center; justify-content:center; z-index:2000;
-      opacity:0; transition:opacity 0.4s var(--ease);
-      cursor:pointer;
-    }
-    .lightbox.active{
-      display:flex; opacity:1;
-    }
-    .lightbox img{
-      max-width:90vw; max-height:90vh; border-radius:12px;
-      box-shadow:0 20px 60px rgba(0,0,0,.3);
-      transform:scale(0.95); transition:transform 0.4s var(--ease);
-      pointer-events:none;
-    }
-    .lightbox.active img{
-      transform:scale(1);
-    }
-    .lightbox-close{
-      position:absolute; top:28px; right:28px; width:48px; height:48px;
-      border-radius:50%; border:1px solid rgba(255,255,255,.3);
-      background:rgba(255,255,255,.1); backdrop-filter:blur(8px);
-      display:grid; place-items:center; cursor:pointer; color:white;
-      transition:transform .3s var(--ease), background 0.3s var(--ease); font-size:20px;
-    }
-    .lightbox-close i{
-      transition:transform .4s var(--ease-back);
-    }
-    .lightbox-close:hover i{
-      transform:rotate(15deg);
-    }
-    .lightbox-close:hover{
-      background:rgba(255,255,255,.2); transform:scale(1.05) translateY(-1px);
-    }
-    @media (prefers-reduced-motion: reduce){
-      .lightbox{transition:none}
-      .lightbox img{transition:none}
-      .lightbox-close{transition:none}
-    }
     .profile-photo{
-      width:180px; height:207px;
-      border-radius:20px; object-fit:contain; object-position:center;
+      width:140px; height:161px;
+      border-radius:16px; object-fit:contain; object-position:center;
       background: var(--bg);
       max-width: 100%; max-height: 100%;
-      cursor:pointer; transition:transform 0.4s var(--ease), box-shadow 0.4s var(--ease);
-      will-change: transform;
-    }
-    .profile-photo:hover{
-      transform:scale(1.05);
-      box-shadow:0 8px 30px rgba(0,0,0,.08);
-    }
-    @media (prefers-reduced-motion: reduce){
-      .profile-photo{
-        transition:none;
-      }
-      .profile-photo:hover{
-        transform:none;
-      }
     }
 
     .name{
-      font-size:clamp(2.8rem,6vw,5.2rem); line-height:1.08; margin:0 0 16px 0; min-height:1.2em;
+      font-size:clamp(2rem,5vw,4rem); line-height:1.08; margin:0 0 16px 0; min-height:1.2em;
       letter-spacing:-.02em; font-weight:400; position:relative
     }
     .typing-cursor{display:inline-block; width:3px; height:1em; background:var(--fg); margin-left:4px; transform:translateY(.05em); animation:cursor-blink 1.4s ease-in-out infinite; border-radius:1px}
@@ -304,14 +250,14 @@
     }
 
     /* Global button press animations */
-    button, .nav-back, .lightbox-close, .lightbox-nav, .scroll-to-top{
+    button, .nav-back, .lightbox-nav, .scroll-to-top{
       transition:transform 0.15s var(--ease), box-shadow 0.15s var(--ease);
     }
-    button:active, .nav-back:active, .lightbox-close:active, .lightbox-nav:active, .scroll-to-top:active{
+    button:active, .nav-back:active, .lightbox-nav:active, .scroll-to-top:active{
       transform:scale(0.97) translateY(1px);
     }
     @media (prefers-reduced-motion: reduce){
-      button:active, .nav-back:active, .lightbox-close:active, .lightbox-nav:active, .scroll-to-top:active{
+      button:active, .nav-back:active, .lightbox-nav:active, .scroll-to-top:active{
         transform:none;
       }
     }
@@ -682,8 +628,8 @@
 
     /* Mobile typography and bubble size tuning */
     @media (max-width:560px){
-      .profile-photo{width:140px; height:161px; border-radius:16px; object-fit:contain; max-width: 100%; max-height: 100%;}
-      .name{font-size:clamp(1.4rem, 6.6vw, 2.2rem)}
+      .profile-photo{width:120px; height:138px; border-radius:14px; object-fit:contain; max-width: 100%; max-height: 100%;}
+      .name{font-size:clamp(1.3rem, 5.5vw, 1.8rem)}
       .subtitle{font-size:clamp(.9rem, 3.6vw, 1.05rem)}
       .social-link{width:40px; height:40px; font-size:18px}
       .bubble{width:clamp(88px, 24vw, 120px)}
@@ -691,8 +637,8 @@
       .bubble[data-armed="1"] .bubble-label{font-size:.66rem}
     }
     @media (max-width:380px){
-      .profile-photo{width:120px; height:138px; border-radius:14px; object-fit:contain; max-width: 100%; max-height: 100%;}
-      .name{font-size:clamp(1.3rem, 7.4vw, 2rem)}
+      .profile-photo{width:100px; height:115px; border-radius:12px; object-fit:contain; max-width: 100%; max-height: 100%;}
+      .name{font-size:clamp(1.2rem, 5vw, 1.6rem)}
       .subtitle{font-size:clamp(.86rem, 3.4vw, 1rem)}
       .social-link{width:36px; height:36px; font-size:16px}
       .bubble{width:clamp(80px, 26vw, 110px)}
@@ -729,20 +675,13 @@
     </nav>
   </aside>
 
-  <!-- Lightbox -->
-  <div class="lightbox" id="lightbox" aria-hidden="true" role="dialog" aria-modal="true" aria-label="Profile photo">
-    <button class="lightbox-close" aria-label="Close lightbox">
-      <i class="fa-solid fa-xmark" aria-hidden="true"></i>
-    </button>
-    <img src="assets/images/IMG_6767.jpeg" alt="Raja Dhanda">
-  </div>
 
   <!-- Main -->
   <main>
     <div id="centerpiece">
       <h1 class="name" id="name" data-text="Raja Dhanda"></h1>
       <div class="profile-photo-container">
-        <img src="assets/images/IMG_6767.jpeg" alt="Raja Dhanda" class="profile-photo" id="profilePhoto" loading="lazy" width="180" height="207">
+        <img src="assets/images/IMG_6767.jpeg" alt="Raja Dhanda" class="profile-photo" id="profilePhoto" loading="lazy" width="140" height="161">
       </div>
       <div class="subtitle" id="subtitle">experimenting with intention</div>
 
@@ -1480,42 +1419,6 @@
       });
     });
 
-    // Profile Photo Lightbox
-    (function(){
-      const photo = document.getElementById('profilePhoto');
-      const lightbox = document.getElementById('lightbox');
-      const closeBtn = lightbox.querySelector('.lightbox-close');
-      
-      if (!photo || !lightbox) return;
-      
-      function openLightbox(){
-        lightbox.classList.add('active');
-        lightbox.setAttribute('aria-hidden', 'false');
-        document.body.style.overflow = 'hidden';
-      }
-      
-      function closeLightbox(){
-        lightbox.classList.remove('active');
-        lightbox.setAttribute('aria-hidden', 'true');
-        document.body.style.overflow = '';
-      }
-      
-      photo.addEventListener('click', openLightbox);
-      closeBtn.addEventListener('click', (e)=>{
-        e.stopPropagation();
-        closeLightbox();
-      });
-      lightbox.addEventListener('click', (e)=>{
-        if (e.target === lightbox) closeLightbox();
-      });
-      
-      // Close on Escape key
-      window.addEventListener('keydown', (e)=>{
-        if (e.key === 'Escape' && lightbox.classList.contains('active')){
-          closeLightbox();
-        }
-      });
-    })();
 
     // Profile photo parallax removed - keeping it fixed in place
 
