@@ -15,19 +15,23 @@
     })();
   </script>
   
-  <link href="https://fonts.googleapis.com/css2?family=Crimson+Text:ital,wght@0,400;0,600;1,400&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
   <!-- Icons -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" referrerpolicy="no-referrer"/>
   <style>
     :root{ 
-      --bg:#FFF8F0; --fg:#1a1a1a; --muted:#686868; --border:#e8e8e8; --border-hover:#d4d4d4;
+      --bg:#FFF8F0; --fg:#0A2540; --fg-light:#2A4A60; --muted:#5A7A90;
+      --accent:#2CA58D; --accent-soft:#E8F8F5;
+      --border:#e8e8e8; --border-hover:#d4d4d4;
       --ease:cubic-bezier(.16,1,.3,1); --shadow-soft:0 2px 20px rgba(0,0,0,.06);
       --shadow-medium:0 8px 30px rgba(0,0,0,.12);
     }
     
     /* Midnight Mode */
     [data-theme="midnight"]{
-      --bg:#0a0e27; --fg:#e8ecf4; --muted:#7a8ca8; --border:#1a2340; --border-hover:#243155;
+      --bg:#0a0e27; --fg:#E8ECF4; --fg-light:#b8c5d9; --muted:#7a8ca8;
+      --accent:#00A896; --accent-soft:#141b33;
+      --border:#1a2340; --border-hover:#243155;
       --shadow-soft:0 2px 20px rgba(0,0,0,.3);
       --shadow-medium:0 8px 30px rgba(0,0,0,.5);
     }
@@ -38,7 +42,7 @@
     }
     *{box-sizing:border-box}
     html,body{height:100%}
-    body{margin:0; background:var(--bg); color:var(--fg); font-family: 'Crimson Text', serif; display:grid; grid-template-rows:1fr auto; line-height:1.6; overflow-x:hidden;}
+    body{margin:0; background:var(--bg); color:var(--fg); font-family: 'Inter', sans-serif; display:grid; grid-template-rows:1fr auto; line-height:1.6; overflow-x:hidden;}
     
     /* Navigation */
     .nav-back{
@@ -204,8 +208,8 @@
     <p class="subtitle">things I've built</p>
     <section class="projects-grid" aria-label="Projects">
       <article class="project-card">
-        <h2 class="project-title">Leave Now? — Commute Decision Engine</h2>
-        <p class="project-desc">iOS app that tells you exactly when to leave with confidence. No maps — one clear recommendation.</p>
+        <h2 class="project-title">Leave Now?</h2>
+        <p class="project-desc">Tells commuters exactly when to leave and what route to take, driven by ML. No navigation; just the best recommendation.</p>
         <div class="project-actions">
           <a class="btn primary" href="https://github.com/rajadhanda/leave-now-ios" target="_blank" rel="noopener noreferrer" aria-label="View Leave Now repository"><i class="fa-brands fa-github" aria-hidden="true"></i> GitHub</a>
           <a class="btn disabled" href="#" aria-disabled="true" title="Coming soon" aria-label="App Store (coming soon)"><i class="fa-brands fa-apple" aria-hidden="true"></i> App Store (soon)</a>

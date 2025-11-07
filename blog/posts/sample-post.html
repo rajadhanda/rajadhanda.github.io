@@ -6,7 +6,7 @@
   <title>Building with Intention – Raja Dhanda</title>
 
   <!-- Type -->
-  <link href="https://fonts.googleapis.com/css2?family=Crimson+Text:ital,wght@0,400;0,600;1,400&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
 
   <!-- Icons -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" referrerpolicy="no-referrer"/>
@@ -18,8 +18,8 @@
 
   <style>
     :root{
-      --bg:#FFF8F0; --fg:#1a1a1a; --fg-light:#404040; --muted:#686868;
-      --accent:#2a2a2a; --accent-soft:#f8f8f8;
+      --bg:#FFF8F0; --fg:#0A2540; --fg-light:#2A4A60; --muted:#5A7A90;
+      --accent:#2CA58D; --accent-soft:#E8F8F5;
       --border:#e8e8e8; --border-hover:#d4d4d4;
       --maxw:880px; --menu-w:420px;
       --ease:cubic-bezier(.16,1,.3,1);
@@ -27,25 +27,31 @@
       --shadow-soft:0 2px 20px rgba(0,0,0,.06);
       --shadow-medium:0 8px 30px rgba(0,0,0,.12);
       
-      /* Pastel Color Palette */
-      --pastel-mint:#E8F8F5; --pastel-mint-dark:#B8E6D9;
-      --pastel-lavender:#F0E8FF; --pastel-lavender-dark:#D4C2F0;
-      --pastel-peach:#FFE8E0; --pastel-peach-dark:#FFD4C2;
-      --pastel-sky:#E8F4FD; --pastel-sky-dark:#B8D9F0;
-      --pastel-rose:#FFE8F0; --pastel-rose-dark:#FFD4E6;
-      --pastel-cream:#FFF8E8; --pastel-cream-dark:#FFE6B8;
-      
       /* Blog-specific colors */
-      --blog-bg:var(--pastel-mint); --blog-card-bg:rgba(255,255,255,0.8);
-      --blog-accent:var(--pastel-lavender-dark); --blog-text:var(--fg);
-      --blog-meta:var(--muted); --blog-border:rgba(184,230,217,0.3);
+      --blog-bg:var(--bg); --blog-card-bg:rgba(255,255,255,0.8);
+      --blog-accent:var(--accent); --blog-text:var(--fg);
+      --blog-meta:var(--muted); --blog-border:rgba(44,165,141,0.3);
     }
 
     *{box-sizing:border-box}
     html,body{height:100%}
     body{
-      margin:0; font-family:'Crimson Text',serif; background:var(--blog-bg); color:var(--fg);
+      margin:0; font-family:'Inter',sans-serif; background:var(--blog-bg); color:var(--fg);
       line-height:1.6; overflow-x:hidden;
+    }
+    
+    /* Midnight Mode */
+    [data-theme="midnight"]{
+      --bg:#0a0e27; --fg:#E8ECF4; --fg-light:#b8c5d9; --muted:#7a8ca8;
+      --accent:#00A896; --accent-soft:#141b33;
+      --border:#1a2340; --border-hover:#243155;
+      --shadow-soft:0 2px 20px rgba(0,0,0,.3);
+      --shadow-medium:0 8px 30px rgba(0,0,0,.5);
+      
+      /* Midnight Blog colors */
+      --blog-bg:#0f1524; --blog-card-bg:rgba(26,30,47,0.6);
+      --blog-accent:var(--accent); --blog-text:var(--fg);
+      --blog-meta:var(--muted); --blog-border:rgba(0,168,150,0.2);
     }
 
     /* Navigation */
@@ -62,7 +68,7 @@
 
     /* Reading Progress */
     .reading-progress{
-      position:fixed; top:0; left:0; height:3px; background:var(--pastel-lavender-dark);
+      position:fixed; top:0; left:0; height:3px; background:var(--accent);
       z-index:1002; transition:width .1s ease;
     }
 
@@ -76,6 +82,7 @@
       text-align:center; margin-bottom:60px; position:relative;
     }
     .article-header h1{
+      font-family:'Playfair Display',serif;
       font-size:clamp(2.4rem,5vw,3.6rem); line-height:1.1; margin:0 0 20px 0;
       letter-spacing:-.02em; font-weight:400; opacity:0; transform:translateY(20px);
       animation:slideInUp 0.8s var(--ease) 0.2s forwards;
@@ -95,11 +102,11 @@
       animation:slideInUp 0.8s var(--ease) 0.6s forwards;
     }
     .tag{
-      background:var(--pastel-lavender); color:var(--pastel-lavender-dark);
+      background:var(--accent-soft); color:var(--accent);
       padding:6px 16px; border-radius:20px; font-size:0.9rem; font-weight:500;
       transition:all .3s var(--ease);
     }
-    .tag:hover{background:var(--pastel-lavender-dark); color:white; transform:translateY(-1px)}
+    .tag:hover{background:var(--accent); color:white; transform:translateY(-1px)}
 
     /* Article Content */
     .article-content{
@@ -110,6 +117,7 @@
     }
 
     .article-content h2{
+      font-family:'Playfair Display',serif;
       font-size:1.8rem; margin:40px 0 20px 0; color:var(--blog-accent);
       font-weight:600; line-height:1.3;
     }
@@ -121,17 +129,17 @@
       margin:0 0 24px 0; font-size:1.1rem; line-height:1.7;
     }
     .article-content blockquote{
-      border-left:4px solid var(--pastel-lavender-dark); padding-left:24px;
+      border-left:4px solid var(--accent); padding-left:24px;
       margin:32px 0; font-style:italic; color:var(--fg-light);
-      background:var(--pastel-lavender); padding:20px 24px; border-radius:8px;
+      background:var(--accent-soft); padding:20px 24px; border-radius:8px;
     }
     .article-content code{
-      background:var(--pastel-cream); color:var(--pastel-cream-dark);
+      background:var(--accent-soft); color:var(--accent);
       padding:2px 8px; border-radius:4px; font-family:'Inter',monospace;
       font-size:0.9em;
     }
     .article-content pre{
-      background:var(--pastel-sky); border:1px solid var(--blog-border);
+      background:var(--accent-soft); border:1px solid var(--blog-border);
       border-radius:8px; padding:24px; overflow-x:auto; margin:24px 0;
     }
     .article-content pre code{
@@ -184,12 +192,12 @@
     }
     .share-btn:hover{
       transform:scale(1.05) translateY(-1px); box-shadow:var(--shadow-medium);
-      background:var(--pastel-lavender); color:var(--pastel-lavender-dark);
+      background:var(--accent-soft); color:var(--accent);
     }
 
     /* Floating Elements */
     .floating-element{
-      position:absolute; pointer-events:none; opacity:.08; color:var(--pastel-lavender-dark);
+      position:absolute; pointer-events:none; opacity:.08; color:var(--accent);
       font-size:14px; animation:float 15s ease-in-out infinite; z-index:1;
     }
     .floating-element:nth-child(1){top:15%; right:20%; animation-delay:-5s}

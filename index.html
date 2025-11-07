@@ -17,15 +17,15 @@
   </script>
 
   <!-- Type -->
-  <link href="https://fonts.googleapis.com/css2?family=Crimson+Text:ital,wght@0,400;0,600;1,400&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
 
   <!-- Icons -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" referrerpolicy="no-referrer"/>
 
   <style>
     :root{
-      --bg:#FFF8F0; --fg:#1a1a1a; --fg-light:#404040; --muted:#686868;
-      --accent:#2a2a2a; --accent-soft:#f8f8f8;
+      --bg:#FFF8F0; --fg:#0A2540; --fg-light:#2A4A60; --muted:#5A7A90;
+      --accent:#2CA58D; --accent-soft:#E8F8F5;
       --border:#e8e8e8; --border-hover:#d4d4d4;
       --maxw:880px; --menu-w:420px;
       --ease:cubic-bezier(.16,1,.3,1);
@@ -33,46 +33,30 @@
       --shadow-soft:0 2px 20px rgba(0,0,0,.06);
       --shadow-medium:0 8px 30px rgba(0,0,0,.12);
       
-      /* Pastel Color Palette */
-      --pastel-mint:#E8F8F5; --pastel-mint-dark:#B8E6D9;
-      --pastel-lavender:#F0E8FF; --pastel-lavender-dark:#D4C2F0;
-      --pastel-peach:#FFE8E0; --pastel-peach-dark:#FFD4C2;
-      --pastel-sky:#E8F4FD; --pastel-sky-dark:#B8D9F0;
-      --pastel-rose:#FFE8F0; --pastel-rose-dark:#FFD4E6;
-      --pastel-cream:#FFF8E8; --pastel-cream-dark:#FFE6B8;
-      
       /* Blog-specific colors */
-      --blog-bg:var(--pastel-mint); --blog-card-bg:rgba(255,255,255,0.8);
-      --blog-accent:var(--pastel-lavender-dark); --blog-text:var(--fg);
-      --blog-meta:var(--muted); --blog-border:rgba(184,230,217,0.3);
+      --blog-bg:var(--accent-soft); --blog-card-bg:rgba(255,255,255,0.8);
+      --blog-accent:var(--accent); --blog-text:var(--fg);
+      --blog-meta:var(--muted); --blog-border:rgba(44,165,141,0.3);
     }
     
     /* Midnight Mode */
     [data-theme="midnight"]{
-      --bg:#0a0e27; --fg:#e8ecf4; --fg-light:#b8c5d9; --muted:#7a8ca8;
-      --accent:#a8b8d9; --accent-soft:#141b33;
+      --bg:#0a0e27; --fg:#E8ECF4; --fg-light:#b8c5d9; --muted:#7a8ca8;
+      --accent:#00A896; --accent-soft:#141b33;
       --border:#1a2340; --border-hover:#243155;
       --shadow-soft:0 2px 20px rgba(0,0,0,.3);
       --shadow-medium:0 8px 30px rgba(0,0,0,.5);
       
-      /* Midnight Pastel Palette (darker, muted versions) */
-      --pastel-mint:#1a2833; --pastel-mint-dark:#2a3d4d;
-      --pastel-lavender:#1f1f33; --pastel-lavender-dark:#2d2d4a;
-      --pastel-peach:#332020; --pastel-peach-dark:#4a2d2d;
-      --pastel-sky:#1a2433; --pastel-sky-dark:#2a3547;
-      --pastel-rose:#331f28; --pastel-rose-dark:#4a2d3a;
-      --pastel-cream:#332d1f; --pastel-cream-dark:#4a4230;
-      
       /* Midnight Blog colors */
       --blog-bg:#0f1524; --blog-card-bg:rgba(26,30,47,0.6);
-      --blog-accent:#7a8ca8; --blog-text:#e8ecf4;
-      --blog-meta:#7a8ca8; --blog-border:rgba(122,140,168,0.2);
+      --blog-accent:var(--accent); --blog-text:var(--fg);
+      --blog-meta:var(--muted); --blog-border:rgba(0,168,150,0.2);
     }
 
     *{box-sizing:border-box}
     html,body{height:100%}
     body{
-      margin:0; font-family:'Crimson Text',serif; background:var(--bg); color:var(--fg);
+      margin:0; font-family:'Inter',sans-serif; background:var(--bg); color:var(--fg);
       display:grid; grid-template-rows:1fr auto; align-items:center; justify-items:center;
       overflow-x:hidden; line-height:1.6;
     }
@@ -175,6 +159,7 @@
     }
 
     .name{
+      font-family:'Playfair Display',serif;
       font-size:clamp(2rem,5vw,4rem); line-height:1.08; margin:0 0 16px 0; min-height:1.2em;
       letter-spacing:-.02em; font-weight:400; position:relative
     }
@@ -197,16 +182,16 @@
     .social-link{
       display:inline-flex; align-items:center; justify-content:center; text-decoration:none; color:var(--fg);
       font-size:24px; width:56px; height:56px; border:1px solid var(--border); border-radius:50%; background:var(--bg);
-      transition: transform .3s var(--ease), border-color .18s var(--ease), box-shadow .18s var(--ease), background .18s var(--ease), color .18s var(--ease);
+      transition: transform .3s var(--ease), border-color .4s var(--ease), box-shadow .3s var(--ease), background .4s var(--ease), color .4s var(--ease);
       position:relative; overflow:hidden
     }
     .social-link i{
-      transition:transform .4s var(--ease-back), color .18s var(--ease);
+      transition:transform .4s var(--ease-back), color .4s var(--ease);
     }
     .social-link:hover i{
       transform:rotate(15deg);
     }
-    .social-link::before{content:''; position:absolute; inset:0; background:var(--fg); border-radius:50%; transform:scale(0); transition:transform .3s var(--ease-back); z-index:-1}
+    .social-link::before{content:''; position:absolute; inset:0; background:var(--fg); border-radius:50%; transform:scale(0); transition:transform .4s var(--ease); z-index:-1}
     .social-link:hover::before{transform:scale(1)}
     .social-link:hover{color:var(--bg); transform:scale(1.05) translateY(-1px); box-shadow:var(--shadow-medium); border-color:var(--fg)}
     
@@ -256,8 +241,8 @@
 
     /* Subtle ornaments */
     .floating-element{position:absolute; pointer-events:none; opacity:.15; color:var(--muted); font-size:12px; animation:float 8s ease-in-out infinite; z-index:-1}
-    .floating-element.pastel-1{color:var(--pastel-lavender-dark); opacity:.4; font-size:16px; animation:float 10s ease-in-out infinite}
-    .floating-element.pastel-2{color:var(--pastel-mint-dark); opacity:.35; font-size:12px; animation:float 12s ease-in-out infinite}
+    .floating-element.pastel-1{color:var(--accent); opacity:.3; font-size:16px; animation:float 10s ease-in-out infinite}
+    .floating-element.pastel-2{color:var(--accent); opacity:.25; font-size:12px; animation:float 12s ease-in-out infinite}
     @keyframes float{0%,100%{transform:translateY(0) rotate(0)}33%{transform:translateY(-8px) rotate(2deg)}66%{transform:translateY(4px) rotate(-1deg)}}
     .floating-element:nth-child(1){top:15%; right:10%; animation-delay:-2s}
     .floating-element:nth-child(2){bottom:20%; left:8%; animation-delay:-5s; animation-duration:12s}
@@ -343,17 +328,17 @@
     .bubble[data-armed="1"]{ border-color:#cfcfcf; box-shadow:0 10px 24px rgba(0,0,0,.08) }
     .bubble[data-armed="1"] .bubble-label{ font-size:.82rem }
 
-    /* Populated bubble styles - Photos (warm tones) */
+    /* Populated bubble styles - Photos */
     .photos-bubble{
-      background:linear-gradient(135deg, var(--pastel-peach), var(--pastel-cream));
-      border:2px solid var(--pastel-peach-dark);
-      box-shadow:0 4px 20px rgba(255, 212, 194, 0.25), 0 8px 40px rgba(255, 230, 184, 0.15);
+      background:linear-gradient(135deg, var(--accent-soft), rgba(44, 165, 141, 0.1));
+      border:2px solid var(--accent);
+      box-shadow:0 4px 20px rgba(44, 165, 141, 0.15), 0 8px 40px rgba(44, 165, 141, 0.1);
       animation:gentlePulse 4s ease-in-out infinite;
     }
     .photos-bubble:hover{
-      background:linear-gradient(135deg, var(--pastel-peach-dark), var(--pastel-cream-dark));
+      background:linear-gradient(135deg, rgba(44, 165, 141, 0.2), rgba(44, 165, 141, 0.15));
       border-color:var(--accent);
-      box-shadow:0 6px 30px rgba(255, 212, 194, 0.35), 0 12px 50px rgba(255, 230, 184, 0.25);
+      box-shadow:0 6px 30px rgba(44, 165, 141, 0.25), 0 12px 50px rgba(44, 165, 141, 0.15);
     }
     .photos-bubble .bubble-title{
       color:var(--accent);
@@ -363,17 +348,17 @@
       color:var(--fg-light);
     }
 
-    /* Populated bubble styles - Blog (cool tones) */
+    /* Populated bubble styles - Blog */
     .blog-bubble{
-      background:linear-gradient(135deg, var(--pastel-mint), var(--pastel-sky));
-      border:2px solid var(--pastel-mint-dark);
-      box-shadow:0 4px 20px rgba(184, 230, 217, 0.25), 0 8px 40px rgba(184, 217, 240, 0.15);
+      background:linear-gradient(135deg, var(--accent-soft), rgba(44, 165, 141, 0.1));
+      border:2px solid var(--accent);
+      box-shadow:0 4px 20px rgba(44, 165, 141, 0.15), 0 8px 40px rgba(44, 165, 141, 0.1);
       animation:gentlePulse 4s ease-in-out infinite;
     }
     .blog-bubble:hover{
-      background:linear-gradient(135deg, var(--pastel-mint-dark), var(--pastel-sky-dark));
+      background:linear-gradient(135deg, rgba(44, 165, 141, 0.2), rgba(44, 165, 141, 0.15));
       border-color:var(--accent);
-      box-shadow:0 6px 30px rgba(184, 230, 217, 0.35), 0 12px 50px rgba(184, 217, 240, 0.25);
+      box-shadow:0 6px 30px rgba(44, 165, 141, 0.25), 0 12px 50px rgba(44, 165, 141, 0.15);
     }
     .blog-bubble .bubble-title{
       color:var(--accent);
@@ -383,17 +368,17 @@
       color:var(--fg-light);
     }
 
-    /* Populated bubble styles - Projects (warm-cool blend) */
+    /* Populated bubble styles - Projects */
     .projects-bubble{
-      background:linear-gradient(135deg, var(--pastel-lavender), var(--pastel-rose));
-      border:2px solid var(--pastel-lavender-dark);
-      box-shadow:0 4px 20px rgba(212, 194, 240, 0.25), 0 8px 40px rgba(255, 212, 230, 0.15);
+      background:linear-gradient(135deg, var(--accent-soft), rgba(44, 165, 141, 0.1));
+      border:2px solid var(--accent);
+      box-shadow:0 4px 20px rgba(44, 165, 141, 0.15), 0 8px 40px rgba(44, 165, 141, 0.1);
       animation:gentlePulse 4s ease-in-out infinite;
     }
     .projects-bubble:hover{
-      background:linear-gradient(135deg, var(--pastel-lavender-dark), var(--pastel-rose-dark));
+      background:linear-gradient(135deg, rgba(44, 165, 141, 0.2), rgba(44, 165, 141, 0.15));
       border-color:var(--accent);
-      box-shadow:0 6px 30px rgba(212, 194, 240, 0.35), 0 12px 50px rgba(255, 212, 230, 0.25);
+      box-shadow:0 6px 30px rgba(44, 165, 141, 0.25), 0 12px 50px rgba(44, 165, 141, 0.15);
     }
     .projects-bubble .bubble-title{
       color:var(--accent);
@@ -401,6 +386,20 @@
     }
     .projects-bubble .bubble-label{
       color:var(--fg-light);
+    }
+
+    /* Midnight mode bubble styles */
+    [data-theme="midnight"] .photos-bubble,
+    [data-theme="midnight"] .blog-bubble,
+    [data-theme="midnight"] .projects-bubble{
+      background:linear-gradient(135deg, var(--accent-soft), rgba(0, 168, 150, 0.1));
+      box-shadow:0 4px 20px rgba(0, 168, 150, 0.15), 0 8px 40px rgba(0, 168, 150, 0.1);
+    }
+    [data-theme="midnight"] .photos-bubble:hover,
+    [data-theme="midnight"] .blog-bubble:hover,
+    [data-theme="midnight"] .projects-bubble:hover{
+      background:linear-gradient(135deg, rgba(0, 168, 150, 0.2), rgba(0, 168, 150, 0.15));
+      box-shadow:0 6px 30px rgba(0, 168, 150, 0.25), 0 12px 50px rgba(0, 168, 150, 0.15);
     }
 
     /* Unpopulated bubble styles - muted and dimmed */
@@ -517,11 +516,11 @@
       width:32px; height:32px;
       border:none; background:transparent;
       color:var(--muted); text-decoration:none;
-      font-size:18px; transition:transform .3s var(--ease), color 0.2s var(--ease);
+      font-size:18px; transition:transform .3s var(--ease), color .4s var(--ease);
       position:relative;
     }
     .hobby-icon i{
-      transition:transform .4s var(--ease-back), color 0.2s var(--ease);
+      transition:transform .4s var(--ease-back), color .4s var(--ease);
     }
     .hobby-icon:hover i{
       transform:rotate(15deg);
@@ -533,36 +532,8 @@
     .hobby-icon:focus-visible{
       outline:none; box-shadow:0 0 0 2px var(--accent);
     }
-    .hobby-icon::after{
-      content:attr(data-tooltip);
-      position:absolute;
-      bottom:100%; left:50%; transform:translateX(-50%) translateY(-8px);
-      background:var(--fg); color:var(--bg);
-      padding:6px 10px; border-radius:4px;
-      font-size:0.75rem; font-family:'Inter',sans-serif;
-      white-space:nowrap; opacity:0; pointer-events:none;
-      transition:opacity 0.2s var(--ease), transform 0.2s var(--ease);
-      z-index:1000;
-    }
-    .hobby-icon::before{
-      content:''; position:absolute;
-      bottom:100%; left:50%; transform:translateX(-50%) translateY(-2px);
-      border:5px solid transparent; border-top-color:var(--fg);
-      opacity:0; pointer-events:none;
-      transition:opacity 0.2s var(--ease), transform 0.2s var(--ease);
-      z-index:1000;
-    }
-    .hobby-icon:hover::after,
-    .hobby-icon:hover::before{
-      opacity:1; transform:translateX(-50%) translateY(-12px);
-    }
-    .hobby-icon:hover::before{
-      transform:translateX(-50%) translateY(-6px);
-    }
     @media (prefers-reduced-motion: reduce){
       .hobby-icon:hover{transform:none}
-      .hobby-icon::after,
-      .hobby-icon::before{transition:none}
     }
     @media (max-width:560px){
       #hobbies{bottom:10px; padding:0 20px}
@@ -663,16 +634,16 @@
       <section id="hobbies" class="hobbies section">
         <div class="hobby-icons">
           <p class="hobbies-label">always happy to chat about</p>
-          <a href="mailto:hello@rajadhanda.me?subject=Hello%20Raja%20%E2%80%94%20Coffee" class="hobby-icon" aria-label="Coffee" data-tooltip="Coffee">
+          <a href="mailto:hello@rajadhanda.me?subject=Coffee" class="hobby-icon" aria-label="Coffee" data-tooltip="Coffee">
             <i class="fa-solid fa-mug-hot" aria-hidden="true"></i>
           </a>
-          <a href="mailto:hello@rajadhanda.me?subject=Hello%20Raja%20%E2%80%94%20QuantumComputing" class="hobby-icon" aria-label="Quantum Computing" data-tooltip="Quantum Computing">
+          <a href="mailto:hello@rajadhanda.me?subject=Quantum%20Computing" class="hobby-icon" aria-label="Quantum Computing" data-tooltip="Quantum Computing">
             <i class="fa-solid fa-microchip" aria-hidden="true"></i>
           </a>
-          <a href="mailto:hello@rajadhanda.me?subject=Hello%20Raja%20%E2%80%94%20Football" class="hobby-icon" aria-label="Football" data-tooltip="Football">
+          <a href="mailto:hello@rajadhanda.me?subject=Football" class="hobby-icon" aria-label="Football" data-tooltip="Football">
             <i class="fa-solid fa-futbol" aria-hidden="true"></i>
           </a>
-          <a href="mailto:hello@rajadhanda.me?subject=Hello%20Raja%20%E2%80%94%20F1" class="hobby-icon" aria-label="F1" data-tooltip="F1">
+          <a href="mailto:hello@rajadhanda.me?subject=F1" class="hobby-icon" aria-label="F1" data-tooltip="F1">
             <i class="fa-solid fa-flag-checkered" aria-hidden="true"></i>
           </a>
         </div>
