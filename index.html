@@ -570,10 +570,17 @@
       margin-top:80px; max-width:600px; margin-left:auto; margin-right:auto;
       text-align:center;
       padding:0 20px;
+      position:fixed; bottom:40px; left:50%;
+      width:100%; max-width:600px;
+      transform:translateX(-50%) translateY(16px);
+    }
+    #hobbies.reveal{
+      transform:translateX(-50%) translateY(0);
     }
     .hobbies-label{
       font-family:'Inter',sans-serif; font-size:0.9rem; color:var(--muted);
-      margin-bottom:20px; font-weight:400; font-style:italic;
+      margin:0; margin-right:12px; font-weight:400; font-style:italic;
+      white-space:nowrap;
     }
     .hobby-icons{
       display:flex; flex-wrap:wrap; gap:16px; justify-content:center;
@@ -585,6 +592,7 @@
       border:none; background:transparent;
       color:var(--muted); text-decoration:none;
       font-size:18px; transition:all 0.2s var(--ease);
+      position:relative;
     }
     .hobby-icon:hover{
       color:var(--fg);
@@ -593,13 +601,45 @@
     .hobby-icon:focus-visible{
       outline:none; box-shadow:0 0 0 2px var(--accent);
     }
+    .hobby-icon::after{
+      content:attr(data-tooltip);
+      position:absolute;
+      bottom:100%; left:50%; transform:translateX(-50%) translateY(-8px);
+      background:var(--fg); color:var(--bg);
+      padding:6px 10px; border-radius:4px;
+      font-size:0.75rem; font-family:'Inter',sans-serif;
+      white-space:nowrap; opacity:0; pointer-events:none;
+      transition:opacity 0.2s var(--ease), transform 0.2s var(--ease);
+      z-index:1000;
+    }
+    .hobby-icon::before{
+      content:''; position:absolute;
+      bottom:100%; left:50%; transform:translateX(-50%) translateY(-2px);
+      border:5px solid transparent; border-top-color:var(--fg);
+      opacity:0; pointer-events:none;
+      transition:opacity 0.2s var(--ease), transform 0.2s var(--ease);
+      z-index:1000;
+    }
+    .hobby-icon:hover::after,
+    .hobby-icon:hover::before{
+      opacity:1; transform:translateX(-50%) translateY(-12px);
+    }
+    .hobby-icon:hover::before{
+      transform:translateX(-50%) translateY(-6px);
+    }
     @media (prefers-reduced-motion: reduce){
       .hobby-icon:hover{transform:none}
+      .hobby-icon::after,
+      .hobby-icon::before{transition:none}
     }
     @media (max-width:560px){
+      #hobbies{bottom:20px; padding:0 20px}
       .hobby-icons{gap:14px}
       .hobby-icon{width:28px; height:28px; font-size:16px}
-      .hobbies-label{font-size:0.85rem}
+      .hobbies-label{font-size:0.85rem; margin-right:10px}
+    }
+    @media (prefers-reduced-motion: reduce){
+      #hobbies{transform:translateX(-50%)}
     }
 
     /* Responsive tweaks */
@@ -771,15 +811,18 @@
 
       <!-- Hobby Icons Section - At bottom after timeline -->
       <section id="hobbies" class="hobbies section">
-        <p class="hobbies-label">always happy to chat about</p>
         <div class="hobby-icons">
-          <a href="mailto:hello@rajadhanda.me?subject=Hello%20Raja%20%E2%80%94%20Coffee" class="hobby-icon" aria-label="Coffee">
-            <i class="fa-solid fa-coffee-beans" aria-hidden="true"></i>
+          <p class="hobbies-label">always happy to chat about</p>
+          <a href="mailto:hello@rajadhanda.me?subject=Hello%20Raja%20%E2%80%94%20Coffee" class="hobby-icon" aria-label="Coffee" data-tooltip="Coffee">
+            <i class="fa-solid fa-mug-hot" aria-hidden="true"></i>
           </a>
-          <a href="mailto:hello@rajadhanda.me?subject=Hello%20Raja%20%E2%80%94%20Football" class="hobby-icon" aria-label="Football">
+          <a href="mailto:hello@rajadhanda.me?subject=Hello%20Raja%20%E2%80%94%20QuantumComputing" class="hobby-icon" aria-label="Quantum Computing" data-tooltip="Quantum Computing">
+            <i class="fa-solid fa-microchip" aria-hidden="true"></i>
+          </a>
+          <a href="mailto:hello@rajadhanda.me?subject=Hello%20Raja%20%E2%80%94%20Football" class="hobby-icon" aria-label="Football" data-tooltip="Football">
             <i class="fa-solid fa-futbol" aria-hidden="true"></i>
           </a>
-          <a href="mailto:hello@rajadhanda.me?subject=Hello%20Raja%20%E2%80%94%20F1" class="hobby-icon" aria-label="F1">
+          <a href="mailto:hello@rajadhanda.me?subject=Hello%20Raja%20%E2%80%94%20F1" class="hobby-icon" aria-label="F1" data-tooltip="F1">
             <i class="fa-solid fa-flag-checkered" aria-hidden="true"></i>
           </a>
         </div>
