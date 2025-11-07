@@ -570,12 +570,18 @@
       margin-top:80px; max-width:600px; margin-left:auto; margin-right:auto;
       text-align:center;
       padding:0 20px;
-      position:fixed; bottom:40px; left:50%;
+      position:fixed; bottom:20px; left:50%;
       width:100%; max-width:600px;
       transform:translateX(-50%) translateY(16px);
+      opacity:0;
+      pointer-events:none;
+      transition:opacity 0.4s var(--ease), transform 0.4s var(--ease);
+      z-index:10;
     }
     #hobbies.reveal{
       transform:translateX(-50%) translateY(0);
+      opacity:1;
+      pointer-events:auto;
     }
     .hobbies-label{
       font-family:'Inter',sans-serif; font-size:0.9rem; color:var(--muted);
@@ -633,7 +639,7 @@
       .hobby-icon::before{transition:none}
     }
     @media (max-width:560px){
-      #hobbies{bottom:20px; padding:0 20px}
+      #hobbies{bottom:10px; padding:0 20px}
       .hobby-icons{gap:14px}
       .hobby-icon{width:28px; height:28px; font-size:16px}
       .hobbies-label{font-size:0.85rem; margin-right:10px}
@@ -1491,30 +1497,7 @@
       });
     })();
 
-    // Gentle parallax on profile photo
-    (function(){
-      const photoContainer = document.querySelector('.profile-photo-container');
-      if (!photoContainer || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-      
-      // Wait for initial animation to complete
-      setTimeout(()=>{
-        let ticking = false;
-        window.addEventListener('scroll', ()=>{
-          if (!ticking){
-            window.requestAnimationFrame(()=>{
-              const scrolled = window.pageYOffset;
-              const rate = scrolled * 0.15; // Gentle parallax speed
-              // Only apply parallax after initial animation
-              if (photoContainer.classList.contains('show')){
-                photoContainer.style.transform = `translateY(${rate}px)`;
-              }
-              ticking = false;
-            });
-            ticking = true;
-          }
-        }, {passive:true});
-      }, 1500); // After initial animation completes
-    })();
+    // Profile photo parallax removed - keeping it fixed in place
 
     // Page transition on bubble click (for desktop/non-touch)
     (function(){
@@ -1564,16 +1547,21 @@
       });
     })();
 
-    // ===== IntersectionObserver for section reveal (gated for About+Timeline) =====
+    // ===== IntersectionObserver for section reveal (gated for About+Timeline+Hobbies) =====
     (function(){
       const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
       const allSections = Array.from(document.querySelectorAll('.section'));
       const about = document.getElementById('about-inline');
       const timeline = document.getElementById('timeline');
-      const gated = new Set([about, timeline]);
+      const hobbies = document.getElementById('hobbies');
+      const gated = new Set([about, timeline, hobbies]);
 
       if (reducedMotion) {
-        allSections.forEach(s => s.classList.add('reveal'));
+        allSections.forEach(s => {
+          if (s !== hobbies) s.classList.add('reveal');
+        });
+        // For hobbies, show immediately on reduced motion
+        if (hobbies) hobbies.classList.add('reveal');
         return;
       }
 
@@ -1592,10 +1580,38 @@
         if (!gated.has(section)) observer.observe(section);
       });
 
-      // After icons are in, start observing the gated sections
+      // After icons are in, start observing the gated sections (except hobbies)
       window.addEventListener('icons:ready', () => {
         [about, timeline].forEach(s => { if (s) observer.observe(s); });
       }, { once: true });
+    })();
+
+    // ===== Hobbies section: show only after scrolling slightly down =====
+    (function(){
+      const hobbies = document.getElementById('hobbies');
+      if (!hobbies) return;
+
+      const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      const scrollThreshold = 80; // Show after scrolling 80px down
+
+      function handleScroll(){
+        const scrollY = window.pageYOffset || window.scrollY || document.documentElement.scrollTop;
+        if (scrollY > scrollThreshold){
+          hobbies.classList.add('reveal');
+        } else {
+          hobbies.classList.remove('reveal');
+        }
+      }
+
+      if (reducedMotion) {
+        // Show immediately on reduced motion
+        hobbies.classList.add('reveal');
+      } else {
+        // Check initial scroll position
+        handleScroll();
+        // Listen for scroll events
+        window.addEventListener('scroll', handleScroll, { passive: true });
+      }
     })();
 
     // ===== Timeline scroll-based reveal =====
