@@ -301,20 +301,32 @@
       border-radius:50%; border:1px solid rgba(255,255,255,.3);
       background:rgba(255,255,255,.1); backdrop-filter:blur(8px);
       display:grid; place-items:center; cursor:pointer; color:white;
-      transition:all 0.3s var(--ease); font-size:20px; z-index:2001;
+      transition:transform .3s var(--ease), background 0.3s var(--ease); font-size:20px; z-index:2001;
+    }
+    .lightbox-close i{
+      transition:transform .4s var(--ease-back);
+    }
+    .lightbox-close:hover i{
+      transform:rotate(15deg);
     }
     .lightbox-close:hover{
-      background:rgba(255,255,255,.2); transform:scale(1.1);
+      background:rgba(255,255,255,.2); transform:scale(1.05) translateY(-1px);
     }
     .lightbox-nav{
       position:absolute; top:50%; transform:translateY(-50%);
       width:48px; height:48px; border-radius:50%; border:1px solid rgba(255,255,255,.3);
       background:rgba(255,255,255,.1); backdrop-filter:blur(8px);
       display:grid; place-items:center; cursor:pointer; color:white;
-      transition:all 0.3s var(--ease); font-size:18px; z-index:2001;
+      transition:transform .3s var(--ease), background 0.3s var(--ease); font-size:18px; z-index:2001;
+    }
+    .lightbox-nav i{
+      transition:transform .4s var(--ease-back);
+    }
+    .lightbox-nav:hover i{
+      transform:rotate(15deg);
     }
     .lightbox-nav:hover{
-      background:rgba(255,255,255,.2); transform:translateY(-50%) scale(1.1);
+      background:rgba(255,255,255,.2); transform:translateY(-50%) scale(1.05) translateY(-1px);
     }
     .lightbox-nav.prev{left:28px}
     .lightbox-nav.next{right:28px}
