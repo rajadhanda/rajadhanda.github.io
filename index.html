@@ -543,22 +543,20 @@
     }
     #about-inline .lede{
       font-size:clamp(0.95rem, 1.8vw, 1.05rem); line-height:1.5; margin:0; font-weight:400;
-      display:-webkit-box; -webkit-line-clamp:2; line-clamp:2; -webkit-box-orient:vertical;
-      overflow:hidden; text-overflow:ellipsis;
     }
     @media (max-width:768px){
       #about-inline .lede{
-        font-size:1rem; line-height:1.4; max-height:2.8em;
+        font-size:0.9rem; line-height:1.4;
       }
     }
     @media (max-width:560px){
       #about-inline .lede{
-        font-size:0.95rem; line-height:1.35; max-height:2.57em;
+        font-size:0.85rem; line-height:1.35;
       }
     }
     @media (max-width:380px){
       #about-inline .lede{
-        font-size:0.9rem; line-height:1.3; max-height:2.34em;
+        font-size:0.8rem; line-height:1.3;
       }
     }
 
@@ -744,7 +742,7 @@
 
       <!-- Inline About Section -->
       <section id="about-inline" class="section">
-        <p class="lede">Emerging technology and innovation consultant, working in fintech. <br>Learning, building and failing - please reach out with any opportunities!</p>
+        <p class="lede">Emerging technology and innovation consultant, working in fintech. Learning, building and failing - please reach out with any opportunities!</p>
       </section>
 
       <!-- Hobby Icons Section -->
@@ -887,9 +885,8 @@
       // --- Helpers ----------------------------------------------------------
       function clamp(v, lo, hi){ return Math.max(lo, Math.min(hi, v)); }
       function clearGapForViewport(){
-        if (innerWidth <= 380) return 80;
-        if (innerWidth <= 560) return 70;
-        if (innerWidth <= 768) return 60;
+        if (innerWidth <= 380) return 56;
+        if (innerWidth <= 560) return 48;
         return 28;
       }
 
@@ -914,9 +911,8 @@
         const cp = document.getElementById('centerpiece');
         if (!cp) return bounds;
         
-        // Add padding around elements for collision detection - larger on mobile
-        const isMobile = innerWidth <= 768;
-        const padding = isMobile ? 100 : 60;
+        // Add padding around elements for collision detection
+        const padding = 60;
         
         // Profile photo
         const photo = document.getElementById('profilePhoto');
@@ -1120,11 +1116,11 @@
       let rafId = 0;
 
       function layoutOnce(center, initialPlacement = false){
-        // Use a more reasonable base radius calculation - larger on mobile
-        const isMobile = innerWidth <= 768;
-        const baseR = isMobile 
-          ? Math.min(Math.max(220, 260), Math.min(innerWidth, innerHeight) * 0.35)
-          : Math.min(Math.max(180, 220), Math.min(innerWidth, innerHeight) * 0.3);
+        // Use a more reasonable base radius calculation
+        const baseR = Math.min(
+          Math.max(180, 220),
+          Math.min(innerWidth, innerHeight) * 0.3
+        );
         
         //
         
@@ -1132,7 +1128,7 @@
           const rect = s.el.getBoundingClientRect();
           const halfW = rect.width/2;
           const halfH = rect.height/2;
-          const pad = isMobile ? 50 : 40; // More padding on mobile for better edge handling
+          const pad = 40; // Increased padding for better edge handling
 
           // Calculate safe boundaries - ensure bubbles stay fully visible
           const minX = halfW + pad;
@@ -1173,7 +1169,7 @@
           const dy0 = ty - center.y;
           const dist0 = Math.hypot(dx0, dy0);
           const centerHalfDiag2 = Math.hypot(center.w/2, center.h/2);
-          const minClear2 = centerHalfDiag2 + Math.max(halfW, halfH) + clearGapForViewport();
+          const minClear2 = centerHalfDiag2 + Math.max(halfW, halfH) + 24;
           if (dist0 < minClear2 && dist0 > 0.0001){
             const sc = minClear2 / dist0;
             tx = center.x + dx0 * sc;
@@ -1198,17 +1194,17 @@
         filtPointer.y += (rawPointer.y - filtPointer.y) * ALPHA;
 
         const center = getCenterpieceCenter();
-        // Keep orbit radius independent of typing width to prevent re-spread - larger on mobile
-        const isMobile = innerWidth <= 768;
-        const baseR = isMobile 
-          ? Math.min(Math.max(220, 260), Math.min(innerWidth, innerHeight) * 0.35)
-          : Math.min(Math.max(180, 220), Math.min(innerWidth, innerHeight) * 0.3);
+        // Keep orbit radius independent of typing width to prevent re-spread
+        const baseR = Math.min(
+          Math.max(180, 220),
+          Math.min(innerWidth, innerHeight) * 0.3
+        );
 
         state.forEach((s, idx) => {
           const rect = s.el.getBoundingClientRect();
           const halfW = rect.width/2;
           const halfH = rect.height/2;
-          const pad = isMobile ? 50 : 40; // More padding on mobile
+          const pad = 40;
 
           // Calculate safe boundaries
           const minX = halfW + pad;
