@@ -574,13 +574,15 @@
       width:100%; max-width:600px;
       transform:translateX(-50%) translateY(16px);
       opacity:0;
+      visibility:hidden;
       pointer-events:none;
-      transition:opacity 0.4s var(--ease), transform 0.4s var(--ease);
+      transition:opacity 0.4s var(--ease), transform 0.4s var(--ease), visibility 0.4s var(--ease);
       z-index:10;
     }
     #hobbies.reveal{
       transform:translateX(-50%) translateY(0);
       opacity:1;
+      visibility:visible;
       pointer-events:auto;
     }
     .hobbies-label{
@@ -1596,10 +1598,14 @@
 
       function handleScroll(){
         const scrollY = window.pageYOffset || window.scrollY || document.documentElement.scrollTop;
-        if (scrollY > scrollThreshold){
-          hobbies.classList.add('reveal');
+        if (scrollY >= scrollThreshold){
+          if (!hobbies.classList.contains('reveal')){
+            hobbies.classList.add('reveal');
+          }
         } else {
-          hobbies.classList.remove('reveal');
+          if (hobbies.classList.contains('reveal')){
+            hobbies.classList.remove('reveal');
+          }
         }
       }
 
@@ -1607,6 +1613,8 @@
         // Show immediately on reduced motion
         hobbies.classList.add('reveal');
       } else {
+        // Ensure it starts hidden
+        hobbies.classList.remove('reveal');
         // Check initial scroll position
         handleScroll();
         // Listen for scroll events
