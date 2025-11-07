@@ -1377,37 +1377,31 @@
       }, { once: true });
     })();
 
-    // ===== Hobbies section: show only after scrolling slightly down =====
+    // ===== Hobbies section: always visible at bottom =====
     (function(){
       const hobbies = document.getElementById('hobbies');
       if (!hobbies) return;
 
       const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-      const scrollThreshold = 80; // Show after scrolling 80px down
-
-      function handleScroll(){
-        const scrollY = window.pageYOffset || window.scrollY || document.documentElement.scrollTop;
-        if (scrollY >= scrollThreshold){
-          if (!hobbies.classList.contains('reveal')){
-            hobbies.classList.add('reveal');
-          }
-        } else {
-          if (hobbies.classList.contains('reveal')){
-            hobbies.classList.remove('reveal');
-          }
+      
+      // Show immediately - always visible at bottom
+      // Show after icons appear for smooth reveal animation
+      window.addEventListener('icons:ready', () => {
+        setTimeout(() => {
+          hobbies.classList.add('reveal');
+        }, 600); // Show shortly after icons appear
+      }, { once: true });
+      
+      // Fallback: show immediately if icons:ready never fires
+      setTimeout(() => {
+        if (!hobbies.classList.contains('reveal')) {
+          hobbies.classList.add('reveal');
         }
-      }
-
+      }, 3000);
+      
+      // Show immediately on reduced motion
       if (reducedMotion) {
-        // Show immediately on reduced motion
         hobbies.classList.add('reveal');
-      } else {
-        // Ensure it starts hidden
-        hobbies.classList.remove('reveal');
-        // Check initial scroll position
-        handleScroll();
-        // Listen for scroll events
-        window.addEventListener('scroll', handleScroll, { passive: true });
       }
     })();
 
