@@ -75,6 +75,11 @@
       margin:0; font-family:'Crimson Text',serif; background:var(--bg); color:var(--fg);
       display:grid; grid-template-rows:1fr auto; align-items:center; justify-items:center;
       overflow-x:hidden; line-height:1.6;
+      -webkit-font-smoothing:antialiased;
+      -moz-osx-font-smoothing:grayscale;
+    }
+    @media (max-width:768px){
+      body{min-height:100vh; min-height:100dvh}
     }
 
     .sr-only{
@@ -90,6 +95,8 @@
       cursor:pointer; z-index:1001; box-shadow:var(--shadow-soft);
       opacity:0; transform:translateY(16px);
       transition:opacity .6s var(--ease), transform .6s var(--ease), all .3s var(--ease);
+      -webkit-tap-highlight-color:rgba(0,0,0,0.05);
+      touch-action:manipulation;
     }
     .theme-toggle.reveal{
       opacity:1; transform:translateY(0);
@@ -127,7 +134,9 @@
       position:fixed; top:28px; left:28px; width:52px; height:52px; border-radius:50%;
       border:1px solid var(--border); display:grid; place-items:center;
       background:rgba(254,254,254,.92); backdrop-filter:blur(12px);
-      cursor:pointer; transition:all .3s var(--ease); z-index:1001; box-shadow:var(--shadow-soft)
+      cursor:pointer; transition:all .3s var(--ease); z-index:1001; box-shadow:var(--shadow-soft);
+      -webkit-tap-highlight-color:rgba(0,0,0,0.05);
+      touch-action:manipulation;
     }
     [data-theme="midnight"] .menu-toggle{
       background:rgba(26,30,47,.92);
@@ -166,6 +175,15 @@
 
     /* Main */
     main{width:100%; max-width:var(--maxw); text-align:center; padding:40px 20px; align-self:center; justify-self:center; position:relative; z-index:2}
+    @media (max-width:768px){
+      main{padding:32px 20px 20px}
+    }
+    @media (max-width:560px){
+      main{padding:28px 16px 16px}
+    }
+    @media (max-width:380px){
+      main{padding:24px 14px 14px}
+    }
     #centerpiece{display:inline-block}
     /* Profile Photo */
     .profile-photo-container{
@@ -188,7 +206,14 @@
     .name{
       font-family:'Playfair Display',serif;
       font-size:clamp(2rem,5vw,4rem); line-height:1.08; margin:0 0 16px 0; min-height:1.2em;
-      letter-spacing:-.02em; font-weight:400; position:relative
+      letter-spacing:-.02em; font-weight:400; position:relative;
+      padding:0 20px;
+    }
+    @media (max-width:560px){
+      .name{padding:0 16px}
+    }
+    @media (max-width:380px){
+      .name{padding:0 12px}
     }
     .typing-cursor{display:inline-block; width:3px; height:1em; background:var(--fg); margin-left:4px; transform:translateY(.05em); animation:cursor-blink 1.4s ease-in-out infinite; border-radius:1px}
     @keyframes cursor-blink{0%,45%{opacity:1}50%,95%{opacity:.1}100%{opacity:1}}
@@ -196,7 +221,14 @@
     .subtitle{
       font-size:clamp(1.2rem,2.4vw,1.8rem); color:var(--muted); font-weight:400; font-style:italic;
       margin:20px 0 0 0; opacity:0; transform:translateY(12px);
-      transition:opacity 1s var(--ease), transform 1s var(--ease); letter-spacing:.01em
+      transition:opacity 1s var(--ease), transform 1s var(--ease); letter-spacing:.01em;
+      padding:0 20px;
+    }
+    @media (max-width:560px){
+      .subtitle{padding:0 16px}
+    }
+    @media (max-width:380px){
+      .subtitle{padding:0 12px}
     }
     .subtitle.show{opacity:1; transform:translateY(0)}
 
@@ -212,6 +244,8 @@
       background:rgba(254,254,254,.92); backdrop-filter:blur(12px);
       transition: transform .3s var(--ease), border-color .5s var(--ease), box-shadow .3s var(--ease), background .5s var(--ease), color .5s var(--ease);
       position:relative; overflow:hidden; box-shadow:var(--shadow-soft);
+      -webkit-tap-highlight-color:rgba(0,0,0,0.05);
+      touch-action:manipulation;
     }
     [data-theme="midnight"] .social-link{
       background:rgba(26,30,47,.92);
@@ -299,21 +333,34 @@
       margin-top:6vh; display:grid; grid-template-columns:repeat(2, minmax(160px,1fr));
       gap:clamp(16px,5vw,36px); align-items:center; justify-items:center;
     }
+    @media (max-width:768px){
+      .bubble-nav{gap:clamp(14px,4vw,28px); margin-top:5vh}
+    }
     @media (max-width:560px){
-      .bubble-nav{grid-template-columns:1fr 1fr; gap:18px; margin-top:5vh}
+      .bubble-nav{grid-template-columns:1fr 1fr; gap:16px; margin-top:4vh}
+    }
+    @media (max-width:380px){
+      .bubble-nav{gap:14px; margin-top:3vh}
     }
 
     .bubble{
-      position:relative; width:clamp(160px,24vw,220px); aspect-ratio:1/1; border-radius:50%;
+      position:relative; width:clamp(120px,18vw,165px); aspect-ratio:1/1; border-radius:50%;
       border:2px solid var(--border); display:grid; place-items:center; text-decoration:none; color:var(--fg);
       overflow:hidden; background:transparent;
       /* JS owns transform entirely for silky motion */
       transition: border-color .18s var(--ease), box-shadow .18s var(--ease);
       will-change: transform;
       backface-visibility:hidden; transform:translate3d(0,0,0);
+      /* Better touch targets on mobile */
+      -webkit-tap-highlight-color:rgba(0,0,0,0.05);
+      touch-action:manipulation;
     }
     .bubble:hover{border-color:var(--muted); box-shadow:0 10px 24px rgba(0,0,0,.08)}
     .bubble:focus-visible{outline:none; box-shadow:0 0 0 3px rgba(0,0,0,.10), 0 10px 24px rgba(0,0,0,.08); border-color:var(--muted)}
+    .bubble:active{transform:scale(0.98)}
+    @media (max-width:560px){
+      .bubble{-webkit-tap-highlight-color:rgba(0,0,0,0.08)}
+    }
     
     /* Subtle pulse animation on hover */
     .bubble::before{
@@ -347,17 +394,17 @@
       .page-transition{display:none}
     }
 
-    .bubble-title{font-size:clamp(1.05rem,2.2vw,1.4rem); font-weight:500; line-height:1.2; text-align:center; pointer-events:none; color:#8c8c8c}
+    .bubble-title{font-size:clamp(0.8rem,1.65vw,1.05rem); font-weight:500; line-height:1.2; text-align:center; pointer-events:none; color:#8c8c8c}
     .bubble-label{
       position:absolute; bottom:16px; left:50%; transform:translate(-50%,6px);
-      font-style:italic; font-size:clamp(.82rem,1.6vw,.95rem); color:var(--muted);
+      font-style:italic; font-size:clamp(.62rem,1.2vw,.72rem); color:var(--muted);
       opacity:0; transition:opacity .2s var(--ease), transform .2s var(--ease);
       pointer-events:none; text-align:center; max-width:88%; line-height:1.25; white-space:normal; word-break:break-word
     }
     .bubble:hover .bubble-label,.bubble:focus-within .bubble-label{opacity:1; transform:translate(-50%,0)}
     /* Armed state on touch: subtle emphasis */
     .bubble[data-armed="1"]{ border-color:var(--muted); box-shadow:0 10px 24px rgba(0,0,0,.08) }
-    .bubble[data-armed="1"] .bubble-label{ font-size:.82rem }
+    .bubble[data-armed="1"] .bubble-label{ font-size:.62rem }
 
     /* Populated bubble styles - Photos (warm tones) */
     .photos-bubble{
@@ -535,6 +582,8 @@
       color:var(--muted); text-decoration:none;
       font-size:14px; transition:transform .3s var(--ease), color .4s var(--ease);
       position:relative;
+      -webkit-tap-highlight-color:rgba(0,0,0,0.05);
+      touch-action:manipulation;
     }
     .hobby-icon i{
       transition:transform .4s var(--ease-back), color .4s var(--ease);
@@ -552,11 +601,23 @@
     @media (prefers-reduced-motion: reduce){
       .hobby-icon:hover{transform:none}
     }
+    @media (max-width:768px){
+      #hobbies{bottom:16px; padding:0 20px; max-width:450px}
+      .hobby-icons{gap:12px}
+      .hobby-icon{width:26px; height:26px; font-size:13px}
+      .hobbies-label{font-size:0.72rem; margin-right:10px}
+    }
     @media (max-width:560px){
-      #hobbies{bottom:10px; padding:0 20px; max-width:400px}
+      #hobbies{bottom:12px; padding:0 16px; max-width:380px}
       .hobby-icons{gap:10px}
       .hobby-icon{width:24px; height:24px; font-size:12px}
       .hobbies-label{font-size:0.7rem; margin-right:8px}
+    }
+    @media (max-width:380px){
+      #hobbies{bottom:10px; padding:0 14px; max-width:340px}
+      .hobby-icons{gap:8px}
+      .hobby-icon{width:22px; height:22px; font-size:11px}
+      .hobbies-label{font-size:0.68rem; margin-right:6px}
     }
     @media (prefers-reduced-motion: reduce){
       #hobbies{transform:translateX(-50%)}
@@ -564,35 +625,56 @@
 
     /* Responsive tweaks */
     @media (max-width:768px){
-      .menu-toggle{top:28px; left:20px; width:46px; height:46px}
-      .theme-toggle{top:28px; right:20px; width:46px; height:46px}
+      .menu-toggle{top:20px; left:20px; width:48px; height:48px}
+      .theme-toggle{top:20px; right:20px; width:48px; height:48px}
       .panel{padding:24px}
       .about{max-width:100%}
-      .social-links{margin-top:16px; gap:24px}
-      .social-link{width:46px; height:46px; font-size:16px}
+      .social-links{margin-top:24px; gap:20px}
+      .social-link{width:48px; height:48px; font-size:17px}
       .status{bottom:20px; right:20px; font-size:.75rem}
       .floating-element{display:none}
-      .section{margin-top:36px}
+      .section{margin-top:32px}
+      main{padding:32px 20px 20px}
+      #about-inline{margin-top:28px; padding:0 12px}
+      #about-inline .lede{font-size:1rem; line-height:1.7}
     }
 
     /* Mobile typography and bubble size tuning */
     @media (max-width:560px){
-      .profile-photo{width:120px; height:138px; border-radius:14px; object-fit:contain; max-width: 100%; max-height: 100%;}
-      .name{font-size:clamp(1.3rem, 5.5vw, 1.8rem)}
-      .subtitle{font-size:clamp(.9rem, 3.6vw, 1.05rem)}
-      .social-link{width:46px; height:46px; font-size:16px}
-      .bubble{width:clamp(88px, 24vw, 120px)}
-      .bubble-label{font-size:.72rem}
-      .bubble[data-armed="1"] .bubble-label{font-size:.66rem}
+      .menu-toggle{top:16px; left:16px; width:44px; height:44px}
+      .theme-toggle{top:16px; right:16px; width:44px; height:44px}
+      main{padding:28px 16px 16px}
+      .profile-photo{width:110px; height:127px; border-radius:14px; object-fit:contain; max-width: 100%; max-height: 100%;}
+      .profile-photo-container{margin-bottom:20px}
+      .name{font-size:clamp(1.4rem, 6vw, 2rem); margin-bottom:12px; line-height:1.1}
+      .subtitle{font-size:clamp(1rem, 4vw, 1.2rem); margin-top:16px; letter-spacing:.02em}
+      .social-links{margin-top:20px; gap:18px}
+      .social-link{width:44px; height:44px; font-size:16px}
+      .bubble{width:clamp(70px, 20vw, 95px)}
+      .bubble-title{font-size:clamp(0.7rem, 1.8vw, 0.85rem); font-weight:500}
+      .bubble-label{font-size:.55rem; bottom:12px; max-width:90%}
+      .bubble[data-armed="1"] .bubble-label{font-size:.52rem}
+      #about-inline{margin-top:24px; padding:0 8px}
+      #about-inline .lede{font-size:0.95rem; line-height:1.65}
+      .section{margin-top:28px}
     }
     @media (max-width:380px){
+      .menu-toggle{top:14px; left:14px; width:42px; height:42px}
+      .theme-toggle{top:14px; right:14px; width:42px; height:42px}
+      main{padding:24px 14px 14px}
       .profile-photo{width:100px; height:115px; border-radius:12px; object-fit:contain; max-width: 100%; max-height: 100%;}
-      .name{font-size:clamp(1.2rem, 5vw, 1.6rem)}
-      .subtitle{font-size:clamp(.86rem, 3.4vw, 1rem)}
-      .social-link{width:42px; height:42px; font-size:14px}
-      .bubble{width:clamp(80px, 26vw, 110px)}
-      .bubble-label{font-size:.68rem}
-      .bubble[data-armed="1"] .bubble-label{font-size:.62rem}
+      .profile-photo-container{margin-bottom:18px}
+      .name{font-size:clamp(1.3rem, 6.5vw, 1.8rem); margin-bottom:10px}
+      .subtitle{font-size:clamp(0.95rem, 4.2vw, 1.1rem); margin-top:14px}
+      .social-links{margin-top:18px; gap:16px}
+      .social-link{width:42px; height:42px; font-size:15px}
+      .bubble{width:clamp(65px, 22vw, 85px)}
+      .bubble-title{font-size:clamp(0.65rem, 1.6vw, 0.78rem)}
+      .bubble-label{font-size:.52rem; bottom:10px}
+      .bubble[data-armed="1"] .bubble-label{font-size:.48rem}
+      #about-inline{margin-top:20px; padding:0 6px}
+      #about-inline .lede{font-size:0.9rem; line-height:1.6}
+      .section{margin-top:24px}
     }
   </style>
 </head>
