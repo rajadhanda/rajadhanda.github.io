@@ -15,6 +15,8 @@
     })();
   </script>
   
+  <!-- Preload critical first image for better LCP -->
+  <link rel="preload" as="image" href="images/IMG_0519.jpeg" fetchpriority="high">
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Crimson+Text:ital,wght@0,400;0,600;1,400&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
   <!-- Icons -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" referrerpolicy="no-referrer"/>
@@ -51,8 +53,8 @@
       text-decoration:none; color:var(--fg);
     }
     .nav-back:hover{transform:scale(1.05) translateY(-1px); border-color:var(--border-hover); box-shadow:var(--shadow-medium)}
-    .nav-back i{font-size:18px; transition:transform .2s var(--ease)}
-    .nav-back:hover i{transform:translateX(-2px)}
+    .nav-back i{font-size:18px; transition:transform .4s var(--ease-back), opacity .3s var(--ease);}
+    .nav-back:hover i{transform:rotate(15deg)}
     [data-theme="midnight"] .nav-back{
       background:rgba(26,30,47,.92);
     }
@@ -184,20 +186,25 @@
     
     .photo-item img{
       width:100%; height:100%; object-fit:cover; display:block;
-      transition:filter 0.3s ease-out, opacity 0.3s ease-out;
+      transition:filter 0.4s ease-out, opacity 0.4s ease-out;
       transform: translateZ(0);
       backface-visibility: hidden;
       border: none;
       outline: none;
       box-shadow: none;
+      /* Prevent layout shift during load */
+      background: var(--accent-soft);
     }
     .photo-item img.loading{
-      opacity:0;
-      filter:blur(20px);
+      opacity:0.3;
+      filter:blur(10px) brightness(1.1);
+      /* Smooth transition from placeholder to image */
+      will-change: filter, opacity;
     }
     .photo-item img.loaded{
       opacity:1;
       filter:blur(0);
+      will-change: auto;
     }
     
     /* Hover Overlay - Desktop Only (touch devices show caption by default) */
@@ -392,59 +399,59 @@
     
     <div class="photo-gallery">
       <div class="photo-item" data-caption="montmartre, paris">
-        <img src="images/IMG_0519.jpeg" alt="Photograph 2" loading="lazy">
+        <img src="images/IMG_0519.jpeg" alt="montmartre, paris" loading="eager" decoding="async" fetchpriority="high">
         <div class="photo-caption">montmartre, paris</div>
       </div>
       <div class="photo-item" data-caption="louis vuitton, champs-elysées, paris">
-        <img src="images/IMG_0787.jpeg" alt="Photograph 3" loading="lazy">
+        <img src="images/IMG_0787.jpeg" alt="louis vuitton, champs-elysées, paris" loading="eager" decoding="async" fetchpriority="high">
         <div class="photo-caption">louis vuitton, champs-elysées, paris</div>
       </div>
       <div class="photo-item" data-caption="a room of quiet contemplation, national museum of korea, seoul">
-        <img src="images/IMG_3516.jpeg" alt="Photograph 4" loading="lazy">
+        <img src="images/IMG_3516.jpeg" alt="a room of quiet contemplation, national museum of korea, seoul" loading="lazy" decoding="async">
         <div class="photo-caption">a room of quiet contemplation, national museum of korea, seoul</div>
       </div>
       <div class="photo-item" data-caption="a room of quiet contemplation, national museum of korea, seoul">
-        <img src="images/IMG_3534.jpeg" alt="Photograph 5" loading="lazy">
+        <img src="images/IMG_3534.jpeg" alt="a room of quiet contemplation, national museum of korea, seoul" loading="lazy" decoding="async">
         <div class="photo-caption">a room of quiet contemplation, national museum of korea, seoul</div>
       </div>
       <div class="photo-item" data-caption="starfield library, coex mall, seoul">
-        <img src="images/IMG_3582.jpeg" alt="Photograph 6" loading="lazy">
+        <img src="images/IMG_3582.jpeg" alt="starfield library, coex mall, seoul" loading="lazy" decoding="async">
         <div class="photo-caption">starfield library, coex mall, seoul</div>
       </div>
       <div class="photo-item" data-caption="ura-namba, osaka">
-        <img src="images/IMG_4229.jpeg" alt="Photograph 7" loading="lazy">
+        <img src="images/IMG_4229.jpeg" alt="ura-namba, osaka" loading="lazy" decoding="async">
         <div class="photo-caption">ura-namba, osaka</div>
       </div>
       <div class="photo-item" data-caption="dōtonbori canal, osaka">
-        <img src="images/IMG_4393.jpeg" alt="Photograph 8" loading="lazy">
+        <img src="images/IMG_4393.jpeg" alt="dōtonbori canal, osaka" loading="lazy" decoding="async">
         <div class="photo-caption">dōtonbori canal, osaka</div>
       </div>
       <div class="photo-item" data-caption="yasaka pagoda, gion, kyoto">
-        <img src="images/IMG_4887.jpeg" alt="Photograph 10" loading="lazy">
+        <img src="images/IMG_4887.jpeg" alt="yasaka pagoda, gion, kyoto" loading="lazy" decoding="async">
         <div class="photo-caption">yasaka pagoda, gion, kyoto</div>
       </div>
       <div class="photo-item" data-caption="fushimi inari taisha, kyoto">
-        <img src="images/IMG_4921.jpeg" alt="Photograph 11" loading="lazy">
+        <img src="images/IMG_4921.jpeg" alt="fushimi inari taisha, kyoto" loading="lazy" decoding="async">
         <div class="photo-caption">fushimi inari taisha, kyoto</div>
       </div>
       <div class="photo-item" data-caption="tokyo tower, tokyo">
-        <img src="images/IMG_5561.jpeg" alt="Photograph 12" loading="lazy">
+        <img src="images/IMG_5561.jpeg" alt="tokyo tower, tokyo" loading="lazy" decoding="async">
         <div class="photo-caption">tokyo tower, tokyo</div>
       </div>
       <div class="photo-item" data-caption="shibuya crossing from shibuya sky, tokyo">
-        <img src="images/IMG_5986.jpeg" alt="Photograph 13" loading="lazy">
+        <img src="images/IMG_5986.jpeg" alt="shibuya crossing from shibuya sky, tokyo" loading="lazy" decoding="async">
         <div class="photo-caption">shibuya crossing from shibuya sky, tokyo</div>
       </div>
       <div class="photo-item" data-caption="flat whites, keswick, lake district national park">
-        <img src="images/IMG_7084.jpeg" alt="Photograph 14" loading="lazy">
+        <img src="images/IMG_7084.jpeg" alt="flat whites, keswick, lake district national park" loading="lazy" decoding="async">
         <div class="photo-caption">flat whites, keswick, lake district national park</div>
       </div>
       <div class="photo-item" data-caption="homeground coffee + kitchen, windermere, lake district national park">
-        <img src="images/IMG_7101.jpeg" alt="Photograph 15" loading="lazy">
+        <img src="images/IMG_7101.jpeg" alt="homeground coffee + kitchen, windermere, lake district national park" loading="lazy" decoding="async">
         <div class="photo-caption">homeground coffee + kitchen, windermere, lake district national park</div>
       </div>
       <div class="photo-item" data-caption="long island iced tea, the oligarch, milton keynes">
-        <img src="images/IMG_8842.jpeg" alt="Photograph 16" loading="lazy">
+        <img src="images/IMG_8842.jpeg" alt="long island iced tea, the oligarch, milton keynes" loading="lazy" decoding="async">
         <div class="photo-caption">long island iced tea, the oligarch, milton keynes</div>
       </div>
     </div>
@@ -591,27 +598,49 @@
       // Expose for lightbox use
       window.preloadAdjacentImages = preloadAdjacentImages;
       
-      // Lazy load images with better performance
+      // Optimized lazy load images with Intersection Observer
+      // Dynamic rootMargin based on connection speed for better performance
+      const getRootMargin = () => {
+        // Use connection API if available to adjust preload distance
+        if ('connection' in navigator) {
+          const connection = navigator.connection || navigator.mozConnection || navigator.webkitConnection;
+          if (connection) {
+            // Reduce preload distance on slower connections
+            if (connection.effectiveType === 'slow-2g' || connection.effectiveType === '2g') {
+              return '25px';
+            }
+            if (connection.effectiveType === '3g') {
+              return '50px';
+            }
+          }
+        }
+        // Default: start loading 100px before image enters viewport
+        return '100px';
+      };
+      
       const imageObserver = new IntersectionObserver((entries, observer) => {
         entries.forEach(entry => {
           if (entry.isIntersecting) {
             const img = entry.target;
             
-            // Start loading
+            // Start loading with blur effect
             if (!img.classList.contains('loading') && !img.classList.contains('loaded')) {
               img.classList.add('loading');
             }
             
-            // If already complete, mark as loaded
+            // If already complete, mark as loaded immediately
             if (img.complete && img.naturalHeight !== 0) {
               img.classList.remove('loading');
               img.classList.add('loaded');
               observer.unobserve(img);
             } else {
-              // Wait for load
+              // Wait for load event
               const loadHandler = () => {
-                img.classList.remove('loading');
-                img.classList.add('loaded');
+                // Use requestAnimationFrame for smooth transition
+                requestAnimationFrame(() => {
+                  img.classList.remove('loading');
+                  img.classList.add('loaded');
+                });
                 observer.unobserve(img);
               };
               img.addEventListener('load', loadHandler, {once:true});
@@ -620,29 +649,35 @@
           }
         });
       }, {
-        rootMargin: '50px', // Start loading slightly before visible
-        threshold: 0.01
+        rootMargin: getRootMargin(), // Adaptive preload distance
+        threshold: 0.01 // Trigger as soon as any pixel is visible
       });
       
-      // Preload first few images immediately
-      const preloadCount = Math.min(4, images.length);
+      // Preload first 2 images immediately (above the fold)
+      // These use loading="eager" and fetchpriority="high" in HTML
+      const preloadCount = Math.min(2, images.length);
       for (let i = 0; i < preloadCount; i++) {
         const img = images[i];
         img.classList.add('loading');
         if (img.complete && img.naturalHeight !== 0) {
-          img.classList.remove('loading');
-          img.classList.add('loaded');
-        } else {
-          const loadHandler = () => {
+          requestAnimationFrame(() => {
             img.classList.remove('loading');
             img.classList.add('loaded');
+          });
+        } else {
+          const loadHandler = () => {
+            requestAnimationFrame(() => {
+              img.classList.remove('loading');
+              img.classList.add('loaded');
+            });
           };
           img.addEventListener('load', loadHandler, {once:true});
           img.addEventListener('error', loadHandler, {once:true});
         }
       }
       
-      // Observe remaining images
+      // Observe all images (including preloaded ones for consistency)
+      // The observer will handle them appropriately based on their loading state
       images.forEach((img, index) => {
         if (index >= preloadCount) {
           imageObserver.observe(img);

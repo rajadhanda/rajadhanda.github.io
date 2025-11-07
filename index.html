@@ -87,13 +87,21 @@
       position:fixed; top:28px; right:28px; width:52px; height:52px; border-radius:50%;
       border:1px solid var(--border); display:grid; place-items:center;
       background:rgba(254,254,254,.92); backdrop-filter:blur(12px);
-      cursor:pointer; transition:all .3s var(--ease); z-index:1001; box-shadow:var(--shadow-soft);
+      cursor:pointer; z-index:1001; box-shadow:var(--shadow-soft);
+      opacity:0; transform:translateY(16px);
+      transition:opacity .6s var(--ease), transform .6s var(--ease), all .3s var(--ease);
+    }
+    .theme-toggle.reveal{
+      opacity:1; transform:translateY(0);
     }
     [data-theme="midnight"] .theme-toggle{
       background:rgba(26,30,47,.92);
     }
     .theme-toggle:hover{
       transform:scale(1.05) translateY(-1px); border-color:var(--border-hover); box-shadow:var(--shadow-medium);
+    }
+    .theme-toggle.reveal:hover{
+      transform:scale(1.05) translateY(-1px) !important;
     }
     .theme-toggle i{
       font-size:18px; color:var(--fg); transition:transform .4s var(--ease-back), opacity .3s var(--ease);
@@ -105,6 +113,9 @@
     .theme-toggle .fa-sun{opacity:0; position:absolute}
     [data-theme="midnight"] .theme-toggle .fa-moon{opacity:0}
     [data-theme="midnight"] .theme-toggle .fa-sun{opacity:1}
+    @media (prefers-reduced-motion: reduce){
+      .theme-toggle{transform:none; transition:opacity .3s var(--ease), all .3s var(--ease)}
+    }
     
     /* Smooth theme transition */
     body{
@@ -701,6 +712,66 @@
             localStorage.setItem('theme', 'midnight');
           }
         });
+      }
+    })();
+
+    // ===== Theme Toggle: reveal on scroll or after time (same logic as hobbies) =====
+    (function(){
+      const themeToggle = document.getElementById('themeToggle');
+      if (!themeToggle) return;
+
+      const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      let revealed = false;
+      
+      function revealThemeToggle() {
+        if (revealed) return;
+        revealed = true;
+        themeToggle.classList.add('reveal');
+      }
+      
+      // Reveal mechanism: scroll down 200px OR after 8 seconds (showing attention)
+      let scrollRevealed = false;
+      let timeRevealed = false;
+      
+      // Scroll-based reveal
+      function checkScroll() {
+        if (scrollRevealed) return;
+        const scrollY = window.pageYOffset || document.documentElement.scrollTop;
+        if (scrollY > 200) {
+          scrollRevealed = true;
+          revealThemeToggle();
+        }
+      }
+      
+      // Time-based reveal (after user has been on page for a while)
+      window.addEventListener('icons:ready', () => {
+        setTimeout(() => {
+          if (!timeRevealed && !revealed) {
+            timeRevealed = true;
+            // Only reveal via time if user hasn't scrolled yet
+            if (!scrollRevealed) {
+              revealThemeToggle();
+            }
+          }
+        }, 8000); // 8 seconds after icons appear
+      }, { once: true });
+      
+      // Scroll listener
+      window.addEventListener('scroll', checkScroll, { passive: true });
+      
+      // Initial check in case page is already scrolled
+      checkScroll();
+      
+      // Fallback: show after 12 seconds if nothing else triggered it
+      setTimeout(() => {
+        if (!revealed) {
+          revealThemeToggle();
+        }
+      }, 12000);
+      
+      // Show immediately on reduced motion
+      if (reducedMotion) {
+        revealThemeToggle();
       }
     })();
 
