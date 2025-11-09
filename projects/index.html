@@ -244,6 +244,11 @@
       const pageTransition = document.getElementById('pageTransition');
       const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
       
+      // Reset page transition overlay on page load (important for back navigation)
+      if (pageTransition) {
+        pageTransition.classList.remove('active');
+      }
+      
       if (!pageTransition || reducedMotion) return;
       
       const navLinks = document.querySelectorAll('a[href^="/"], a[href^="./"], a.nav-back');
@@ -259,7 +264,8 @@
           
           e.preventDefault();
           pageTransition.classList.add('active');
-          setTimeout(() => { window.location.href = href; }, 300);
+          // Use location.assign to ensure proper history entry
+          setTimeout(() => { window.location.assign(href); }, 300);
         });
       });
     })();

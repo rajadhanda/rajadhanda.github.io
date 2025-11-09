@@ -1456,6 +1456,11 @@
       const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
       const isTouch = 'ontouchstart' in window || (navigator.maxTouchPoints||0) > 0;
       
+      // Reset page transition overlay on page load (important for back navigation)
+      if (pageTransition) {
+        pageTransition.classList.remove('active');
+      }
+      
       if (!bubbles.length || !pageTransition || reducedMotion || isTouch) return;
       
       bubbles.forEach(bubble => {
@@ -1489,9 +1494,9 @@
             pageTransition.classList.add('active');
           });
           
-          // Navigate after animation
+          // Navigate after animation - use location.assign to ensure proper history entry
           setTimeout(() => {
-            window.location.href = href;
+            window.location.assign(href);
           }, 400);
         });
       });
