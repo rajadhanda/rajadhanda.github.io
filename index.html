@@ -815,6 +815,53 @@
         // Ensure body is visible and not blocked
         document.body.style.overflow = '';
         document.body.style.visibility = 'visible';
+        
+        // Reset ALL visibility states for animations to replay
+        // Reset profile photo
+        const profilePhotoContainer = document.querySelector('.profile-photo-container');
+        if (profilePhotoContainer) {
+          profilePhotoContainer.classList.remove('show');
+        }
+        
+        // Reset subtitle
+        const subtitleEl = document.getElementById('subtitle');
+        if (subtitleEl) {
+          subtitleEl.classList.remove('show');
+        }
+        
+        // Reset social links
+        const socialLinksEl = document.querySelector('.social-links');
+        if (socialLinksEl) {
+          socialLinksEl.classList.remove('icons-in');
+          // Reset individual social link animations
+          socialLinksEl.querySelectorAll('.social-link').forEach(link => {
+            link.style.opacity = '0';
+            link.style.transform = 'translateY(6px) scale(0.94)';
+          });
+        }
+        
+        // Reset all sections (about, hobbies, etc.)
+        document.querySelectorAll('.section').forEach(section => {
+          section.classList.remove('reveal');
+        });
+        
+        // Reset hobbies section
+        const hobbies = document.getElementById('hobbies');
+        if (hobbies) {
+          hobbies.classList.remove('reveal');
+        }
+        
+        // Reset theme toggle
+        const themeToggle = document.getElementById('themeToggle');
+        if (themeToggle) {
+          themeToggle.classList.remove('reveal');
+        }
+        
+        // Reset bubbles navigation
+        const bubbleNav = document.getElementById('bubbleNav');
+        if (bubbleNav) {
+          bubbleNav.classList.remove('ready');
+        }
       }
       
       // Reset immediately
@@ -825,6 +872,8 @@
         // event.persisted is true when page is loaded from cache (back navigation)
         if (event.persisted) {
           resetPageState();
+          // Force a reflow to ensure styles are applied
+          void document.body.offsetHeight;
         }
       });
       
@@ -867,6 +916,25 @@
 
       const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
       let revealed = false;
+      let scrollRevealed = false;
+      let timeRevealed = false;
+      let timeRevealTimeout = null;
+      let fallbackTimeout = null;
+      
+      function resetThemeToggleState() {
+        revealed = false;
+        scrollRevealed = false;
+        timeRevealed = false;
+        if (timeRevealTimeout) {
+          clearTimeout(timeRevealTimeout);
+          timeRevealTimeout = null;
+        }
+        if (fallbackTimeout) {
+          clearTimeout(fallbackTimeout);
+          fallbackTimeout = null;
+        }
+        themeToggle.classList.remove('reveal');
+      }
       
       function revealThemeToggle() {
         if (revealed) return;
@@ -874,50 +942,65 @@
         themeToggle.classList.add('reveal');
       }
       
-      // Reveal mechanism: scroll down 200px OR after 8 seconds (showing attention)
-      let scrollRevealed = false;
-      let timeRevealed = false;
-      
-      // Scroll-based reveal
-      function checkScroll() {
-        if (scrollRevealed) return;
-        const scrollY = window.pageYOffset || document.documentElement.scrollTop;
-        if (scrollY > 200) {
-          scrollRevealed = true;
-          revealThemeToggle();
-        }
-      }
-      
-      // Time-based reveal (after user has been on page for a while)
-      window.addEventListener('icons:ready', () => {
-        setTimeout(() => {
-          if (!timeRevealed && !revealed) {
-            timeRevealed = true;
-            // Only reveal via time if user hasn't scrolled yet
-            if (!scrollRevealed) {
-              revealThemeToggle();
-            }
+      function setupThemeToggleReveal() {
+        resetThemeToggleState();
+        
+        // Scroll-based reveal
+        function checkScroll() {
+          if (scrollRevealed) return;
+          const scrollY = window.pageYOffset || document.documentElement.scrollTop;
+          if (scrollY > 200) {
+            scrollRevealed = true;
+            revealThemeToggle();
           }
-        }, 8000); // 8 seconds after icons appear
-      }, { once: true });
-      
-      // Scroll listener
-      window.addEventListener('scroll', checkScroll, { passive: true });
-      
-      // Initial check in case page is already scrolled
-      checkScroll();
-      
-      // Fallback: show after 12 seconds if nothing else triggered it
-      setTimeout(() => {
-        if (!revealed) {
+        }
+        
+        // Time-based reveal (after user has been on page for a while)
+        function handleIconsReady() {
+          timeRevealTimeout = setTimeout(() => {
+            if (!timeRevealed && !revealed) {
+              timeRevealed = true;
+              // Only reveal via time if user hasn't scrolled yet
+              if (!scrollRevealed) {
+                revealThemeToggle();
+              }
+            }
+          }, 8000); // 8 seconds after icons appear
+        }
+        window.addEventListener('icons:ready', handleIconsReady);
+        
+        // Scroll listener
+        window.addEventListener('scroll', checkScroll, { passive: true });
+        
+        // Initial check in case page is already scrolled
+        checkScroll();
+        
+        // Fallback: show after 12 seconds if nothing else triggered it
+        fallbackTimeout = setTimeout(() => {
+          if (!revealed) {
+            revealThemeToggle();
+          }
+        }, 12000);
+        
+        // Show immediately on reduced motion
+        if (reducedMotion) {
           revealThemeToggle();
         }
-      }, 12000);
-      
-      // Show immediately on reduced motion
-      if (reducedMotion) {
-        revealThemeToggle();
       }
+      
+      // Setup initially
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', setupThemeToggleReveal);
+      } else {
+        setupThemeToggleReveal();
+      }
+      
+      // Reset and re-setup on pageshow (back navigation from cache)
+      window.addEventListener('pageshow', function(event) {
+        if (event.persisted) {
+          setupThemeToggleReveal();
+        }
+      });
     })();
 
     // ===== Bubble freeflow — robust centreing and mobile-safe viewport =====
@@ -1360,18 +1443,23 @@
           rafId = 0;
         }
         nav.classList.remove('ready');
+        // Reset bubble positions to initial state
+        bubbles.forEach(bubble => {
+          bubble.style.transform = '';
+          bubble.style.opacity = '';
+        });
       }
       
-      // Reset on page load/visibility change (handles back navigation)
+      // Reset on page load
       if (document.readyState === 'loading') {
         document.addEventListener('DOMContentLoaded', resetBubbleState);
       } else {
         resetBubbleState();
       }
       
-      // Also reset when page becomes visible (handles back navigation from cache)
-      document.addEventListener('visibilitychange', () => {
-        if (!document.hidden) {
+      // Reset on pageshow event (handles back navigation from cache)
+      window.addEventListener('pageshow', function(event) {
+        if (event.persisted) {
           resetBubbleState();
         }
       });
@@ -1514,13 +1602,12 @@
       startTyping();
     }
     
-    // Also restart on visibility change (handles back navigation from cache)
-    document.addEventListener('visibilitychange', () => {
-      if (!document.hidden && nameEl) {
-        // Only restart if name is already typed (page was cached)
-        if (nameEl.textContent && nameEl.textContent.trim() === fullText) {
-          startTyping();
-        }
+    // Handle pageshow event for back navigation (page loaded from cache)
+    window.addEventListener('pageshow', function(event) {
+      if (event.persisted) {
+        // Page was loaded from cache (back navigation)
+        // Reset and restart typing animation
+        startTyping();
       }
     });
     
@@ -1619,41 +1706,64 @@
     // ===== IntersectionObserver for section reveal (gated for About+Hobbies) =====
     (function(){
       const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-      const allSections = Array.from(document.querySelectorAll('.section'));
-      const about = document.getElementById('about-inline');
-      const hobbies = document.getElementById('hobbies');
-      const gated = new Set([about, hobbies]);
+      let observer = null;
+      
+      function setupObserver() {
+        const allSections = Array.from(document.querySelectorAll('.section'));
+        const about = document.getElementById('about-inline');
+        const hobbies = document.getElementById('hobbies');
+        const gated = new Set([about, hobbies]);
 
-      if (reducedMotion) {
-        allSections.forEach(s => {
-          if (s !== hobbies) s.classList.add('reveal');
+        if (reducedMotion) {
+          allSections.forEach(s => {
+            if (s !== hobbies) s.classList.add('reveal');
+          });
+          // For hobbies, show immediately on reduced motion
+          if (hobbies) hobbies.classList.add('reveal');
+          return;
+        }
+
+        // Disconnect existing observer if it exists
+        if (observer) {
+          observer.disconnect();
+        }
+
+        const observerOptions = { root: null, rootMargin: '0px', threshold: 0.1 };
+        observer = new IntersectionObserver((entries) => {
+          entries.forEach(entry => {
+            if (entry.isIntersecting) {
+              entry.target.classList.add('reveal');
+              observer.unobserve(entry.target);
+            }
+          });
+        }, observerOptions);
+
+        // Observe all except the gated ones initially
+        allSections.forEach(section => {
+          if (!gated.has(section)) observer.observe(section);
         });
-        // For hobbies, show immediately on reduced motion
-        if (hobbies) hobbies.classList.add('reveal');
-        return;
+
+        // After icons are in, start observing the gated sections (except hobbies)
+        // Remove once:true to allow re-triggering on back navigation
+        function handleIconsReady() {
+          if (about && observer) observer.observe(about);
+        }
+        window.addEventListener('icons:ready', handleIconsReady);
       }
-
-      const observerOptions = { root: null, rootMargin: '0px', threshold: 0.1 };
-      const observer = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-          if (entry.isIntersecting) {
-            entry.target.classList.add('reveal');
-            observer.unobserve(entry.target);
-          }
-        });
-      }, observerOptions);
-
-      // Observe all except the gated ones initially
-      allSections.forEach(section => {
-        if (!gated.has(section)) observer.observe(section);
+      
+      // Setup observer initially
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', setupObserver);
+      } else {
+        setupObserver();
+      }
+      
+      // Re-setup observer on pageshow (back navigation from cache)
+      window.addEventListener('pageshow', function(event) {
+        if (event.persisted) {
+          setupObserver();
+        }
       });
-
-      // After icons are in, start observing the gated sections (except hobbies)
-      // Remove once:true to allow re-triggering on back navigation
-      function handleIconsReady() {
-        if (about) observer.observe(about);
-      }
-      window.addEventListener('icons:ready', handleIconsReady);
     })();
 
     // ===== Hobbies section: reveal on scroll or after time (for attentive users) =====
@@ -1663,6 +1773,25 @@
 
       const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
       let revealed = false;
+      let scrollRevealed = false;
+      let timeRevealed = false;
+      let timeRevealTimeout = null;
+      let fallbackTimeout = null;
+      
+      function resetHobbiesState() {
+        revealed = false;
+        scrollRevealed = false;
+        timeRevealed = false;
+        if (timeRevealTimeout) {
+          clearTimeout(timeRevealTimeout);
+          timeRevealTimeout = null;
+        }
+        if (fallbackTimeout) {
+          clearTimeout(fallbackTimeout);
+          fallbackTimeout = null;
+        }
+        hobbies.classList.remove('reveal');
+      }
       
       function revealHobbies() {
         if (revealed) return;
@@ -1670,50 +1799,65 @@
         hobbies.classList.add('reveal');
       }
       
-      // Reveal mechanism: scroll down 200px OR after 8 seconds (showing attention)
-      let scrollRevealed = false;
-      let timeRevealed = false;
-      
-      // Scroll-based reveal
-      function checkScroll() {
-        if (scrollRevealed) return;
-        const scrollY = window.pageYOffset || document.documentElement.scrollTop;
-        if (scrollY > 200) {
-          scrollRevealed = true;
-          revealHobbies();
-        }
-      }
-      
-      // Time-based reveal (after user has been on page for a while)
-      window.addEventListener('icons:ready', () => {
-        setTimeout(() => {
-          if (!timeRevealed && !revealed) {
-            timeRevealed = true;
-            // Only reveal via time if user hasn't scrolled yet
-            if (!scrollRevealed) {
-              revealHobbies();
-            }
+      function setupHobbiesReveal() {
+        resetHobbiesState();
+        
+        // Scroll-based reveal
+        function checkScroll() {
+          if (scrollRevealed) return;
+          const scrollY = window.pageYOffset || document.documentElement.scrollTop;
+          if (scrollY > 200) {
+            scrollRevealed = true;
+            revealHobbies();
           }
-        }, 8000); // 8 seconds after icons appear
-      }, { once: true });
-      
-      // Scroll listener
-      window.addEventListener('scroll', checkScroll, { passive: true });
-      
-      // Initial check in case page is already scrolled
-      checkScroll();
-      
-      // Fallback: show after 12 seconds if nothing else triggered it
-      setTimeout(() => {
-        if (!revealed) {
+        }
+        
+        // Time-based reveal (after user has been on page for a while)
+        function handleIconsReady() {
+          timeRevealTimeout = setTimeout(() => {
+            if (!timeRevealed && !revealed) {
+              timeRevealed = true;
+              // Only reveal via time if user hasn't scrolled yet
+              if (!scrollRevealed) {
+                revealHobbies();
+              }
+            }
+          }, 8000); // 8 seconds after icons appear
+        }
+        window.addEventListener('icons:ready', handleIconsReady);
+        
+        // Scroll listener
+        window.addEventListener('scroll', checkScroll, { passive: true });
+        
+        // Initial check in case page is already scrolled
+        checkScroll();
+        
+        // Fallback: show after 12 seconds if nothing else triggered it
+        fallbackTimeout = setTimeout(() => {
+          if (!revealed) {
+            revealHobbies();
+          }
+        }, 12000);
+        
+        // Show immediately on reduced motion
+        if (reducedMotion) {
           revealHobbies();
         }
-      }, 12000);
-      
-      // Show immediately on reduced motion
-      if (reducedMotion) {
-        revealHobbies();
       }
+      
+      // Setup initially
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', setupHobbiesReveal);
+      } else {
+        setupHobbiesReveal();
+      }
+      
+      // Reset and re-setup on pageshow (back navigation from cache)
+      window.addEventListener('pageshow', function(event) {
+        if (event.persisted) {
+          setupHobbiesReveal();
+        }
+      });
     })();
 
   </script>
