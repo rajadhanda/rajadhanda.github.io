@@ -798,6 +798,42 @@
   </nav>
 
   <script>
+    // ===== CRITICAL: Reset page state on load (especially for back navigation) =====
+    (function(){
+      function resetPageState() {
+        // Immediately reset page transition overlay to ensure content is visible
+        const pageTransition = document.getElementById('pageTransition');
+        if (pageTransition) {
+          pageTransition.classList.remove('active');
+          // Force reset styles in case they're stuck
+          pageTransition.style.width = '0';
+          pageTransition.style.height = '0';
+          pageTransition.style.opacity = '0';
+          pageTransition.style.pointerEvents = 'none';
+        }
+        
+        // Ensure body is visible and not blocked
+        document.body.style.overflow = '';
+        document.body.style.visibility = 'visible';
+      }
+      
+      // Reset immediately
+      resetPageState();
+      
+      // Reset on pageshow event (handles back/forward navigation from cache)
+      window.addEventListener('pageshow', function(event) {
+        // event.persisted is true when page is loaded from cache (back navigation)
+        if (event.persisted) {
+          resetPageState();
+        }
+      });
+      
+      // Also reset on DOMContentLoaded as a safety measure
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', resetPageState);
+      }
+    })();
+
     // ===== Theme Toggle (load first to prevent flash) =====
     (function(){
       const themeToggle = document.getElementById('themeToggle');
@@ -1313,8 +1349,38 @@
           rafId = requestAnimationFrame(tick);
         }
       }
-      // Allow external trigger after icons reveal
-      window.addEventListener('bubbles:start', () => start(true), { once:true });
+      
+      // Reset started flag on page load (important for back navigation)
+      // This ensures bubbles reinitialize when navigating back
+      function resetBubbleState() {
+        started = false;
+        initialized = false;
+        if (rafId) {
+          cancelAnimationFrame(rafId);
+          rafId = 0;
+        }
+        nav.classList.remove('ready');
+      }
+      
+      // Reset on page load/visibility change (handles back navigation)
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', resetBubbleState);
+      } else {
+        resetBubbleState();
+      }
+      
+      // Also reset when page becomes visible (handles back navigation from cache)
+      document.addEventListener('visibilitychange', () => {
+        if (!document.hidden) {
+          resetBubbleState();
+        }
+      });
+      
+      // Allow external trigger after icons reveal - remove once:true to allow re-triggering
+      function handleBubblesStart() {
+        start(true);
+      }
+      window.addEventListener('bubbles:start', handleBubblesStart);
 
       // Mobile: first tap acts like hover, second tap navigates
       const elToState = new Map(state.map(s => [s.el, s]));
@@ -1394,10 +1460,26 @@
     const totalMs = 2200; // faster typing again
     const stepMs = Math.max(30, Math.floor(totalMs / Math.max(1, fullText.length)));
     let idx = 0;
+    let typingTimeout = null;
+    
+    function resetTypingState() {
+      // Clear any ongoing typing animation
+      if (typingTimeout) {
+        clearTimeout(typingTimeout);
+        typingTimeout = null;
+      }
+      idx = 0;
+      // Reset visibility states
+      if (profilePhotoContainer) profilePhotoContainer.classList.remove('show');
+      if (subtitleEl) subtitleEl.classList.remove('show');
+      if (socialLinksEl) socialLinksEl.classList.remove('icons-in');
+    }
+    
     function typeNext(){
       if (idx <= fullText.length){
         nameEl.innerHTML = fullText.slice(0, idx) + '<span class="typing-cursor"></span>';
-        idx++; setTimeout(typeNext, stepMs + Math.random()*40);
+        idx++; 
+        typingTimeout = setTimeout(typeNext, stepMs + Math.random()*40);
       } else {
         nameEl.innerHTML = fullText + '<span class="typing-cursor"></span>';
         setTimeout(()=> {
@@ -1417,9 +1499,37 @@
         }, 400);
       }
     }
+    
+    function startTyping() {
+      resetTypingState();
+      nameEl.textContent = '';
+      typingTimeout = setTimeout(typeNext, 300);
+    }
+    
     // Kick off typing as soon as DOM is ready; also on load as redundancy
-    document.addEventListener('DOMContentLoaded', ()=>{ nameEl.textContent=''; setTimeout(typeNext, 300); });
-    window.addEventListener('load', ()=>{ if (!nameEl.textContent) { nameEl.textContent=''; setTimeout(typeNext, 300); } });
+    // Always reset and restart on page load (important for back navigation)
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', startTyping);
+    } else {
+      startTyping();
+    }
+    
+    // Also restart on visibility change (handles back navigation from cache)
+    document.addEventListener('visibilitychange', () => {
+      if (!document.hidden && nameEl) {
+        // Only restart if name is already typed (page was cached)
+        if (nameEl.textContent && nameEl.textContent.trim() === fullText) {
+          startTyping();
+        }
+      }
+    });
+    
+    window.addEventListener('load', () => {
+      // Fallback: if typing didn't start, start it now
+      if (nameEl && (!nameEl.textContent || nameEl.textContent.trim() === '')) {
+        startTyping();
+      }
+    });
 
     // Absolute fallbacks so page never feels blank if something blocks animations
     setTimeout(()=>{
@@ -1456,9 +1566,13 @@
       const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
       const isTouch = 'ontouchstart' in window || (navigator.maxTouchPoints||0) > 0;
       
-      // Reset page transition overlay on page load (important for back navigation)
+      // Reset is already handled at the top of the script, but ensure it's reset here too
       if (pageTransition) {
         pageTransition.classList.remove('active');
+        pageTransition.style.width = '0';
+        pageTransition.style.height = '0';
+        pageTransition.style.opacity = '0';
+        pageTransition.style.pointerEvents = 'none';
       }
       
       if (!bubbles.length || !pageTransition || reducedMotion || isTouch) return;
@@ -1535,9 +1649,11 @@
       });
 
       // After icons are in, start observing the gated sections (except hobbies)
-      window.addEventListener('icons:ready', () => {
+      // Remove once:true to allow re-triggering on back navigation
+      function handleIconsReady() {
         if (about) observer.observe(about);
-      }, { once: true });
+      }
+      window.addEventListener('icons:ready', handleIconsReady);
     })();
 
     // ===== Hobbies section: reveal on scroll or after time (for attentive users) =====
