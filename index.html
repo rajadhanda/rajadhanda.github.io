@@ -970,7 +970,7 @@
                 revealThemeToggle();
               }
             }
-          }, 8000); // 8 seconds after icons appear
+          }, 4000); // 4 seconds after icons appear
         }
         window.addEventListener('icons:ready', handleIconsReady);
         
@@ -980,12 +980,12 @@
         // Initial check in case page is already scrolled
         checkScroll();
         
-        // Fallback: show after 12 seconds if nothing else triggered it
+        // Fallback: show after 6 seconds if nothing else triggered it
         fallbackTimeout = setTimeout(() => {
           if (!revealed) {
             revealThemeToggle();
           }
-        }, 12000);
+        }, 6000);
         
         // Show immediately on reduced motion
         if (reducedMotion) {
@@ -1827,7 +1827,7 @@
                 revealHobbies();
               }
             }
-          }, 8000); // 8 seconds after icons appear
+          }, 4000); // 4 seconds after icons appear
         }
         window.addEventListener('icons:ready', handleIconsReady);
         
@@ -1837,12 +1837,12 @@
         // Initial check in case page is already scrolled
         checkScroll();
         
-        // Fallback: show after 12 seconds if nothing else triggered it
+        // Fallback: show after 6 seconds if nothing else triggered it
         fallbackTimeout = setTimeout(() => {
           if (!revealed) {
             revealHobbies();
           }
-        }, 12000);
+        }, 6000);
         
         // Show immediately on reduced motion
         if (reducedMotion) {
