@@ -693,58 +693,70 @@
       .section{margin-top:24px}
     }
 
-    /* Zebra Container - LoveFrom bear-inspired design */
-    .zebra-container{
+    /* Elephant Container - LoveFrom bear-inspired design */
+    .elephant-container{
       position:fixed; inset:0; pointer-events:none; z-index:1;
       opacity:0; transition:opacity 1s var(--ease);
       will-change:transform;
     }
-    .zebra-container.reveal{opacity:1}
-    .zebra-svg{
-      position:absolute; width:110px; height:73px;
-      color:var(--fg); opacity:0.7;
-      transition:color 0.5s var(--ease), filter 0.5s var(--ease);
+    .elephant-container.reveal{opacity:1}
+    .elephant-svg{
+      position:absolute; width:50px; height:40px;
+      color:var(--fg); opacity:0.85;
+      transition:color 0.5s var(--ease), filter 0.5s var(--ease), transform 0.3s var(--ease);
       transform-origin:center center;
     }
-    [data-theme="midnight"] .zebra-svg{
-      color:var(--fg-light); opacity:0.6;
+    [data-theme="midnight"] .elephant-svg{
+      color:var(--fg-light); opacity:0.75;
       filter:brightness(1.1);
     }
     
     /* Walking animation - subtle body bob */
-    .zebra-container.walking .zebra-svg{
-      animation:zebra-walk 0.8s ease-in-out infinite;
+    .elephant-container.walking .elephant-svg{
+      animation:elephant-walk 0.6s ease-in-out infinite;
     }
-    @keyframes zebra-walk{
-      0%, 100%{transform:translateY(0) rotate(0deg)}
-      50%{transform:translateY(-2px) rotate(0.5deg)}
+    @keyframes elephant-walk{
+      0%, 100%{transform:translateY(0)}
+      50%{transform:translateY(-1px)}
     }
     
     /* Idle animation - gentle breathing */
-    .zebra-container.idle .zebra-svg{
-      animation:zebra-idle 3s ease-in-out infinite;
+    .elephant-container.idle .elephant-svg{
+      animation:elephant-idle 3s ease-in-out infinite;
     }
-    @keyframes zebra-idle{
+    @keyframes elephant-idle{
       0%, 100%{transform:translateY(0) scale(1)}
-      50%{transform:translateY(-1px) scale(1.02)}
+      50%{transform:translateY(-0.5px) scale(1.01)}
     }
     
     /* Direction flipping */
-    .zebra-container.facing-left .zebra-svg{
+    .elephant-container.facing-left .elephant-svg{
       transform:scaleX(-1);
     }
     
     /* Hide on reduced motion */
     @media (prefers-reduced-motion: reduce){
-      .zebra-container{display:none}
+      .elephant-container{display:none}
     }
     
     /* Responsive sizing */
     @media (max-width:768px){
-      .zebra-svg{width:90px; height:60px}
+      .elephant-svg{width:45px; height:36px}
     }
     @media (max-width:560px){
-      .zebra-svg{width:80px; height:53px}
+      .elephant-svg{width:40px; height:32px}
+    }
+    
+    /* Hobby icon pressed state (when elephant steps on it) */
+    .hobby-icon{
+      transform-origin:center bottom;
+      transition:transform 0.3s var(--ease), color 0.4s var(--ease);
+    }
+    .hobby-icon.pressed{
+      transform:scaleY(0.88) translateY(1px);
+    }
+    .hobby-icon.pressed i{
+      transform:none !important;
     }
   </style>
 </head>
@@ -762,54 +774,48 @@
   <div class="floating-element pastel-1">◈</div>
   <div class="floating-element pastel-2">◊</div>
 
-  <!-- Zebra -->
-  <div class="zebra-container" id="zebraContainer" aria-hidden="true">
-    <svg class="zebra-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 80">
-      <!-- Minimalist line-art zebra inspired by LoveFrom's bear design -->
-      <!-- Body -->
-      <path d="M 20 50 Q 25 45 30 50 Q 35 55 40 50 Q 50 45 60 50 Q 70 55 80 50 Q 85 45 90 50" 
-            stroke="currentColor" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
-      
-      <!-- Head -->
-      <ellipse cx="25" cy="45" rx="8" ry="10" 
-               stroke="currentColor" stroke-width="2.5" fill="none"/>
-      
-      <!-- Ear -->
-      <path d="M 20 38 Q 18 35 20 32 Q 22 35 20 38" 
-            stroke="currentColor" stroke-width="2.5" fill="none" stroke-linejoin="round"/>
-      
-      <!-- Mane (simple lines) -->
-      <path d="M 30 40 Q 32 35 30 30" 
-            stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round"/>
-      <path d="M 35 42 Q 37 37 35 32" 
-            stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round"/>
-      <path d="M 40 44 Q 42 39 40 34" 
-            stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round"/>
-      
-      <!-- Legs (front) -->
-      <line x1="35" y1="50" x2="35" y2="65" 
-            stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/>
-      <line x1="45" y1="50" x2="45" y2="65" 
-            stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/>
-      
-      <!-- Legs (back) -->
-      <line x1="70" y1="50" x2="70" y2="65" 
-            stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/>
-      <line x1="80" y1="50" x2="80" y2="65" 
-            stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/>
-      
-      <!-- Tail -->
-      <path d="M 90 50 Q 95 48 100 45" 
-            stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round"/>
-      
-      <!-- Eye (minimal dot) -->
-      <circle cx="27" cy="44" r="1.5" fill="currentColor"/>
-      
-      <!-- Simple stripes (minimalist approach) -->
-      <line x1="50" y1="48" x2="50" y2="52" 
-            stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-      <line x1="65" y1="48" x2="65" y2="52" 
-            stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+  <!-- Elephant -->
+  <div class="elephant-container" id="elephantContainer" aria-hidden="true">
+    <svg class="elephant-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 80">
+      <!-- Elegant filled elephant silhouette inspired by LoveFrom bear -->
+      <path fill="currentColor" d="
+        M 85 45
+        C 85 38 80 32 72 32
+        L 72 28
+        C 72 25 70 23 68 23
+        C 66 23 64 25 64 28
+        L 64 32
+        C 58 32 52 35 48 40
+        L 48 35
+        C 48 33 46 31 44 31
+        C 42 31 40 33 40 35
+        L 40 42
+        C 36 45 32 50 30 55
+        L 28 50
+        C 27 47 24 45 21 46
+        C 18 47 16 50 17 53
+        L 22 65
+        C 22 68 24 70 27 70
+        L 33 70
+        L 33 75
+        C 33 77 35 79 37 79
+        C 39 79 41 77 41 75
+        L 41 70
+        L 55 70
+        L 55 75
+        C 55 77 57 79 59 79
+        C 61 79 63 77 63 75
+        L 63 70
+        L 73 70
+        C 80 70 85 65 85 58
+        L 85 45
+        Z
+        M 75 42
+        C 76.5 42 78 43.5 78 45
+        C 78 46.5 76.5 48 75 48
+        C 73.5 48 72 46.5 72 45
+        C 72 43.5 73.5 42 75 42
+      "/>
     </svg>
   </div>
 
@@ -1923,136 +1929,31 @@
       });
     })();
 
-    // ===== Zebra Animation - LoveFrom bear-inspired wandering =====
+    // ===== Elephant Animation - LoveFrom bear-inspired wandering =====
     (function(){
-      const zebraContainer = document.getElementById('zebraContainer');
-      if (!zebraContainer) return;
+      const elephantContainer = document.getElementById('elephantContainer');
+      if (!elephantContainer) return;
       
-      const zebraSvg = zebraContainer.querySelector('.zebra-svg');
-      if (!zebraSvg) return;
+      const elephantSvg = elephantContainer.querySelector('.elephant-svg');
+      if (!elephantSvg) return;
+      
+      const hobbiesSection = document.getElementById('hobbies');
+      if (!hobbiesSection) return;
       
       const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
       if (reducedMotion) {
-        zebraContainer.style.display = 'none';
+        elephantContainer.style.display = 'none';
         return;
       }
       
       // Helper functions
       function clamp(v, lo, hi) { return Math.max(lo, Math.min(hi, v)); }
       
-      // Reuse centerpiece bounds function from bubble system
-      function getCenterpieceElementBounds() {
-        const bounds = [];
-        const cp = document.getElementById('centerpiece');
-        if (!cp) return bounds;
-        
-        const padding = 70; // Generous padding for natural avoidance
-        
-        // Profile photo
-        const photo = document.getElementById('profilePhoto');
-        if (photo) {
-          const rect = photo.getBoundingClientRect();
-          if (rect.width > 0 && rect.height > 0) {
-            bounds.push({
-              left: rect.left - padding,
-              right: rect.right + padding,
-              top: rect.top - padding,
-              bottom: rect.bottom + padding,
-              centerX: rect.left + rect.width / 2,
-              centerY: rect.top + rect.height / 2
-            });
-          }
-        }
-        
-        // Name text
-        const name = document.getElementById('name');
-        if (name) {
-          const rect = name.getBoundingClientRect();
-          if (rect.width > 0 && rect.height > 0) {
-            bounds.push({
-              left: rect.left - padding,
-              right: rect.right + padding,
-              top: rect.top - padding,
-              bottom: rect.bottom + padding,
-              centerX: rect.left + rect.width / 2,
-              centerY: rect.top + rect.height / 2
-            });
-          }
-        }
-        
-        // Social links
-        const socialLinks = document.querySelectorAll('.social-link');
-        socialLinks.forEach(link => {
-          const rect = link.getBoundingClientRect();
-          if (rect.width > 0 && rect.height > 0) {
-            bounds.push({
-              left: rect.left - padding,
-              right: rect.right + padding,
-              top: rect.top - padding,
-              bottom: rect.bottom + padding,
-              centerX: rect.left + rect.width / 2,
-              centerY: rect.top + rect.height / 2
-            });
-          }
-        });
-        
-        // About section
-        const aboutInline = document.getElementById('about-inline');
-        if (aboutInline) {
-          const rect = aboutInline.getBoundingClientRect();
-          if (rect.width > 0 && rect.height > 0) {
-            bounds.push({
-              left: rect.left - padding,
-              right: rect.right + padding,
-              top: rect.top - padding,
-              bottom: rect.bottom + padding,
-              centerX: rect.left + rect.width / 2,
-              centerY: rect.top + rect.height / 2
-            });
-          }
-        }
-        
-        // Hobbies section
-        const hobbies = document.getElementById('hobbies');
-        if (hobbies) {
-          const rect = hobbies.getBoundingClientRect();
-          if (rect.width > 0 && rect.height > 0) {
-            bounds.push({
-              left: rect.left - padding,
-              right: rect.right + padding,
-              top: rect.top - padding,
-              bottom: rect.bottom + padding,
-              centerX: rect.left + rect.width / 2,
-              centerY: rect.top + rect.height / 2
-            });
-          }
-        }
-        
-        // Bubbles
-        const bubbles = document.querySelectorAll('.bubble');
-        bubbles.forEach(bubble => {
-          const rect = bubble.getBoundingClientRect();
-          if (rect.width > 0 && rect.height > 0) {
-            bounds.push({
-              left: rect.left - padding,
-              right: rect.right + padding,
-              top: rect.top - padding,
-              bottom: rect.bottom + padding,
-              centerX: rect.left + rect.width / 2,
-              centerY: rect.top + rect.height / 2
-            });
-          }
-        });
-        
-        return bounds;
-      }
-      
-      // Zebra state
-      const zebraWidth = 110;
-      const zebraHeight = 73;
-      const halfW = zebraWidth / 2;
-      const halfH = zebraHeight / 2;
-      const pad = 60;
+      // Elephant dimensions (smaller, more elegant)
+      const elephantWidth = 50;
+      const elephantHeight = 40;
+      const halfW = elephantWidth / 2;
+      const halfH = elephantHeight / 2;
       
       const state = {
         pos: { x: 0, y: 0 },
@@ -2062,93 +1963,99 @@
         isMoving: false,
         isIdle: false,
         idleTimer: 0,
-        facingLeft: false
+        facingLeft: false,
+        pressedIcons: new Set()
       };
       
-      // Movement parameters (gentler than bubbles, more deliberate)
-      const MAX_VEL = 2.5;        // Slower, more controlled
-      const SPRING = 0.025;        // Gentle pursuit
-      const DAMP = 0.92;           // Smooth damping
-      const IDLE_DURATION = 800;  // 0.8s pause at waypoint
-      const MIN_DIST_TO_WAYPOINT = 15; // Close enough to waypoint
+      // Movement parameters - more deliberate and horizontal like LoveFrom bear
+      const MAX_VEL = 1.2;          // Slower, more elegant
+      const SPRING = 0.018;         // Gentler pursuit
+      const DAMP = 0.94;            // Smoother damping
+      const IDLE_DURATION = 1500;   // Longer pauses (1.5s)
+      const MIN_DIST_TO_WAYPOINT = 8;
       
-      // Pick random waypoint within safe bounds
-      function pickWaypoint() {
-        const minX = halfW + pad;
-        const maxX = innerWidth - halfW - pad;
-        const minY = halfH + pad;
-        const maxY = innerHeight - halfH - pad;
-        
-        // Try to find a safe waypoint (not too close to obstacles)
-        let attempts = 0;
-        let waypoint = null;
-        
-        while (attempts < 20 && !waypoint) {
-          const testX = minX + Math.random() * (maxX - minX);
-          const testY = minY + Math.random() * (maxY - minY);
-          
-          // Check if this position is safe (not colliding with elements)
-          const elementBounds = getCenterpieceElementBounds();
-          let isSafe = true;
-          
-          for (const bounds of elementBounds) {
-            if (testX >= bounds.left && testX <= bounds.right &&
-                testY >= bounds.top && testY <= bounds.bottom) {
-              isSafe = false;
-              break;
-            }
-          }
-          
-          if (isSafe) {
-            waypoint = { x: testX, y: testY };
-          }
-          
-          attempts++;
-        }
-        
-        // Fallback: pick any point if we can't find a safe one
-        if (!waypoint) {
-          waypoint = {
-            x: minX + Math.random() * (maxX - minX),
-            y: minY + Math.random() * (maxY - minY)
-          };
-        }
-        
-        return waypoint;
+      // Get hobby icons
+      function getHobbyIcons() {
+        return Array.from(hobbiesSection.querySelectorAll('.hobby-icon'));
       }
       
-      // Calculate collision avoidance
-      function calculateAvoidance(posX, posY) {
-        const elementBounds = getCenterpieceElementBounds();
-        let avoidX = 0;
-        let avoidY = 0;
-        let hasCollision = false;
+      // Get bounds of the hobbies section for elephant movement
+      function getHobbiesBounds() {
+        const rect = hobbiesSection.getBoundingClientRect();
+        const padding = 80; // Extra space around hobbies area
+        return {
+          left: Math.max(halfW + 20, rect.left - padding),
+          right: Math.min(innerWidth - halfW - 20, rect.right + padding),
+          top: Math.max(halfH + 20, rect.top - padding - 30),
+          bottom: Math.min(innerHeight - halfH - 20, rect.bottom + padding)
+        };
+      }
+      
+      // Pick waypoint within hobbies area - prefer horizontal movement
+      function pickWaypoint() {
+        const bounds = getHobbiesBounds();
+        const currentY = state.pos.y || (bounds.top + bounds.bottom) / 2;
         
-        for (const bounds of elementBounds) {
-          const bubbleLeft = posX - halfW;
-          const bubbleRight = posX + halfW;
-          const bubbleTop = posY - halfH;
-          const bubbleBottom = posY + halfH;
-          
-          const overlapX = Math.min(bubbleRight - bounds.left, bounds.right - bubbleLeft);
-          const overlapY = Math.min(bubbleBottom - bounds.top, bounds.bottom - bubbleTop);
-          
-          if (overlapX > 0 && overlapY > 0) {
-            hasCollision = true;
-            const dx = posX - bounds.centerX;
-            const dy = posY - bounds.centerY;
-            const dist = Math.hypot(dx, dy);
-            
-            if (dist > 0.0001) {
-              const overlapDepth = Math.min(overlapX, overlapY);
-              // Smooth avoidance
-              avoidX += (dx / dist) * overlapDepth * 0.6;
-              avoidY += (dy / dist) * overlapDepth * 0.6;
-            }
+        // 80% chance of horizontal movement (like LoveFrom bear)
+        const preferHorizontal = Math.random() < 0.8;
+        
+        let targetX, targetY;
+        
+        if (preferHorizontal) {
+          // Move horizontally across the hobbies section
+          if (state.pos.x < (bounds.left + bounds.right) / 2) {
+            targetX = bounds.right - Math.random() * 60;
+          } else {
+            targetX = bounds.left + Math.random() * 60;
           }
+          // Keep Y relatively stable with small variation
+          targetY = clamp(
+            currentY + (Math.random() - 0.5) * 20,
+            bounds.top,
+            bounds.bottom
+          );
+        } else {
+          // Occasional random position
+          targetX = bounds.left + Math.random() * (bounds.right - bounds.left);
+          targetY = bounds.top + Math.random() * (bounds.bottom - bounds.top);
         }
         
-        return { avoidX, avoidY, hasCollision };
+        return { x: targetX, y: targetY };
+      }
+      
+      // Check if elephant overlaps with hobby icon and apply press effect
+      function checkIconCollisions() {
+        const icons = getHobbyIcons();
+        const elephantLeft = state.pos.x - halfW;
+        const elephantRight = state.pos.x + halfW;
+        const elephantTop = state.pos.y - halfH;
+        const elephantBottom = state.pos.y + halfH;
+        
+        icons.forEach(icon => {
+          const rect = icon.getBoundingClientRect();
+          const iconCenterX = rect.left + rect.width / 2;
+          const iconCenterY = rect.top + rect.height / 2;
+          
+          // Check if elephant overlaps this icon
+          const isOverlapping = (
+            elephantRight > rect.left - 5 &&
+            elephantLeft < rect.right + 5 &&
+            elephantBottom > rect.top - 5 &&
+            elephantTop < rect.bottom + 5
+          );
+          
+          if (isOverlapping) {
+            if (!state.pressedIcons.has(icon)) {
+              state.pressedIcons.add(icon);
+              icon.classList.add('pressed');
+            }
+          } else {
+            if (state.pressedIcons.has(icon)) {
+              state.pressedIcons.delete(icon);
+              icon.classList.remove('pressed');
+            }
+          }
+        });
       }
       
       // Animation loop
@@ -2160,11 +2067,7 @@
         const dt = Math.min(0.032, (t - last) / 1000);
         last = t;
         
-        // Calculate safe boundaries
-        const minX = halfW + pad;
-        const maxX = innerWidth - halfW - pad;
-        const minY = halfH + pad;
-        const maxY = innerHeight - halfH - pad;
+        const bounds = getHobbiesBounds();
         
         // Update waypoint if needed
         if (!state.waypoint) {
@@ -2173,8 +2076,8 @@
           state.target.y = state.waypoint.y;
           state.isMoving = true;
           state.isIdle = false;
-          zebraContainer.classList.remove('idle');
-          zebraContainer.classList.add('walking');
+          elephantContainer.classList.remove('idle');
+          elephantContainer.classList.add('walking');
         }
         
         // Check if we've reached the waypoint
@@ -2184,68 +2087,38 @@
         );
         
         if (distToWaypoint < MIN_DIST_TO_WAYPOINT && state.isMoving) {
-          // Reached waypoint - pause for idle
           state.isMoving = false;
           state.isIdle = true;
           state.idleTimer = 0;
           state.vel.x = 0;
           state.vel.y = 0;
-          zebraContainer.classList.remove('walking');
-          zebraContainer.classList.add('idle');
+          elephantContainer.classList.remove('walking');
+          elephantContainer.classList.add('idle');
         }
         
         // Handle idle state
         if (state.isIdle) {
           state.idleTimer += dt * 1000;
           if (state.idleTimer >= IDLE_DURATION) {
-            // Pick new waypoint
             state.waypoint = pickWaypoint();
             state.target.x = state.waypoint.x;
             state.target.y = state.waypoint.y;
             state.isMoving = true;
             state.isIdle = false;
             state.idleTimer = 0;
-            zebraContainer.classList.remove('idle');
-            zebraContainer.classList.add('walking');
+            elephantContainer.classList.remove('idle');
+            elephantContainer.classList.add('walking');
           }
         }
         
         // Update movement if moving
         if (state.isMoving) {
-          // Calculate avoidance
-          const avoidance = calculateAvoidance(state.pos.x, state.pos.y);
-          
-          // Blend waypoint seeking with avoidance
-          const toWaypointX = state.target.x - state.pos.x;
-          const toWaypointY = state.target.y - state.pos.y;
-          const toWaypointDist = Math.hypot(toWaypointX, toWaypointY);
-          
-          // Normalize waypoint direction
-          let waypointDirX = 0;
-          let waypointDirY = 0;
-          if (toWaypointDist > 0.0001) {
-            waypointDirX = toWaypointX / toWaypointDist;
-            waypointDirY = toWaypointY / toWaypointDist;
-          }
-          
-          // Blend: 70% waypoint seeking, 30% avoidance (when needed)
-          const blendFactor = avoidance.hasCollision ? 0.3 : 0;
-          const targetDirX = waypointDirX * (1 - blendFactor) + (avoidance.avoidX > 0 ? 1 : avoidance.avoidX < 0 ? -1 : 0) * blendFactor;
-          const targetDirY = waypointDirY * (1 - blendFactor) + (avoidance.avoidY > 0 ? 1 : avoidance.avoidY < 0 ? -1 : 0) * blendFactor;
-          
-          // Update target with avoidance correction
-          state.target.x = state.pos.x + targetDirX * Math.min(toWaypointDist, 100);
-          state.target.y = state.pos.y + targetDirY * Math.min(toWaypointDist, 100);
-          
-          // Apply avoidance position correction
-          if (avoidance.hasCollision) {
-            state.target.x += avoidance.avoidX * 0.4;
-            state.target.y += avoidance.avoidY * 0.4;
-          }
+          state.target.x = state.waypoint.x;
+          state.target.y = state.waypoint.y;
           
           // Clamp target to bounds
-          state.target.x = clamp(state.target.x, minX, maxX);
-          state.target.y = clamp(state.target.y, minY, maxY);
+          state.target.x = clamp(state.target.x, bounds.left, bounds.right);
+          state.target.y = clamp(state.target.y, bounds.top, bounds.bottom);
           
           // Spring physics for smooth movement
           state.vel.x = (state.vel.x + (state.target.x - state.pos.x) * SPRING) * DAMP;
@@ -2264,53 +2137,53 @@
           state.pos.y += state.vel.y;
           
           // Final clamp
-          state.pos.x = clamp(state.pos.x, minX, maxX);
-          state.pos.y = clamp(state.pos.y, minY, maxY);
+          state.pos.x = clamp(state.pos.x, bounds.left, bounds.right);
+          state.pos.y = clamp(state.pos.y, bounds.top, bounds.bottom);
           
-          // Update facing direction
-          if (Math.abs(state.vel.x) > 0.1) {
+          // Update facing direction (only change when moving significantly)
+          if (Math.abs(state.vel.x) > 0.15) {
             const newFacingLeft = state.vel.x < 0;
             if (newFacingLeft !== state.facingLeft) {
               state.facingLeft = newFacingLeft;
               if (state.facingLeft) {
-                zebraContainer.classList.add('facing-left');
+                elephantContainer.classList.add('facing-left');
               } else {
-                zebraContainer.classList.remove('facing-left');
+                elephantContainer.classList.remove('facing-left');
               }
             }
           }
         }
         
+        // Check for icon collisions and apply press effect
+        checkIconCollisions();
+        
         // Update DOM
-        zebraSvg.style.left = (state.pos.x - halfW) + 'px';
-        zebraSvg.style.top = (state.pos.y - halfH) + 'px';
+        elephantSvg.style.left = (state.pos.x - halfW) + 'px';
+        elephantSvg.style.top = (state.pos.y - halfH) + 'px';
         
         rafId = requestAnimationFrame(tick);
       }
       
-      // Initialize zebra
-      function initZebra() {
+      // Initialize elephant
+      function initElephant() {
         if (started) return;
         started = true;
         
-        // Start at random position
-        const minX = halfW + pad;
-        const maxX = innerWidth - halfW - pad;
-        const minY = halfH + pad;
-        const maxY = innerHeight - halfH - pad;
+        const bounds = getHobbiesBounds();
         
-        state.pos.x = minX + Math.random() * (maxX - minX);
-        state.pos.y = minY + Math.random() * (maxY - minY);
+        // Start at left side of hobbies area
+        state.pos.x = bounds.left + 30;
+        state.pos.y = (bounds.top + bounds.bottom) / 2;
         
-        // Pick first waypoint
-        state.waypoint = pickWaypoint();
+        // Pick first waypoint (to the right)
+        state.waypoint = { x: bounds.right - 30, y: state.pos.y };
         state.target.x = state.waypoint.x;
         state.target.y = state.waypoint.y;
         state.isMoving = true;
-        zebraContainer.classList.add('walking');
+        elephantContainer.classList.add('walking');
         
-        // Reveal zebra
-        zebraContainer.classList.add('reveal');
+        // Reveal elephant
+        elephantContainer.classList.add('reveal');
         
         // Start animation
         last = performance.now();
@@ -2318,37 +2191,52 @@
       }
       
       // Reset function
-      function resetZebra() {
+      function resetElephant() {
         started = false;
         if (rafId) {
           cancelAnimationFrame(rafId);
           rafId = 0;
         }
-        zebraContainer.classList.remove('reveal', 'walking', 'idle', 'facing-left');
+        elephantContainer.classList.remove('reveal', 'walking', 'idle', 'facing-left');
         state.waypoint = null;
         state.isMoving = false;
         state.isIdle = false;
         state.vel.x = 0;
         state.vel.y = 0;
+        
+        // Clear all pressed icons
+        state.pressedIcons.forEach(icon => icon.classList.remove('pressed'));
+        state.pressedIcons.clear();
       }
       
-      // Start after page load (similar to bubbles)
-      function handleZebraStart() {
-        setTimeout(() => {
-          initZebra();
-        }, 3500); // Start after bubbles have settled
+      // Watch for hobbies section to be revealed
+      function watchForHobbiesReveal() {
+        // Check if already revealed
+        if (hobbiesSection.classList.contains('reveal')) {
+          setTimeout(initElephant, 800);
+          return;
+        }
+        
+        // Use MutationObserver to watch for reveal class
+        const observer = new MutationObserver((mutations) => {
+          mutations.forEach((mutation) => {
+            if (mutation.type === 'attributes' && mutation.attributeName === 'class') {
+              if (hobbiesSection.classList.contains('reveal')) {
+                observer.disconnect();
+                setTimeout(initElephant, 800);
+              }
+            }
+          });
+        });
+        
+        observer.observe(hobbiesSection, { attributes: true });
       }
       
       // Setup
       if (document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', () => {
-          window.addEventListener('bubbles:start', handleZebraStart);
-          // Fallback
-          setTimeout(handleZebraStart, 4000);
-        });
+        document.addEventListener('DOMContentLoaded', watchForHobbiesReveal);
       } else {
-        window.addEventListener('bubbles:start', handleZebraStart);
-        setTimeout(handleZebraStart, 4000);
+        watchForHobbiesReveal();
       }
       
       // Handle resize
@@ -2357,13 +2245,9 @@
         clearTimeout(resizeTimer);
         resizeTimer = setTimeout(() => {
           if (started) {
-            // Re-clamp position to new bounds
-            const minX = halfW + pad;
-            const maxX = innerWidth - halfW - pad;
-            const minY = halfH + pad;
-            const maxY = innerHeight - halfH - pad;
-            state.pos.x = clamp(state.pos.x, minX, maxX);
-            state.pos.y = clamp(state.pos.y, minY, maxY);
+            const bounds = getHobbiesBounds();
+            state.pos.x = clamp(state.pos.x, bounds.left, bounds.right);
+            state.pos.y = clamp(state.pos.y, bounds.top, bounds.bottom);
           }
         }, 150);
       });
@@ -2371,8 +2255,8 @@
       // Reset on pageshow (back navigation)
       window.addEventListener('pageshow', function(event) {
         if (event.persisted) {
-          resetZebra();
-          setTimeout(handleZebraStart, 1000);
+          resetElephant();
+          watchForHobbiesReveal();
         }
       });
     })();
