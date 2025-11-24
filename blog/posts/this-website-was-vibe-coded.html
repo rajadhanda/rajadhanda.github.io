@@ -239,54 +239,6 @@
       font-style:italic; line-height:1.5; font-family:'Crimson Text',serif;
     }
 
-    /* Table of Contents */
-    .toc{
-      position:fixed; top:50%; right:40px; transform:translateY(-50%);
-      background:var(--blog-card-bg); border:1px solid var(--blog-border);
-      border-radius:12px; padding:20px; backdrop-filter:blur(20px);
-      max-width:200px; opacity:0; visibility:hidden; transition:all .3s var(--ease);
-      z-index:1000;
-    }
-    .toc.visible{opacity:1; visibility:visible}
-    .toc h4{
-      margin:0 0 12px 0; font-size:0.9rem; color:var(--blog-accent);
-      font-weight:600; text-transform:uppercase; letter-spacing:0.5px;
-    }
-    .toc ul{
-      list-style:none; padding:0; margin:0;
-    }
-    .toc li{
-      margin:0 0 8px 0;
-    }
-    .toc a{
-      color:var(--blog-meta); text-decoration:none; font-size:0.85rem;
-      transition:color .3s var(--ease); display:block; padding:4px 0;
-    }
-    .toc a:hover, .toc a.active{color:var(--blog-accent)}
-
-    /* Share Buttons */
-    .share-buttons{
-      position:fixed; bottom:40px; right:40px; display:flex; flex-direction:column;
-      gap:12px; opacity:0; visibility:hidden; transition:all .3s var(--ease);
-      z-index:1000;
-    }
-    .share-buttons.visible{opacity:1; visibility:visible}
-    .share-btn{
-      width:48px; height:48px; border-radius:50%; border:1px solid var(--blog-border);
-      background:var(--blog-card-bg); backdrop-filter:blur(20px);
-      display:grid; place-items:center; text-decoration:none; color:var(--fg);
-      transition:transform .3s var(--ease), box-shadow .3s var(--ease), background .3s var(--ease), color .3s var(--ease); box-shadow:var(--shadow-soft);
-    }
-    .share-btn i{
-      transition:transform .4s var(--ease-back), color .3s var(--ease);
-    }
-    .share-btn:hover i{
-      transform:rotate(15deg);
-    }
-    .share-btn:hover{
-      transform:scale(1.05) translateY(-1px); box-shadow:var(--shadow-medium);
-      background:var(--accent-soft); color:var(--accent);
-    }
     
     /* Scroll to Top Button */
     .scroll-to-top{
@@ -347,8 +299,6 @@
       .article-header h1{padding-top:66px; font-size:clamp(1.4rem,5vw,2rem)} /* Button: 20px top + 46px height = 66px */
       .nav-back{top:28px; left:20px; width:46px; height:46px}
       .theme-toggle{top:28px; right:20px; width:46px; height:46px}
-      .toc{display:none}
-      .share-buttons{bottom:20px; right:20px}
     }
     
     @media (max-width:560px){
@@ -440,30 +390,10 @@
     </div>
   </article>
 
-  <!-- Table of Contents -->
-  <nav class="toc" id="toc">
-    <h4>Contents</h4>
-    <ul>
-    </ul>
-  </nav>
-
   <!-- Scroll to Top Button -->
   <button class="scroll-to-top" id="scrollToTop" aria-label="Scroll to top">
     <i class="fa-solid fa-arrow-up" aria-hidden="true"></i>
   </button>
-
-  <!-- Share Buttons -->
-  <div class="share-buttons" id="shareButtons">
-    <a href="#" class="share-btn" aria-label="Share on Twitter">
-      <i class="fa-brands fa-twitter"></i>
-    </a>
-    <a href="#" class="share-btn" aria-label="Share on LinkedIn">
-      <i class="fa-brands fa-linkedin"></i>
-    </a>
-    <a href="#" class="share-btn" aria-label="Copy link">
-      <i class="fa-solid fa-link"></i>
-    </a>
-  </div>
 
   <script>
     // Theme Toggle
@@ -486,55 +416,6 @@
     })();
 
 
-    // TOC and Share buttons visibility
-    function updateSidebarVisibility() {
-      const toc = document.getElementById('toc');
-      const shareButtons = document.getElementById('shareButtons');
-      const article = document.querySelector('.article-content');
-      const articleTop = article.offsetTop;
-      const scrollTop = window.pageYOffset;
-      
-      if (scrollTop > articleTop - 200) {
-        toc.classList.add('visible');
-        shareButtons.classList.add('visible');
-      } else {
-        toc.classList.remove('visible');
-        shareButtons.classList.remove('visible');
-      }
-    }
-
-    // TOC active section highlighting
-    function updateActiveTocSection() {
-      const sections = document.querySelectorAll('.article-content h2');
-      const tocLinks = document.querySelectorAll('.toc a');
-      
-      let activeSection = '';
-      sections.forEach(section => {
-        const rect = section.getBoundingClientRect();
-        if (rect.top <= 100) {
-          activeSection = section.id;
-        }
-      });
-      
-      tocLinks.forEach(link => {
-        link.classList.remove('active');
-        if (link.getAttribute('href') === '#' + activeSection) {
-          link.classList.add('active');
-        }
-      });
-    }
-
-    // Smooth scroll for TOC links
-    document.querySelectorAll('.toc a').forEach(link => {
-      link.addEventListener('click', (e) => {
-        e.preventDefault();
-        const targetId = link.getAttribute('href').substring(1);
-        const targetElement = document.getElementById(targetId);
-        if (targetElement) {
-          targetElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
-        }
-      });
-    });
 
     // Scroll to top button visibility update
     function updateScrollToTopVisibility(){
@@ -551,23 +432,8 @@
     // Event listeners
     window.addEventListener('scroll', () => {
       updateReadingProgress();
-      updateSidebarVisibility();
-      updateActiveTocSection();
       updateScrollToTopVisibility();
     }, {passive:true});
-
-    // Copy link functionality
-    document.querySelector('.share-btn[aria-label="Copy link"]').addEventListener('click', (e) => {
-      e.preventDefault();
-      navigator.clipboard.writeText(window.location.href).then(() => {
-        const btn = e.target.closest('.share-btn');
-        const originalIcon = btn.innerHTML;
-        btn.innerHTML = '<i class="fa-solid fa-check"></i>';
-        setTimeout(() => {
-          btn.innerHTML = originalIcon;
-        }, 2000);
-      });
-    });
 
     // Smooth scroll behavior
     document.documentElement.style.scrollBehavior = 'smooth';
