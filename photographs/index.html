@@ -293,15 +293,19 @@
     /* Loading Progress Indicator - Horizontal Top Bar */
     .loading-progress{
       position:fixed; top:0; left:0; width:100%; height:3px;
-      background:var(--border); z-index:1002;
+      background:rgba(0,0,0,0.05); z-index:1002;
       opacity:1; visibility:visible;
       transition:opacity 0.6s var(--ease), visibility 0.6s var(--ease);
+    }
+    [data-theme="midnight"] .loading-progress{
+      background:rgba(255,255,255,0.05);
     }
     .loading-progress::before{
       content:''; position:absolute; top:0; left:0; height:100%;
       background:var(--accent);
-      transition:width .1s ease;
+      transition:width .15s ease;
       width: var(--progress-width, 0%);
+      min-width: 0%;
     }
     .loading-progress.complete{
       opacity:0; visibility:hidden;
@@ -731,34 +735,15 @@
         threshold: 0.01 // Trigger as soon as any pixel is visible
       });
       
-      // Initialize progress indicator at 0%
+      // Initialize progress indicator at 0% - do this FIRST before any handlers
       if (loadingProgress && !reducedMotion && totalInitial > 0) {
-        updateLoadingProgress(); // Start at 0%
+        // Ensure it's visible and starts at 0%
+        loadingProgress.style.setProperty('--progress-width', '0%');
+        loadingProgress.classList.remove('complete');
       } else if (loadingProgress && (reducedMotion || totalInitial === 0)) {
         // Hide immediately if reduced motion or no initial images
         loadingProgress.classList.add('complete');
       }
-      
-      // Set up load tracking for initial images without interfering with existing loading
-      // Just listen for when they actually finish loading
-      initialImages.forEach((img) => {
-        // Check if already loaded (cached)
-        if (img.complete && img.naturalHeight !== 0) {
-          // Already loaded - track immediately
-          requestAnimationFrame(() => {
-            onInitialImageLoad(img);
-          });
-        } else {
-          // Set up load handler - just track, don't modify loading state
-          const loadHandler = () => {
-            requestAnimationFrame(() => {
-              onInitialImageLoad(img);
-            });
-          };
-          img.addEventListener('load', loadHandler, {once:true});
-          img.addEventListener('error', loadHandler, {once:true});
-        }
-      });
       
       // Preload first 2 images immediately (above the fold)
       // These use loading="eager" and fetchpriority="high" in HTML
@@ -767,15 +752,44 @@
         const img = images[i];
         img.classList.add('loading');
         if (img.complete && img.naturalHeight !== 0) {
+          // Already loaded (cached)
           requestAnimationFrame(() => {
             img.classList.remove('loading');
             img.classList.add('loaded');
+            onInitialImageLoad(img);
           });
         } else {
+          // Set up load handler
           const loadHandler = () => {
             requestAnimationFrame(() => {
               img.classList.remove('loading');
               img.classList.add('loaded');
+              onInitialImageLoad(img);
+            });
+          };
+          img.addEventListener('load', loadHandler, {once:true});
+          img.addEventListener('error', loadHandler, {once:true});
+        }
+      }
+      
+      // Set up load tracking for remaining initial images (3rd and 4th)
+      // These will be loaded via IntersectionObserver but we need to track them
+      for (let i = preloadCount; i < initialImageCount; i++) {
+        const img = initialImages[i];
+        if (img.complete && img.naturalHeight !== 0) {
+          // Already loaded (cached)
+          requestAnimationFrame(() => {
+            if (!img.classList.contains('loaded')) {
+              img.classList.add('loaded');
+            }
+            onInitialImageLoad(img);
+          });
+        } else {
+          // Set up load handler - these will be observed by IntersectionObserver
+          // but we also track them here for progress
+          const loadHandler = () => {
+            requestAnimationFrame(() => {
+              onInitialImageLoad(img);
             });
           };
           img.addEventListener('load', loadHandler, {once:true});
