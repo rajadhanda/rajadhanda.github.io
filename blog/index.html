@@ -149,7 +149,7 @@
       margin-bottom:80px;
     }
     .blog-grid{
-      display:grid; grid-template-columns:repeat(auto-fit, minmax(350px, 1fr));
+      display:grid; grid-template-columns:repeat(auto-fit, minmax(380px, 1fr));
       gap:32px; margin-top:60px;
     }
 
@@ -219,18 +219,20 @@
 
     .article-title-section{
       display:flex; align-items:flex-start; justify-content:space-between;
-      margin-bottom:20px; gap:20px;
+      margin-bottom:20px; gap:20px; overflow:hidden;
     }
     .blog-card h3{
       font-size:1.6rem; font-weight:600; margin:0; color:var(--blog-text);
-      line-height:1.4; transition:color .3s var(--ease); text-decoration:none;
-      flex:1; letter-spacing:-0.01em;
+      line-height:1.3; transition:color .3s var(--ease); text-decoration:none;
+      flex:1; letter-spacing:-0.01em; min-width:0;
+      display:-webkit-box; -webkit-line-clamp:2; line-clamp:2; -webkit-box-orient:vertical;
+      overflow:hidden; word-break:break-word;
     }
     .blog-card:hover h3{color:var(--blog-accent)}
     
     .company-logos{
       display:flex; gap:14px; align-items:center; flex-shrink:0;
-      margin-top:2px;
+      margin-top:2px; max-width:120px;
     }
     .logo{
       transition:all .3s var(--ease);
@@ -238,7 +240,7 @@
     }
     .logo img{
       transition:all .3s var(--ease);
-      height:36px; width:auto; object-fit:contain;
+      height:30px; width:auto; object-fit:contain;
     }
     .blog-card:hover .logo img{
       transform:scale(1.08);
@@ -315,6 +317,12 @@
       h1{padding-top:70px} /* Button: 48px top + 52px height = 100px */
     }
     
+    @media (max-width:900px){
+      .article-title-section{flex-direction:column; align-items:flex-start; gap:16px}
+      .company-logos{order:2; margin-top:0}
+      .logo img{height:28px}
+    }
+    
     @media (max-width:768px){
       .blog-grid{grid-template-columns:1fr; gap:24px}
       .blog-card{padding:28px}
@@ -325,7 +333,7 @@
       h1{font-size:clamp(1.4rem,5vw,2rem); padding-top:66px} /* Button: 48px top + 46px height = 94px */
       .article-title-section{flex-direction:column; align-items:flex-start; gap:16px}
       .company-logos{order:2; margin-top:0}
-      .logo img{height:32px}
+      .logo img{height:24px}
     }
     @media (max-width:560px){
       main{padding:72px 20px 20px}
@@ -397,13 +405,15 @@
     <!-- Blog Grid -->
     <div class="blog-grid">
       <!-- Blog Posts -->
-      <a href="/blog/posts/quantum-computing-hsbc-ibm.html" class="blog-card">
+      <!-- Hidden: Quantum Computing post -->
+      <!--
+      <a href="/blog/posts/quantum-computing-hsbc-ibm.html" class="blog-card" style="display:none;">
         <div class="blog-meta">
           <span class="date"><i class="fa-solid fa-calendar"></i> Oct 4, 2025</span>
           <span class="read-time"><i class="fa-solid fa-clock"></i> ~10 min read</span>
         </div>
         <div class="article-title-section">
-          <h3>Quantum Computing Just Made Real Money (Maybe)</h3>
+          <h3>Quantum Computing might have made money?</h3>
           <div class="company-logos">
             <div class="logo hsbc-logo">
               <img src="/assets/images/HSBC_logo_(2018).svg.png" alt="HSBC Logo">
@@ -413,8 +423,9 @@
             </div>
           </div>
         </div>
-        <p class="excerpt">HSBC and IBM just dropped what they're calling "the world's first known empirical evidence" that quantum computers can actually solve real-world problems in finance. A 34% improvement in prediction accuracy compared to classical techniques.</p>
+        <p class="excerpt">HSBC and IBM claim to have seen a 34% improvement in a real-world finance problem using quantum computers</p>
       </a>
+      -->
       
       <!-- Blog Posts -->
       <a href="/blog/posts/this-website-was-vibe-coded.html" class="blog-card">
@@ -425,14 +436,17 @@
         <div class="article-title-section">
           <h3>This website was vibe coded</h3>
         </div>
-        <p class="excerpt">Vibe coding is everywhere...but I still think it's underrated. How I built rajadhanda.me using Cursor and why treating AI as a collaboration tool, not outsourcing, is key.</p>
+        <p class="excerpt">Vibe coding is everywhere....but I still think it's underrated</p>
       </a>
       
-      <div class="blog-card placeholder">
+      <!-- Hidden: State of the internet placeholder -->
+      <!--
+      <div class="blog-card placeholder" style="display:none;">
         <div class="article-title-section">
           <h3>The state of the internet</h3>
         </div>
       </div>
+      -->
     </div>
     </div>
   </main>
