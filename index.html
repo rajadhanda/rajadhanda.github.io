@@ -192,7 +192,7 @@
     #centerpiece{display:inline-block}
     /* Profile Photo */
     .profile-photo-container{
-      margin:0 0 24px 0; display:flex; justify-content:center; align-items:center;
+      margin:0 0 28px 0; display:flex; justify-content:center; align-items:center;
       opacity:0; transform:translateY(20px) scale(0.9);
       transition:opacity 1.2s var(--ease), transform 1.2s var(--ease);
       position:relative;
@@ -223,22 +223,8 @@
     .typing-cursor{display:inline-block; width:3px; height:1em; background:var(--fg); margin-left:4px; transform:translateY(.05em); animation:cursor-blink 1.4s ease-in-out infinite; border-radius:1px}
     @keyframes cursor-blink{0%,45%{opacity:1}50%,95%{opacity:.1}100%{opacity:1}}
 
-    .subtitle{
-      font-size:clamp(1.2rem,2.4vw,1.8rem); color:var(--muted); font-weight:400; font-style:italic;
-      margin:20px 0 0 0; opacity:0; transform:translateY(12px);
-      transition:opacity 1s var(--ease), transform 1s var(--ease); letter-spacing:.01em;
-      padding:0 20px;
-    }
-    @media (max-width:560px){
-      .subtitle{padding:0 16px}
-    }
-    @media (max-width:380px){
-      .subtitle{padding:0 12px}
-    }
-    .subtitle.show{opacity:1; transform:translateY(0)}
-
     /* Socials */
-    .social-links{margin-top:28px; display:flex; gap:32px; justify-content:center; align-items:center}
+    .social-links{margin-top:0; display:flex; gap:32px; justify-content:center; align-items:center}
     .social-link{opacity:0; transform:translateY(6px) scale(.94)}
     .social-links.icons-in .social-link{animation:icon-pop .46s var(--ease-back) forwards}
     .social-links.icons-in .social-link:nth-child(2){animation-delay:.08s}
@@ -655,7 +641,7 @@
       .theme-toggle{top:20px; right:20px; width:48px; height:48px}
       .panel{padding:24px}
       .about{max-width:100%}
-      .social-links{margin-top:24px; gap:20px}
+      .social-links{margin-top:0; gap:20px}
       .social-link{width:48px; height:48px; font-size:17px}
       .status{bottom:20px; right:20px; font-size:.75rem}
       .floating-element{display:none}
@@ -673,8 +659,7 @@
       .profile-photo{width:110px; height:127px; border-radius:14px; object-fit:contain; max-width: 100%; max-height: 100%;}
       .profile-photo-container{margin-bottom:20px}
       .name{font-size:clamp(1.4rem, 6vw, 2rem); margin-bottom:12px; line-height:1.1}
-      .subtitle{font-size:clamp(1rem, 4vw, 1.2rem); margin-top:16px; letter-spacing:.02em}
-      .social-links{margin-top:20px; gap:18px}
+      .social-links{margin-top:0; gap:18px}
       .social-link{width:44px; height:44px; font-size:16px}
       .bubble{width:clamp(70px, 20vw, 95px)}
       .bubble-title{font-size:clamp(0.7rem, 1.8vw, 0.85rem); font-weight:500}
@@ -694,8 +679,7 @@
       .profile-photo{width:100px; height:115px; border-radius:12px; object-fit:contain; max-width: 100%; max-height: 100%;}
       .profile-photo-container{margin-bottom:18px}
       .name{font-size:clamp(1.3rem, 6.5vw, 1.8rem); margin-bottom:10px}
-      .subtitle{font-size:clamp(0.95rem, 4.2vw, 1.1rem); margin-top:14px}
-      .social-links{margin-top:18px; gap:16px}
+      .social-links{margin-top:0; gap:16px}
       .social-link{width:42px; height:42px; font-size:15px}
       .bubble{width:clamp(65px, 22vw, 85px)}
       .bubble-title{font-size:clamp(0.65rem, 1.6vw, 0.78rem)}
@@ -746,7 +730,6 @@
       <div class="profile-photo-container">
         <img src="assets/images/IMG_6767.jpeg" alt="Raja Dhanda" class="profile-photo" id="profilePhoto" loading="lazy" width="140" height="161">
       </div>
-      <div class="subtitle" id="subtitle">experimenting with intention</div>
 
       <div class="social-links" aria-label="Connect with me">
         <a class="social-link" href="https://www.linkedin.com/in/ramendra-raja-dhanda/" target="_blank" rel="noopener" aria-label="LinkedIn">
@@ -826,12 +809,6 @@
         const profilePhotoContainer = document.querySelector('.profile-photo-container');
         if (profilePhotoContainer) {
           profilePhotoContainer.classList.remove('show');
-        }
-        
-        // Reset subtitle
-        const subtitleEl = document.getElementById('subtitle');
-        if (subtitleEl) {
-          subtitleEl.classList.remove('show');
         }
         
         // Reset social links
@@ -1070,22 +1047,6 @@
         const name = document.getElementById('name');
         if (name) {
           const rect = name.getBoundingClientRect();
-          if (rect.width > 0 && rect.height > 0) {
-            bounds.push({
-              left: rect.left - padding,
-              right: rect.right + padding,
-              top: rect.top - padding,
-              bottom: rect.bottom + padding,
-              centerX: rect.left + rect.width / 2,
-              centerY: rect.top + rect.height / 2
-            });
-          }
-        }
-        
-        // Subtitle
-        const subtitle = document.getElementById('subtitle');
-        if (subtitle) {
-          const rect = subtitle.getBoundingClientRect();
           if (rect.width > 0 && rect.height > 0) {
             bounds.push({
               left: rect.left - padding,
@@ -1545,7 +1506,6 @@
 
     // Typing (~5s total, natural jitter)
     const nameEl = document.getElementById('name');
-    const subtitleEl = document.getElementById('subtitle');
     const socialLinksEl = document.querySelector('.social-links');
     const profilePhotoEl = document.getElementById('profilePhoto');
     const profilePhotoContainer = document.querySelector('.profile-photo-container');
@@ -1564,7 +1524,6 @@
       idx = 0;
       // Reset visibility states
       if (profilePhotoContainer) profilePhotoContainer.classList.remove('show');
-      if (subtitleEl) subtitleEl.classList.remove('show');
       if (socialLinksEl) socialLinksEl.classList.remove('icons-in');
     }
     
@@ -1579,15 +1538,12 @@
           // Show profile photo first
           profilePhotoContainer?.classList.add('show');
           setTimeout(()=> {
-            subtitleEl.classList.add('show');
-            // Pop in icons after a larger gap
-            setTimeout(()=>{
-              socialLinksEl?.classList.add('icons-in');
-              // Notify that icons are ready so About section can begin reveal observation
-              window.dispatchEvent(new Event('icons:ready'));
-              // After icons pop, start bubbles with initial offscreen placement
-              setTimeout(()=>{ window.dispatchEvent(new Event('bubbles:start')); }, 450);
-            }, 600);
+            // Pop in icons after photo
+            socialLinksEl?.classList.add('icons-in');
+            // Notify that icons are ready so About section can begin reveal observation
+            window.dispatchEvent(new Event('icons:ready'));
+            // After icons pop, start bubbles with initial offscreen placement
+            setTimeout(()=>{ window.dispatchEvent(new Event('bubbles:start')); }, 450);
           }, 300);
         }, 400);
       }
@@ -1628,11 +1584,8 @@
       if (!profilePhotoContainer?.classList.contains('show')) profilePhotoContainer?.classList.add('show');
     }, 1200);
     setTimeout(()=>{
-      if (!subtitleEl.classList.contains('show')) subtitleEl.classList.add('show');
-    }, 1800);
-    setTimeout(()=>{
       if (!socialLinksEl.classList.contains('icons-in')) socialLinksEl.classList.add('icons-in');
-    }, 2400);
+    }, 1800);
     setTimeout(()=>{
       // ensure bubbles start even if typing flow didn't dispatch
       window.dispatchEvent(new Event('bubbles:start'));

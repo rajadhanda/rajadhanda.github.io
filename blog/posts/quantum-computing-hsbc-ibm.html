@@ -224,9 +224,27 @@
     }
     .article-content strong{
       color:var(--blog-accent); font-weight:600;
+      background:var(--accent-soft);
+      padding:2px 4px; border-radius:3px;
     }
     .article-content em{
       color:var(--fg-light); font-style:italic;
+    }
+    .article-content a{
+      color:var(--blog-accent); text-decoration:underline;
+      text-decoration-color:rgba(44, 165, 141, 0.3);
+      text-underline-offset:3px;
+      transition:all .3s var(--ease);
+    }
+    .article-content a:hover{
+      text-decoration-color:var(--blog-accent);
+      color:var(--blog-accent);
+    }
+    [data-theme="midnight"] .article-content a{
+      text-decoration-color:rgba(0, 168, 150, 0.4);
+    }
+    [data-theme="midnight"] .article-content a:hover{
+      text-decoration-color:var(--blog-accent);
     }
 
     /* Table of Contents */
@@ -679,6 +697,7 @@
       
       if (!article || !progress) return;
       
+      const articleRect = article.getBoundingClientRect();
       const articleTop = article.offsetTop;
       const articleHeight = article.offsetHeight;
       const windowHeight = window.innerHeight;
@@ -687,11 +706,20 @@
       // Calculate scroll progress: how much of the article has been scrolled through
       // Start at 0% when article top reaches viewport top
       // Reach 100% when article bottom reaches viewport top
+      const articleBottom = articleTop + articleHeight;
       const scrollableHeight = articleHeight - windowHeight;
-      const scrolled = Math.max(0, scrollTop - articleTop);
-      const progressPercent = scrollableHeight > 0 
-        ? Math.min(100, Math.max(0, (scrolled / scrollableHeight) * 100))
-        : 0;
+      
+      // Calculate how much has been scrolled past the article start
+      const scrolled = scrollTop - articleTop;
+      
+      // Calculate progress percentage
+      let progressPercent = 0;
+      if (scrollableHeight > 0) {
+        progressPercent = Math.min(100, Math.max(0, (scrolled / scrollableHeight) * 100));
+      } else if (scrollTop >= articleTop) {
+        // Article is shorter than viewport, show 100% once scrolled to it
+        progressPercent = 100;
+      }
       
       // Update progress bar
       progress.style.setProperty('--progress-height', progressPercent + '%');
