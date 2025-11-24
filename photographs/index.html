@@ -290,6 +290,40 @@
       .page-transition{display:none}
     }
     
+    /* Loading Progress Indicator - Elegant Side Indicator */
+    .loading-progress{
+      position:fixed; top:50%; left:20px; width:4px; height:200px;
+      background:var(--border); border-radius:2px; z-index:1002;
+      transform:translateY(-50%); transition:all .3s var(--ease);
+      opacity:1; visibility:visible;
+    }
+    .loading-progress::before{
+      content:''; position:absolute; top:0; left:0; width:100%;
+      background:linear-gradient(180deg, var(--accent), var(--accent));
+      border-radius:2px; transition:height .1s ease;
+      height: var(--progress-height, 0%);
+    }
+    .loading-progress::after{
+      content:''; position:absolute; top:0; left:-4px; width:12px; height:12px;
+      background:var(--accent); border-radius:50%; transform:translateY(-6px);
+      transition:top .1s ease; box-shadow:0 2px 8px rgba(0,0,0,0.2);
+      top: var(--dot-position, 0px);
+    }
+    .loading-progress.complete{
+      opacity:0; visibility:hidden;
+      transition:opacity 0.6s var(--ease), visibility 0.6s var(--ease);
+    }
+    @media (max-width:768px){
+      .loading-progress{left:20px}
+    }
+    @media (max-width:480px){
+      .loading-progress{left:16px; height:150px}
+      .loading-progress::after{width:10px; height:10px; left:-3px; transform:translateY(-5px)}
+    }
+    @media (prefers-reduced-motion: reduce){
+      .loading-progress{display:none}
+    }
+    
     /* Lightbox */
     .lightbox{
       position:fixed; inset:0; background:rgba(0,0,0,.92); backdrop-filter:blur(12px);
@@ -366,6 +400,9 @@
 <body>
   <!-- Page Transition Overlay -->
   <div class="page-transition" id="pageTransition"></div>
+
+  <!-- Loading Progress Indicator -->
+  <div class="loading-progress" id="loadingProgress"></div>
 
   <!-- Theme Toggle Button -->
   <button class="theme-toggle" id="themeToggle" aria-label="Toggle midnight mode">
@@ -585,10 +622,76 @@
       });
     })();
 
-    // Optimized blur-up loading with Intersection Observer
+    // Optimized blur-up loading with Intersection Observer and Loading Progress
     (function(){
       const images = Array.from(document.querySelectorAll('.photo-item img'));
       if (!images.length) return;
+      
+      const loadingProgress = document.getElementById('loadingProgress');
+      const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      
+      // Identify initially visible images (first 2-4 images that are in viewport)
+      function getInitialVisibleImages() {
+        const initialImages = [];
+        const viewportHeight = window.innerHeight;
+        const gallery = document.querySelector('.photo-gallery');
+        if (!gallery) return initialImages;
+        
+        // Get images that are initially visible or above the fold
+        // Check first 4 images (2 rows in 2-column layout)
+        const maxInitialCount = Math.min(4, images.length);
+        for (let i = 0; i < maxInitialCount; i++) {
+          const img = images[i];
+          const photoItem = img.closest('.photo-item');
+          if (photoItem) {
+            const rect = photoItem.getBoundingClientRect();
+            // Include if in viewport or just above it (within reasonable distance)
+            if (rect.top < viewportHeight + 100) {
+              initialImages.push(img);
+            }
+          }
+        }
+        
+        // Fallback: if no images found, use first 2-4 images
+        if (initialImages.length === 0) {
+          return images.slice(0, Math.min(4, images.length));
+        }
+        
+        return initialImages;
+      }
+      
+      const initialImages = getInitialVisibleImages();
+      let loadedCount = 0;
+      const totalInitial = initialImages.length;
+      
+      // Update loading progress
+      function updateLoadingProgress() {
+        if (!loadingProgress || reducedMotion || totalInitial === 0) return;
+        
+        const progressPercent = totalInitial > 0 
+          ? Math.min(100, Math.max(0, (loadedCount / totalInitial) * 100))
+          : 0;
+        
+        loadingProgress.style.setProperty('--progress-height', progressPercent + '%');
+        loadingProgress.style.setProperty('--dot-position', (progressPercent / 100) * 200 + 'px');
+        
+        // Hide progress indicator when complete
+        if (progressPercent >= 100) {
+          setTimeout(() => {
+            if (loadingProgress) {
+              loadingProgress.classList.add('complete');
+            }
+          }, 300); // Small delay to show 100% completion
+        }
+      }
+      
+      // Track when an initial image loads
+      function onInitialImageLoad(img) {
+        if (!initialImages.includes(img)) return;
+        
+        loadedCount++;
+        updateLoadingProgress();
+      }
       
       // Preload adjacent images for lightbox (helper function)
       function preloadAdjacentImages(currentIndex) {
@@ -643,6 +746,7 @@
             if (img.complete && img.naturalHeight !== 0) {
               img.classList.remove('loading');
               img.classList.add('loaded');
+              onInitialImageLoad(img);
               observer.unobserve(img);
             } else {
               // Wait for load event
@@ -651,6 +755,7 @@
                 requestAnimationFrame(() => {
                   img.classList.remove('loading');
                   img.classList.add('loaded');
+                  onInitialImageLoad(img);
                 });
                 observer.unobserve(img);
               };
@@ -674,17 +779,32 @@
           requestAnimationFrame(() => {
             img.classList.remove('loading');
             img.classList.add('loaded');
+            onInitialImageLoad(img);
           });
         } else {
           const loadHandler = () => {
             requestAnimationFrame(() => {
               img.classList.remove('loading');
               img.classList.add('loaded');
+              onInitialImageLoad(img);
             });
           };
           img.addEventListener('load', loadHandler, {once:true});
           img.addEventListener('error', loadHandler, {once:true});
         }
+      }
+      
+      // Check if all initial images are already loaded (cached)
+      let alreadyLoadedCount = 0;
+      initialImages.forEach(img => {
+        if (img.complete && img.naturalHeight !== 0 && !img.classList.contains('loaded')) {
+          alreadyLoadedCount++;
+          img.classList.add('loaded');
+        }
+      });
+      if (alreadyLoadedCount > 0) {
+        loadedCount = alreadyLoadedCount;
+        updateLoadingProgress();
       }
       
       // Observe all images (including preloaded ones for consistency)
@@ -694,6 +814,14 @@
           imageObserver.observe(img);
         }
       });
+      
+      // Initialize progress indicator
+      if (loadingProgress && !reducedMotion && totalInitial > 0) {
+        updateLoadingProgress();
+      } else if (loadingProgress && (reducedMotion || totalInitial === 0)) {
+        // Hide immediately if reduced motion or no initial images
+        loadingProgress.classList.add('complete');
+      }
     })();
 
     // Lightbox functionality
