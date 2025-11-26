@@ -4,6 +4,13 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Blog – Raja Dhanda</title>
+  <meta name="description" content="Notes and thought experiments from Raja Dhanda on technology, fintech, and more.">
+  
+  <!-- Open Graph -->
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://rajadhanda.me/blog/">
+  <meta property="og:title" content="Blog – Raja Dhanda">
+  <meta property="og:description" content="Notes and thought experiments from Raja Dhanda on technology, fintech, and more.">
   
   <!-- Favicons -->
   <link rel="icon" type="image/png" sizes="32x32" href="/assets/icons/favicons/favicon-32x32.png">
@@ -11,12 +18,23 @@
   <link rel="apple-touch-icon" sizes="180x180" href="/assets/icons/favicons/apple-touch-icon.png">
 
   <!-- Theme Script (inline to prevent FOUC) -->
+  <style id="theme-init">.theme-loading,.theme-loading *{transition:none!important}</style>
   <script>
     (function(){
+      document.documentElement.classList.add('theme-loading');
       const savedTheme = localStorage.getItem('theme') || 'light';
       if (savedTheme === 'midnight') {
         document.documentElement.setAttribute('data-theme', 'midnight');
       }
+      // Set background immediately to prevent any flash
+      document.documentElement.style.backgroundColor = savedTheme === 'midnight' ? '#0a0e27' : '#FFF8F0';
+      // Remove loading class after first paint
+      requestAnimationFrame(function(){
+        requestAnimationFrame(function(){
+          document.documentElement.classList.remove('theme-loading');
+          document.documentElement.style.backgroundColor = '';
+        });
+      });
     })();
   </script>
 
@@ -494,6 +512,7 @@
     </div>
     </div>
   </main>
+  <footer style="padding:24px; text-align:center; color:var(--muted); font-size:.7rem; margin-top:40px;">© 2025 Raja Dhanda – Crafted with care</footer>
 
   <script>
     // Theme Toggle

@@ -4,6 +4,13 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Photographs – Raja Dhanda</title>
+  <meta name="description" content="A collection of photographs from Raja Dhanda's camera roll - travel, coffee, and moments captured.">
+  
+  <!-- Open Graph -->
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://rajadhanda.me/photographs/">
+  <meta property="og:title" content="Photographs – Raja Dhanda">
+  <meta property="og:description" content="A collection of photographs from Raja Dhanda's camera roll - travel, coffee, and moments captured.">
   
   <!-- Favicons -->
   <link rel="icon" type="image/png" sizes="32x32" href="/assets/icons/favicons/favicon-32x32.png">
@@ -11,17 +18,28 @@
   <link rel="apple-touch-icon" sizes="180x180" href="/assets/icons/favicons/apple-touch-icon.png">
   
   <!-- Theme Script (inline to prevent FOUC) -->
+  <style id="theme-init">.theme-loading,.theme-loading *{transition:none!important}</style>
   <script>
     (function(){
+      document.documentElement.classList.add('theme-loading');
       const savedTheme = localStorage.getItem('theme') || 'light';
       if (savedTheme === 'midnight') {
         document.documentElement.setAttribute('data-theme', 'midnight');
       }
+      // Set background immediately to prevent any flash
+      document.documentElement.style.backgroundColor = savedTheme === 'midnight' ? '#0a0e27' : '#FFF8F0';
+      // Remove loading class after first paint
+      requestAnimationFrame(function(){
+        requestAnimationFrame(function(){
+          document.documentElement.classList.remove('theme-loading');
+          document.documentElement.style.backgroundColor = '';
+        });
+      });
     })();
   </script>
   
   <!-- Preload critical first image for better LCP -->
-  <link rel="preload" as="image" href="images/IMG_0519.jpeg" fetchpriority="high">
+  <link rel="preload" as="image" href="https://res.cloudinary.com/dd2rpc7mx/image/fetch/f_auto,q_auto,w_800/https://rajadhanda.me/photographs/images/IMG_0519.jpeg" fetchpriority="high">
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Crimson+Text:ital,wght@0,400;0,600;1,400&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
   <!-- Icons -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" referrerpolicy="no-referrer"/>
@@ -396,63 +414,147 @@
 
   <main>
     <h1>Photographs</h1>
-    <p class="subtitle">frames i took</p>
+    <p class="subtitle">frames from my camera roll</p>
     
     <div class="photo-gallery">
-      <div class="photo-item" data-caption="montmartre, paris">
-        <img src="images/IMG_0519.jpeg" alt="montmartre, paris" loading="eager" decoding="async" fetchpriority="high">
+      <div class="photo-item" data-caption="montmartre, paris" data-full="https://res.cloudinary.com/dd2rpc7mx/image/fetch/f_auto,q_auto,w_1600/https://rajadhanda.me/photographs/images/IMG_0519.jpeg">
+        <img 
+          srcset="https://res.cloudinary.com/dd2rpc7mx/image/fetch/f_auto,q_auto,w_400/https://rajadhanda.me/photographs/images/IMG_0519.jpeg 400w,
+                  https://res.cloudinary.com/dd2rpc7mx/image/fetch/f_auto,q_auto,w_600/https://rajadhanda.me/photographs/images/IMG_0519.jpeg 600w,
+                  https://res.cloudinary.com/dd2rpc7mx/image/fetch/f_auto,q_auto,w_800/https://rajadhanda.me/photographs/images/IMG_0519.jpeg 800w"
+          sizes="(max-width: 768px) 100vw, 50vw"
+          src="https://res.cloudinary.com/dd2rpc7mx/image/fetch/f_auto,q_auto,w_600/https://rajadhanda.me/photographs/images/IMG_0519.jpeg"
+          alt="montmartre, paris" loading="eager" decoding="async" fetchpriority="high">
         <div class="photo-caption">montmartre, paris</div>
       </div>
-      <div class="photo-item" data-caption="louis vuitton, champs-elysées, paris">
-        <img src="images/IMG_0787.jpeg" alt="louis vuitton, champs-elysées, paris" loading="eager" decoding="async" fetchpriority="high">
+      <div class="photo-item" data-caption="louis vuitton, champs-elysées, paris" data-full="https://res.cloudinary.com/dd2rpc7mx/image/fetch/f_auto,q_auto,w_1600/https://rajadhanda.me/photographs/images/IMG_0787.jpeg">
+        <img 
+          srcset="https://res.cloudinary.com/dd2rpc7mx/image/fetch/f_auto,q_auto,w_400/https://rajadhanda.me/photographs/images/IMG_0787.jpeg 400w,
+                  https://res.cloudinary.com/dd2rpc7mx/image/fetch/f_auto,q_auto,w_600/https://rajadhanda.me/photographs/images/IMG_0787.jpeg 600w,
+                  https://res.cloudinary.com/dd2rpc7mx/image/fetch/f_auto,q_auto,w_800/https://rajadhanda.me/photographs/images/IMG_0787.jpeg 800w"
+          sizes="(max-width: 768px) 100vw, 50vw"
+          src="https://res.cloudinary.com/dd2rpc7mx/image/fetch/f_auto,q_auto,w_600/https://rajadhanda.me/photographs/images/IMG_0787.jpeg"
+          alt="louis vuitton, champs-elysées, paris" loading="eager" decoding="async" fetchpriority="high">
         <div class="photo-caption">louis vuitton, champs-elysées, paris</div>
       </div>
-      <div class="photo-item" data-caption="a room of quiet contemplation, national museum of korea, seoul">
-        <img src="images/IMG_3516.jpeg" alt="a room of quiet contemplation, national museum of korea, seoul" loading="lazy" decoding="async">
+      <div class="photo-item" data-caption="a room of quiet contemplation, national museum of korea, seoul" data-full="https://res.cloudinary.com/dd2rpc7mx/image/fetch/f_auto,q_auto,w_1600/https://rajadhanda.me/photographs/images/IMG_3516.jpeg">
+        <img 
+          srcset="https://res.cloudinary.com/dd2rpc7mx/image/fetch/f_auto,q_auto,w_400/https://rajadhanda.me/photographs/images/IMG_3516.jpeg 400w,
+                  https://res.cloudinary.com/dd2rpc7mx/image/fetch/f_auto,q_auto,w_600/https://rajadhanda.me/photographs/images/IMG_3516.jpeg 600w,
+                  https://res.cloudinary.com/dd2rpc7mx/image/fetch/f_auto,q_auto,w_800/https://rajadhanda.me/photographs/images/IMG_3516.jpeg 800w"
+          sizes="(max-width: 768px) 100vw, 50vw"
+          src="https://res.cloudinary.com/dd2rpc7mx/image/fetch/f_auto,q_auto,w_600/https://rajadhanda.me/photographs/images/IMG_3516.jpeg"
+          alt="a room of quiet contemplation, national museum of korea, seoul" loading="lazy" decoding="async">
         <div class="photo-caption">a room of quiet contemplation, national museum of korea, seoul</div>
       </div>
-      <div class="photo-item" data-caption="a room of quiet contemplation, national museum of korea, seoul">
-        <img src="images/IMG_3534.jpeg" alt="a room of quiet contemplation, national museum of korea, seoul" loading="lazy" decoding="async">
+      <div class="photo-item" data-caption="a room of quiet contemplation, national museum of korea, seoul" data-full="https://res.cloudinary.com/dd2rpc7mx/image/fetch/f_auto,q_auto,w_1600/https://rajadhanda.me/photographs/images/IMG_3534.jpeg">
+        <img 
+          srcset="https://res.cloudinary.com/dd2rpc7mx/image/fetch/f_auto,q_auto,w_400/https://rajadhanda.me/photographs/images/IMG_3534.jpeg 400w,
+                  https://res.cloudinary.com/dd2rpc7mx/image/fetch/f_auto,q_auto,w_600/https://rajadhanda.me/photographs/images/IMG_3534.jpeg 600w,
+                  https://res.cloudinary.com/dd2rpc7mx/image/fetch/f_auto,q_auto,w_800/https://rajadhanda.me/photographs/images/IMG_3534.jpeg 800w"
+          sizes="(max-width: 768px) 100vw, 50vw"
+          src="https://res.cloudinary.com/dd2rpc7mx/image/fetch/f_auto,q_auto,w_600/https://rajadhanda.me/photographs/images/IMG_3534.jpeg"
+          alt="a room of quiet contemplation, national museum of korea, seoul" loading="lazy" decoding="async">
         <div class="photo-caption">a room of quiet contemplation, national museum of korea, seoul</div>
       </div>
-      <div class="photo-item" data-caption="starfield library, coex mall, seoul">
-        <img src="images/IMG_3582.jpeg" alt="starfield library, coex mall, seoul" loading="lazy" decoding="async">
+      <div class="photo-item" data-caption="starfield library, coex mall, seoul" data-full="https://res.cloudinary.com/dd2rpc7mx/image/fetch/f_auto,q_auto,w_1600/https://rajadhanda.me/photographs/images/IMG_3582.jpeg">
+        <img 
+          srcset="https://res.cloudinary.com/dd2rpc7mx/image/fetch/f_auto,q_auto,w_400/https://rajadhanda.me/photographs/images/IMG_3582.jpeg 400w,
+                  https://res.cloudinary.com/dd2rpc7mx/image/fetch/f_auto,q_auto,w_600/https://rajadhanda.me/photographs/images/IMG_3582.jpeg 600w,
+                  https://res.cloudinary.com/dd2rpc7mx/image/fetch/f_auto,q_auto,w_800/https://rajadhanda.me/photographs/images/IMG_3582.jpeg 800w"
+          sizes="(max-width: 768px) 100vw, 50vw"
+          src="https://res.cloudinary.com/dd2rpc7mx/image/fetch/f_auto,q_auto,w_600/https://rajadhanda.me/photographs/images/IMG_3582.jpeg"
+          alt="starfield library, coex mall, seoul" loading="lazy" decoding="async">
         <div class="photo-caption">starfield library, coex mall, seoul</div>
       </div>
-      <div class="photo-item" data-caption="ura-namba, osaka">
-        <img src="images/IMG_4229.jpeg" alt="ura-namba, osaka" loading="lazy" decoding="async">
+      <div class="photo-item" data-caption="ura-namba, osaka" data-full="https://res.cloudinary.com/dd2rpc7mx/image/fetch/f_auto,q_auto,w_1600/https://rajadhanda.me/photographs/images/IMG_4229.jpeg">
+        <img 
+          srcset="https://res.cloudinary.com/dd2rpc7mx/image/fetch/f_auto,q_auto,w_400/https://rajadhanda.me/photographs/images/IMG_4229.jpeg 400w,
+                  https://res.cloudinary.com/dd2rpc7mx/image/fetch/f_auto,q_auto,w_600/https://rajadhanda.me/photographs/images/IMG_4229.jpeg 600w,
+                  https://res.cloudinary.com/dd2rpc7mx/image/fetch/f_auto,q_auto,w_800/https://rajadhanda.me/photographs/images/IMG_4229.jpeg 800w"
+          sizes="(max-width: 768px) 100vw, 50vw"
+          src="https://res.cloudinary.com/dd2rpc7mx/image/fetch/f_auto,q_auto,w_600/https://rajadhanda.me/photographs/images/IMG_4229.jpeg"
+          alt="ura-namba, osaka" loading="lazy" decoding="async">
         <div class="photo-caption">ura-namba, osaka</div>
       </div>
-      <div class="photo-item" data-caption="dōtonbori canal, osaka">
-        <img src="images/IMG_4393.jpeg" alt="dōtonbori canal, osaka" loading="lazy" decoding="async">
+      <div class="photo-item" data-caption="dōtonbori canal, osaka" data-full="https://res.cloudinary.com/dd2rpc7mx/image/fetch/f_auto,q_auto,w_1600/https://rajadhanda.me/photographs/images/IMG_4393.jpeg">
+        <img 
+          srcset="https://res.cloudinary.com/dd2rpc7mx/image/fetch/f_auto,q_auto,w_400/https://rajadhanda.me/photographs/images/IMG_4393.jpeg 400w,
+                  https://res.cloudinary.com/dd2rpc7mx/image/fetch/f_auto,q_auto,w_600/https://rajadhanda.me/photographs/images/IMG_4393.jpeg 600w,
+                  https://res.cloudinary.com/dd2rpc7mx/image/fetch/f_auto,q_auto,w_800/https://rajadhanda.me/photographs/images/IMG_4393.jpeg 800w"
+          sizes="(max-width: 768px) 100vw, 50vw"
+          src="https://res.cloudinary.com/dd2rpc7mx/image/fetch/f_auto,q_auto,w_600/https://rajadhanda.me/photographs/images/IMG_4393.jpeg"
+          alt="dōtonbori canal, osaka" loading="lazy" decoding="async">
         <div class="photo-caption">dōtonbori canal, osaka</div>
       </div>
-      <div class="photo-item" data-caption="yasaka pagoda, gion, kyoto">
-        <img src="images/IMG_4887.jpeg" alt="yasaka pagoda, gion, kyoto" loading="lazy" decoding="async">
+      <div class="photo-item" data-caption="yasaka pagoda, gion, kyoto" data-full="https://res.cloudinary.com/dd2rpc7mx/image/fetch/f_auto,q_auto,w_1600/https://rajadhanda.me/photographs/images/IMG_4887.jpeg">
+        <img 
+          srcset="https://res.cloudinary.com/dd2rpc7mx/image/fetch/f_auto,q_auto,w_400/https://rajadhanda.me/photographs/images/IMG_4887.jpeg 400w,
+                  https://res.cloudinary.com/dd2rpc7mx/image/fetch/f_auto,q_auto,w_600/https://rajadhanda.me/photographs/images/IMG_4887.jpeg 600w,
+                  https://res.cloudinary.com/dd2rpc7mx/image/fetch/f_auto,q_auto,w_800/https://rajadhanda.me/photographs/images/IMG_4887.jpeg 800w"
+          sizes="(max-width: 768px) 100vw, 50vw"
+          src="https://res.cloudinary.com/dd2rpc7mx/image/fetch/f_auto,q_auto,w_600/https://rajadhanda.me/photographs/images/IMG_4887.jpeg"
+          alt="yasaka pagoda, gion, kyoto" loading="lazy" decoding="async">
         <div class="photo-caption">yasaka pagoda, gion, kyoto</div>
       </div>
-      <div class="photo-item" data-caption="fushimi inari taisha, kyoto">
-        <img src="images/IMG_4921.jpeg" alt="fushimi inari taisha, kyoto" loading="lazy" decoding="async">
+      <div class="photo-item" data-caption="fushimi inari taisha, kyoto" data-full="https://res.cloudinary.com/dd2rpc7mx/image/fetch/f_auto,q_auto,w_1600/https://rajadhanda.me/photographs/images/IMG_4921.jpeg">
+        <img 
+          srcset="https://res.cloudinary.com/dd2rpc7mx/image/fetch/f_auto,q_auto,w_400/https://rajadhanda.me/photographs/images/IMG_4921.jpeg 400w,
+                  https://res.cloudinary.com/dd2rpc7mx/image/fetch/f_auto,q_auto,w_600/https://rajadhanda.me/photographs/images/IMG_4921.jpeg 600w,
+                  https://res.cloudinary.com/dd2rpc7mx/image/fetch/f_auto,q_auto,w_800/https://rajadhanda.me/photographs/images/IMG_4921.jpeg 800w"
+          sizes="(max-width: 768px) 100vw, 50vw"
+          src="https://res.cloudinary.com/dd2rpc7mx/image/fetch/f_auto,q_auto,w_600/https://rajadhanda.me/photographs/images/IMG_4921.jpeg"
+          alt="fushimi inari taisha, kyoto" loading="lazy" decoding="async">
         <div class="photo-caption">fushimi inari taisha, kyoto</div>
       </div>
-      <div class="photo-item" data-caption="tokyo tower, tokyo">
-        <img src="images/IMG_5561.jpeg" alt="tokyo tower, tokyo" loading="lazy" decoding="async">
+      <div class="photo-item" data-caption="tokyo tower, tokyo" data-full="https://res.cloudinary.com/dd2rpc7mx/image/fetch/f_auto,q_auto,w_1600/https://rajadhanda.me/photographs/images/IMG_5561.jpeg">
+        <img 
+          srcset="https://res.cloudinary.com/dd2rpc7mx/image/fetch/f_auto,q_auto,w_400/https://rajadhanda.me/photographs/images/IMG_5561.jpeg 400w,
+                  https://res.cloudinary.com/dd2rpc7mx/image/fetch/f_auto,q_auto,w_600/https://rajadhanda.me/photographs/images/IMG_5561.jpeg 600w,
+                  https://res.cloudinary.com/dd2rpc7mx/image/fetch/f_auto,q_auto,w_800/https://rajadhanda.me/photographs/images/IMG_5561.jpeg 800w"
+          sizes="(max-width: 768px) 100vw, 50vw"
+          src="https://res.cloudinary.com/dd2rpc7mx/image/fetch/f_auto,q_auto,w_600/https://rajadhanda.me/photographs/images/IMG_5561.jpeg"
+          alt="tokyo tower, tokyo" loading="lazy" decoding="async">
         <div class="photo-caption">tokyo tower, tokyo</div>
       </div>
-      <div class="photo-item" data-caption="shibuya crossing from shibuya sky, tokyo">
-        <img src="images/IMG_5986.jpeg" alt="shibuya crossing from shibuya sky, tokyo" loading="lazy" decoding="async">
+      <div class="photo-item" data-caption="shibuya crossing from shibuya sky, tokyo" data-full="https://res.cloudinary.com/dd2rpc7mx/image/fetch/f_auto,q_auto,w_1600/https://rajadhanda.me/photographs/images/IMG_5986.jpeg">
+        <img 
+          srcset="https://res.cloudinary.com/dd2rpc7mx/image/fetch/f_auto,q_auto,w_400/https://rajadhanda.me/photographs/images/IMG_5986.jpeg 400w,
+                  https://res.cloudinary.com/dd2rpc7mx/image/fetch/f_auto,q_auto,w_600/https://rajadhanda.me/photographs/images/IMG_5986.jpeg 600w,
+                  https://res.cloudinary.com/dd2rpc7mx/image/fetch/f_auto,q_auto,w_800/https://rajadhanda.me/photographs/images/IMG_5986.jpeg 800w"
+          sizes="(max-width: 768px) 100vw, 50vw"
+          src="https://res.cloudinary.com/dd2rpc7mx/image/fetch/f_auto,q_auto,w_600/https://rajadhanda.me/photographs/images/IMG_5986.jpeg"
+          alt="shibuya crossing from shibuya sky, tokyo" loading="lazy" decoding="async">
         <div class="photo-caption">shibuya crossing from shibuya sky, tokyo</div>
       </div>
-      <div class="photo-item" data-caption="flat whites, keswick, lake district national park">
-        <img src="images/IMG_7084.jpeg" alt="flat whites, keswick, lake district national park" loading="lazy" decoding="async">
+      <div class="photo-item" data-caption="flat whites, keswick, lake district national park" data-full="https://res.cloudinary.com/dd2rpc7mx/image/fetch/f_auto,q_auto,w_1600/https://rajadhanda.me/photographs/images/IMG_7084.jpeg">
+        <img 
+          srcset="https://res.cloudinary.com/dd2rpc7mx/image/fetch/f_auto,q_auto,w_400/https://rajadhanda.me/photographs/images/IMG_7084.jpeg 400w,
+                  https://res.cloudinary.com/dd2rpc7mx/image/fetch/f_auto,q_auto,w_600/https://rajadhanda.me/photographs/images/IMG_7084.jpeg 600w,
+                  https://res.cloudinary.com/dd2rpc7mx/image/fetch/f_auto,q_auto,w_800/https://rajadhanda.me/photographs/images/IMG_7084.jpeg 800w"
+          sizes="(max-width: 768px) 100vw, 50vw"
+          src="https://res.cloudinary.com/dd2rpc7mx/image/fetch/f_auto,q_auto,w_600/https://rajadhanda.me/photographs/images/IMG_7084.jpeg"
+          alt="flat whites, keswick, lake district national park" loading="lazy" decoding="async">
         <div class="photo-caption">flat whites, keswick, lake district national park</div>
       </div>
-      <div class="photo-item" data-caption="homeground coffee + kitchen, windermere, lake district national park">
-        <img src="images/IMG_7101.jpeg" alt="homeground coffee + kitchen, windermere, lake district national park" loading="lazy" decoding="async">
+      <div class="photo-item" data-caption="homeground coffee + kitchen, windermere, lake district national park" data-full="https://res.cloudinary.com/dd2rpc7mx/image/fetch/f_auto,q_auto,w_1600/https://rajadhanda.me/photographs/images/IMG_7101.jpeg">
+        <img 
+          srcset="https://res.cloudinary.com/dd2rpc7mx/image/fetch/f_auto,q_auto,w_400/https://rajadhanda.me/photographs/images/IMG_7101.jpeg 400w,
+                  https://res.cloudinary.com/dd2rpc7mx/image/fetch/f_auto,q_auto,w_600/https://rajadhanda.me/photographs/images/IMG_7101.jpeg 600w,
+                  https://res.cloudinary.com/dd2rpc7mx/image/fetch/f_auto,q_auto,w_800/https://rajadhanda.me/photographs/images/IMG_7101.jpeg 800w"
+          sizes="(max-width: 768px) 100vw, 50vw"
+          src="https://res.cloudinary.com/dd2rpc7mx/image/fetch/f_auto,q_auto,w_600/https://rajadhanda.me/photographs/images/IMG_7101.jpeg"
+          alt="homeground coffee + kitchen, windermere, lake district national park" loading="lazy" decoding="async">
         <div class="photo-caption">homeground coffee + kitchen, windermere, lake district national park</div>
       </div>
-      <div class="photo-item" data-caption="long island iced tea, the oligarch, milton keynes">
-        <img src="images/IMG_8842.jpeg" alt="long island iced tea, the oligarch, milton keynes" loading="lazy" decoding="async">
+      <div class="photo-item" data-caption="long island iced tea, the oligarch, milton keynes" data-full="https://res.cloudinary.com/dd2rpc7mx/image/fetch/f_auto,q_auto,w_1600/https://rajadhanda.me/photographs/images/IMG_8842.jpeg">
+        <img 
+          srcset="https://res.cloudinary.com/dd2rpc7mx/image/fetch/f_auto,q_auto,w_400/https://rajadhanda.me/photographs/images/IMG_8842.jpeg 400w,
+                  https://res.cloudinary.com/dd2rpc7mx/image/fetch/f_auto,q_auto,w_600/https://rajadhanda.me/photographs/images/IMG_8842.jpeg 600w,
+                  https://res.cloudinary.com/dd2rpc7mx/image/fetch/f_auto,q_auto,w_800/https://rajadhanda.me/photographs/images/IMG_8842.jpeg 800w"
+          sizes="(max-width: 768px) 100vw, 50vw"
+          src="https://res.cloudinary.com/dd2rpc7mx/image/fetch/f_auto,q_auto,w_600/https://rajadhanda.me/photographs/images/IMG_8842.jpeg"
+          alt="long island iced tea, the oligarch, milton keynes" loading="lazy" decoding="async">
         <div class="photo-caption">long island iced tea, the oligarch, milton keynes</div>
       </div>
     </div>
@@ -675,17 +777,27 @@
         const img = item.querySelector('img');
         const caption = item.dataset.caption || item.querySelector('.photo-caption')?.textContent || '';
         
-        lightboxImg.src = img.src;
+        // Use high-res URL from data-full attribute, fallback to img src
+        lightboxImg.src = item.dataset.full || img.src;
         lightboxImg.alt = img.alt;
         lightboxCaption.textContent = caption;
         lightbox.classList.add('active');
         lightbox.setAttribute('aria-hidden', 'false');
         document.body.style.overflow = 'hidden';
         
-        // Preload adjacent images for smooth navigation
-        if (window.preloadAdjacentImages) {
-          window.preloadAdjacentImages(index);
-        }
+        // Preload adjacent high-res images for smooth navigation
+        preloadAdjacentLightbox(index);
+      }
+      
+      function preloadAdjacentLightbox(index){
+        [-1, 1].forEach(offset => {
+          const idx = (index + offset + photoItems.length) % photoItems.length;
+          const item = photoItems[idx];
+          if (item && item.dataset.full) {
+            const preload = new Image();
+            preload.src = item.dataset.full;
+          }
+        });
       }
       
       function closeLightbox(){

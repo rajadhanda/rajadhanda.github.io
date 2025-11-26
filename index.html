@@ -4,6 +4,20 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Raja Dhanda</title>
+  <meta name="description" content="Technology optimist working in fintech. Learning and building - please reach out with any opportunities!">
+  
+  <!-- Open Graph / LinkedIn -->
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://rajadhanda.me/">
+  <meta property="og:title" content="Raja Dhanda">
+  <meta property="og:description" content="Technology optimist working in fintech. Learning and building - please reach out with any opportunities!">
+  <meta property="og:image" content="https://rajadhanda.me/assets/images/IMG_6767.jpeg">
+  
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Raja Dhanda">
+  <meta name="twitter:description" content="Technology optimist working in fintech. Learning and building - please reach out with any opportunities!">
+  <meta name="twitter:image" content="https://rajadhanda.me/assets/images/IMG_6767.jpeg">
   
   <!-- Favicons -->
   <link rel="icon" type="image/png" sizes="32x32" href="/assets/icons/favicons/favicon-32x32.png">
@@ -12,12 +26,23 @@
   <!-- Pastel elements updated -->
 
   <!-- Theme Script (inline to prevent FOUC) -->
+  <style id="theme-init">.theme-loading,.theme-loading *{transition:none!important}</style>
   <script>
     (function(){
+      document.documentElement.classList.add('theme-loading');
       const savedTheme = localStorage.getItem('theme') || 'light';
       if (savedTheme === 'midnight') {
         document.documentElement.setAttribute('data-theme', 'midnight');
       }
+      // Set background immediately to prevent any flash
+      document.documentElement.style.backgroundColor = savedTheme === 'midnight' ? '#0a0e27' : '#FFF8F0';
+      // Remove loading class after first paint
+      requestAnimationFrame(function(){
+        requestAnimationFrame(function(){
+          document.documentElement.classList.remove('theme-loading');
+          document.documentElement.style.backgroundColor = '';
+        });
+      });
     })();
   </script>
 
@@ -822,19 +847,6 @@
   </div>
 
   <!-- Menu removed -->
-
-  <!-- Panel -->
-  <aside class="panel" id="panel" aria-hidden="true" style="display:none">
-    <header>Navigation</header>
-    <nav aria-label="Primary">
-      <ul>
-        <li><a href="/blog/">Blog</a></li>
-        <li><a href="/projects/">Projects</a></li>
-        <li><a href="/photographs/">Photographs</a></li>
-      </ul>
-    </nav>
-  </aside>
-
 
   <!-- Main -->
   <main>
