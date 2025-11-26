@@ -176,40 +176,35 @@
     .photo-item{
       position:relative; overflow:hidden; border-radius:4px;
       background:var(--accent-soft); aspect-ratio:1; cursor:pointer;
-      opacity:0; transform:translateY(20px);
-      transition:opacity 0.4s ease-out, transform 0.4s ease-out;
-      will-change: opacity, transform;
+      opacity:0;
       contain: layout style paint;
       border: none;
       outline: none;
       box-shadow: none;
     }
     
+    /* Staggered fade-in animation */
     .photo-item.visible{
-      opacity:1; transform:translateY(0);
+      animation: photoFadeIn 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    }
+    
+    @keyframes photoFadeIn {
+      from { opacity: 0; transform: translateY(12px); }
+      to { opacity: 1; transform: translateY(0); }
     }
     
     .photo-item img{
       width:100%; height:100%; object-fit:cover; display:block;
-      transition:filter 0.4s ease-out, opacity 0.4s ease-out;
-      transform: translateZ(0);
-      backface-visibility: hidden;
+      opacity: 0;
+      transition: opacity 0.3s ease-out;
       border: none;
       outline: none;
       box-shadow: none;
-      /* Prevent layout shift during load */
       background: var(--accent-soft);
     }
-    .photo-item img.loading{
-      opacity:0.3;
-      filter:blur(10px) brightness(1.1);
-      /* Smooth transition from placeholder to image */
-      will-change: filter, opacity;
-    }
+    
     .photo-item img.loaded{
-      opacity:1;
-      filter:blur(0);
-      will-change: auto;
+      opacity: 1;
     }
     
     /* Hover Overlay - Desktop Only (touch devices show caption by default) */
@@ -254,20 +249,19 @@
       .photo-gallery{
         grid-template-columns:1fr; gap:8px; margin-bottom:60px;
       }
-      
-      .photo-item{
-        opacity:1; transform:none;
-      }
     }
-    
-    /* Photo gallery responsive - already handled above */
     
     /* Reduced Motion Support */
     @media (prefers-reduced-motion: reduce){
       .photo-item{
-        opacity:1; transform:none; transition:none;
+        opacity:1;
+      }
+      .photo-item.visible{
+        animation:none;
+        opacity:1;
       }
       .photo-item img{transition:none}
+      .photo-item img.loaded{opacity:1}
       .photo-item::before{transition:none}
       .photo-caption{transition:none}
     }
@@ -290,30 +284,6 @@
       .page-transition{display:none}
     }
     
-    /* Loading Progress Indicator - Horizontal Top Bar */
-    .loading-progress{
-      position:fixed; top:0; left:0; width:100%; height:5px;
-      background:rgba(0,0,0,0.08); z-index:1002;
-      opacity:1; visibility:visible;
-      transition:opacity 0.6s var(--ease), visibility 0.6s var(--ease);
-    }
-    [data-theme="midnight"] .loading-progress{
-      background:rgba(255,255,255,0.05);
-    }
-    .loading-progress::before{
-      content:''; position:absolute; top:0; left:0; height:100%;
-      background:var(--accent);
-      transition:width .15s ease;
-      width: var(--progress-width, 0%);
-      min-width: 0%;
-      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
-    }
-    .loading-progress.complete{
-      opacity:0; visibility:hidden;
-    }
-    @media (prefers-reduced-motion: reduce){
-      .loading-progress{display:none}
-    }
     
     /* Lightbox */
     .lightbox{
@@ -392,8 +362,6 @@
   <!-- Page Transition Overlay -->
   <div class="page-transition" id="pageTransition"></div>
 
-  <!-- Loading Progress Indicator -->
-  <div class="loading-progress" id="loadingProgress"></div>
 
   <!-- Theme Toggle Button -->
   <button class="theme-toggle" id="themeToggle" aria-label="Toggle midnight mode">
@@ -538,49 +506,59 @@
       }
     })();
 
-    // Intersection Observer for scroll-triggered animations
-    const observerOptions = {
-      threshold: 0.15,
-      rootMargin: '0px 0px -10px 0px'
-    };
-
-    let animationFrameId;
-    const observer = new IntersectionObserver((entries) => {
-      // Use requestAnimationFrame to batch DOM updates
-      if (animationFrameId) {
-        cancelAnimationFrame(animationFrameId);
+    // Smooth staggered reveal system
+    (function(){
+      const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      const photoItems = document.querySelectorAll('.photo-item');
+      
+      if (reducedMotion) {
+        // Show everything immediately for reduced motion
+        photoItems.forEach(item => {
+          item.classList.add('visible');
+          const img = item.querySelector('img');
+          if (img) img.classList.add('loaded');
+        });
+        return;
       }
       
-      animationFrameId = requestAnimationFrame(() => {
-        entries.forEach((entry) => {
+      // Track visible items for staggered animation
+      let visibleQueue = [];
+      let isProcessing = false;
+      
+      function processQueue() {
+        if (isProcessing || visibleQueue.length === 0) return;
+        isProcessing = true;
+        
+        // Process items with staggered timing
+        const items = [...visibleQueue];
+        visibleQueue = [];
+        
+        items.forEach((item, i) => {
+          // Stagger by 80ms per item for smooth cascade
+          setTimeout(() => {
+            item.classList.add('visible');
+          }, i * 80);
+        });
+        
+        // Allow next batch after current batch completes
+        setTimeout(() => {
+          isProcessing = false;
+          if (visibleQueue.length > 0) processQueue();
+        }, items.length * 80 + 100);
+      }
+      
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
           if (entry.isIntersecting && !entry.target.classList.contains('visible')) {
-            // Only animate once - don't re-animate on scroll
-            entry.target.classList.add('visible');
-            // Stop observing this element to prevent re-animation
+            visibleQueue.push(entry.target);
             observer.unobserve(entry.target);
           }
         });
-      });
-    }, observerOptions);
-
-    // Initialize animations when DOM is loaded
-    document.addEventListener('DOMContentLoaded', () => {
-      const photoItems = document.querySelectorAll('.photo-item');
+        requestAnimationFrame(processQueue);
+      }, { threshold: 0.1, rootMargin: '50px' });
       
-      photoItems.forEach((item, index) => {
-        // Determine column for staggered animation
-        item.dataset.column = index % 2 === 0 ? 'left' : 'right';
-        observer.observe(item);
-      });
-    });
-
-    // Respect reduced motion preference
-    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-      const photoItems = document.querySelectorAll('.photo-item');
-      photoItems.forEach(item => {
-        item.classList.add('visible');
-      });
-    }
+      photoItems.forEach(item => observer.observe(item));
+    })();
 
     // Page transition on navigation link click
     (function(){
@@ -613,197 +591,67 @@
       });
     })();
 
-    // Optimized blur-up loading with Intersection Observer and Loading Progress
+    // Image loading with decode() for smooth reveal
     (function(){
       const images = Array.from(document.querySelectorAll('.photo-item img'));
       if (!images.length) return;
       
-      const loadingProgress = document.getElementById('loadingProgress');
-      const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-      
-      // Track first 4 images (the ones that should load initially above the fold)
-      // These are the first 2 rows in the 2-column grid layout
-      const initialImageCount = Math.min(4, images.length);
-      const initialImages = images.slice(0, initialImageCount);
-      let loadedCount = 0;
-      const totalInitial = initialImages.length;
-      
-      // Track which initial images have been loaded
-      const loadedImages = new Set();
-      
-      // Update loading progress
-      function updateLoadingProgress() {
-        if (!loadingProgress || reducedMotion || totalInitial === 0) return;
+      // Smooth image reveal using decode()
+      async function revealImage(img) {
+        if (img.classList.contains('loaded')) return;
         
-        const progressPercent = totalInitial > 0 
-          ? Math.min(100, Math.max(0, (loadedCount / totalInitial) * 100))
-          : 0;
-        
-        loadingProgress.style.setProperty('--progress-width', progressPercent + '%');
-        
-        // Hide progress indicator when complete
-        if (progressPercent >= 100) {
-          setTimeout(() => {
-            if (loadingProgress) {
-              loadingProgress.classList.add('complete');
-            }
-          }, 300); // Small delay to show 100% completion
+        try {
+          // Wait for image to be fully decoded (prevents flicker)
+          if (img.decode) {
+            await img.decode();
+          }
+        } catch(e) {
+          // Fallback if decode fails
         }
-      }
-      
-      // Track when an initial image loads
-      function onInitialImageLoad(img) {
-        if (!initialImages.includes(img) || loadedImages.has(img)) return;
         
-        loadedImages.add(img);
-        loadedCount++;
-        updateLoadingProgress();
+        img.classList.add('loaded');
       }
       
-      // Preload adjacent images for lightbox (helper function)
-      function preloadAdjacentImages(currentIndex) {
-        const indices = [
-          (currentIndex - 1 + images.length) % images.length,
-          (currentIndex + 1) % images.length
-        ];
-        indices.forEach(index => {
-          const img = images[index];
+      // Preload adjacent images for lightbox
+      window.preloadAdjacentImages = function(currentIndex) {
+        [-1, 1].forEach(offset => {
+          const idx = (currentIndex + offset + images.length) % images.length;
+          const img = images[idx];
           if (img && !img.classList.contains('loaded')) {
-            // Use Image preloading for better performance
-            const preloadImg = new Image();
-            preloadImg.src = img.src;
+            const preload = new Image();
+            preload.src = img.src;
           }
         });
-      }
-      
-      // Expose for lightbox use
-      window.preloadAdjacentImages = preloadAdjacentImages;
-      
-      // Optimized lazy load images with Intersection Observer
-      // Dynamic rootMargin based on connection speed for better performance
-      const getRootMargin = () => {
-        // Use connection API if available to adjust preload distance
-        if ('connection' in navigator) {
-          const connection = navigator.connection || navigator.mozConnection || navigator.webkitConnection;
-          if (connection) {
-            // Reduce preload distance on slower connections
-            if (connection.effectiveType === 'slow-2g' || connection.effectiveType === '2g') {
-              return '25px';
-            }
-            if (connection.effectiveType === '3g') {
-              return '50px';
-            }
-          }
-        }
-        // Default: start loading 100px before image enters viewport
-        return '100px';
       };
       
-      const imageObserver = new IntersectionObserver((entries, observer) => {
+      // Handle eager-loaded images (first 2)
+      images.slice(0, 2).forEach(img => {
+        if (img.complete && img.naturalHeight) {
+          revealImage(img);
+        } else {
+          img.addEventListener('load', () => revealImage(img), { once: true });
+          img.addEventListener('error', () => revealImage(img), { once: true });
+        }
+      });
+      
+      // Lazy load remaining images
+      const imageObserver = new IntersectionObserver((entries, obs) => {
         entries.forEach(entry => {
           if (entry.isIntersecting) {
             const img = entry.target;
             
-            // Start loading with blur effect
-            if (!img.classList.contains('loading') && !img.classList.contains('loaded')) {
-              img.classList.add('loading');
-            }
-            
-            // If already complete, mark as loaded immediately
-            if (img.complete && img.naturalHeight !== 0) {
-              img.classList.remove('loading');
-              img.classList.add('loaded');
-              onInitialImageLoad(img);
-              observer.unobserve(img);
+            if (img.complete && img.naturalHeight) {
+              revealImage(img);
             } else {
-              // Wait for load event
-              const loadHandler = () => {
-                // Use requestAnimationFrame for smooth transition
-                requestAnimationFrame(() => {
-                  img.classList.remove('loading');
-                  img.classList.add('loaded');
-                  onInitialImageLoad(img);
-                });
-                observer.unobserve(img);
-              };
-              img.addEventListener('load', loadHandler, {once:true});
-              img.addEventListener('error', loadHandler, {once:true});
+              img.addEventListener('load', () => revealImage(img), { once: true });
+              img.addEventListener('error', () => revealImage(img), { once: true });
             }
+            obs.unobserve(img);
           }
         });
-      }, {
-        rootMargin: getRootMargin(), // Adaptive preload distance
-        threshold: 0.01 // Trigger as soon as any pixel is visible
-      });
+      }, { rootMargin: '100px', threshold: 0.01 });
       
-      // Initialize progress indicator at 0% - do this FIRST before any handlers
-      if (loadingProgress && !reducedMotion && totalInitial > 0) {
-        // Ensure it's visible and starts at 0%
-        loadingProgress.style.setProperty('--progress-width', '0%');
-        loadingProgress.classList.remove('complete');
-      } else if (loadingProgress && (reducedMotion || totalInitial === 0)) {
-        // Hide immediately if reduced motion or no initial images
-        loadingProgress.classList.add('complete');
-      }
-      
-      // Preload first 2 images immediately (above the fold)
-      // These use loading="eager" and fetchpriority="high" in HTML
-      const preloadCount = Math.min(2, images.length);
-      for (let i = 0; i < preloadCount; i++) {
-        const img = images[i];
-        img.classList.add('loading');
-        if (img.complete && img.naturalHeight !== 0) {
-          // Already loaded (cached)
-          requestAnimationFrame(() => {
-            img.classList.remove('loading');
-            img.classList.add('loaded');
-            onInitialImageLoad(img);
-          });
-        } else {
-          // Set up load handler
-          const loadHandler = () => {
-            requestAnimationFrame(() => {
-              img.classList.remove('loading');
-              img.classList.add('loaded');
-              onInitialImageLoad(img);
-            });
-          };
-          img.addEventListener('load', loadHandler, {once:true});
-          img.addEventListener('error', loadHandler, {once:true});
-        }
-      }
-      
-      // Set up load tracking for remaining initial images (3rd and 4th)
-      // These will be loaded via IntersectionObserver but we need to track them
-      for (let i = preloadCount; i < initialImageCount; i++) {
-        const img = initialImages[i];
-        if (img.complete && img.naturalHeight !== 0) {
-          // Already loaded (cached)
-          requestAnimationFrame(() => {
-            if (!img.classList.contains('loaded')) {
-              img.classList.add('loaded');
-            }
-            onInitialImageLoad(img);
-          });
-        } else {
-          // Set up load handler - these will be observed by IntersectionObserver
-          // but we also track them here for progress
-          const loadHandler = () => {
-            requestAnimationFrame(() => {
-              onInitialImageLoad(img);
-            });
-          };
-          img.addEventListener('load', loadHandler, {once:true});
-          img.addEventListener('error', loadHandler, {once:true});
-        }
-      }
-      
-      // Observe all images starting from index 2
-      images.forEach((img, index) => {
-        if (index >= preloadCount) {
-          imageObserver.observe(img);
-        }
-      });
+      images.slice(2).forEach(img => imageObserver.observe(img));
     })();
 
     // Lightbox functionality
