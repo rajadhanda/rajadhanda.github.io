@@ -374,9 +374,43 @@
     @media (prefers-reduced-motion: reduce){
       .page-transition{display:none}
     }
+    
+    /* Work in Progress Bar */
+    .wip-bar{
+      position:fixed; top:0; left:0; right:0; height:4px; z-index:2000;
+      background:repeating-linear-gradient(
+        -55deg,
+        #f5c842,
+        #f5c842 10px,
+        #1a1a1a 10px,
+        #1a1a1a 20px
+      );
+      background-size:200% 100%;
+      animation:wip-scroll 1s linear infinite;
+    }
+    [data-theme="midnight"] .wip-bar{
+      background:repeating-linear-gradient(
+        -55deg,
+        #d4a72c,
+        #d4a72c 10px,
+        #0a0e27 10px,
+        #0a0e27 20px
+      );
+      background-size:200% 100%;
+    }
+    @keyframes wip-scroll{
+      0%{background-position:0 0}
+      100%{background-position:28px 0}
+    }
+    @media (prefers-reduced-motion: reduce){
+      .wip-bar{animation:none}
+    }
   </style>
 </head>
 <body>
+  <!-- Work in Progress Bar -->
+  <div class="wip-bar" aria-hidden="true"></div>
+  
   <!-- Page Transition Overlay -->
   <div class="page-transition" id="pageTransition"></div>
 
