@@ -44,6 +44,9 @@
   <!-- Icons -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" referrerpolicy="no-referrer"/>
 
+  <!-- Smooth Scroll -->
+  <script src="https://unpkg.com/lenis@1.1.13/dist/lenis.min.js"></script>
+
   <style>
     :root{
       --bg:#FFF8F0; --fg:#0A2540; --fg-light:#2A4A60; --muted:#5A7A90;
@@ -538,18 +541,32 @@
       }
     })();
 
-    // Smooth scroll behavior
-    document.documentElement.style.scrollBehavior = 'smooth';
-
-    // Add some subtle parallax to floating elements
-    let scrollPos = 0;
-    window.addEventListener('scroll', ()=>{
-      scrollPos = window.pageYOffset;
-      document.querySelectorAll('.floating-element').forEach((el,i)=>{
-        const speed = (i+1)*0.3;
-        el.style.transform = `translateY(${scrollPos*speed}px)`;
+    // Smooth scroll with Lenis (respects reduced motion)
+    const reducedMotionGlobal = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    let lenis = null;
+    
+    if (!reducedMotionGlobal) {
+      lenis = new Lenis({
+        duration: 1.2,
+        easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+        orientation: 'vertical',
+        smoothWheel: true
       });
-    });
+      
+      function raf(time) {
+        lenis.raf(time);
+        requestAnimationFrame(raf);
+      }
+      requestAnimationFrame(raf);
+
+      // Add some subtle parallax to floating elements (uses Lenis scroll event)
+      lenis.on('scroll', ({ scroll }) => {
+        document.querySelectorAll('.floating-element').forEach((el,i)=>{
+          const speed = (i+1)*0.3;
+          el.style.transform = `translateY(${scroll*speed}px)`;
+        });
+      });
+    }
 
     // Add hover effects and 3D tilt to blog cards
     document.addEventListener('DOMContentLoaded', ()=>{
