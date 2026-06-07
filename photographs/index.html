@@ -187,9 +187,9 @@
     }
     nav a:hover{border-color:var(--border-hover)}
     
-    /* Photo Gallery Grid - 2 Column Layout */
+    /* Photo Gallery Grid - 4 Column Layout */
     .photo-gallery{
-      display:grid; grid-template-columns:repeat(2, 1fr); gap:12px 16px;
+      display:grid; grid-template-columns:repeat(4, 1fr); gap:10px 12px;
       margin-bottom:80px;
       contain: layout style paint;
     }
@@ -265,11 +265,15 @@
       }
     }
     
-    /* Mobile Experience - Single Column */
-    @media (max-width:768px){
-      .photo-gallery{
-        grid-template-columns:1fr; gap:8px; margin-bottom:60px;
-      }
+    /* Responsive grid */
+    @media (max-width:1024px){
+      .photo-gallery{ grid-template-columns:repeat(3, 1fr); gap:8px 10px; }
+    }
+    @media (max-width:640px){
+      .photo-gallery{ grid-template-columns:repeat(2, 1fr); gap:6px 8px; margin-bottom:60px; }
+    }
+    @media (max-width:380px){
+      .photo-gallery{ grid-template-columns:1fr; gap:6px; margin-bottom:60px; }
     }
     
     /* Reduced Motion Support */
@@ -425,7 +429,7 @@
           srcset="https://res.cloudinary.com/dd2rpc7mx/image/fetch/f_auto,q_auto,w_400/https://rajadhanda.me/photographs/images/IMG_0519.jpeg 400w,
                   https://res.cloudinary.com/dd2rpc7mx/image/fetch/f_auto,q_auto,w_600/https://rajadhanda.me/photographs/images/IMG_0519.jpeg 600w,
                   https://res.cloudinary.com/dd2rpc7mx/image/fetch/f_auto,q_auto,w_800/https://rajadhanda.me/photographs/images/IMG_0519.jpeg 800w"
-          sizes="(max-width: 768px) 100vw, 50vw"
+          sizes="(max-width: 380px) 100vw, (max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
           src="https://res.cloudinary.com/dd2rpc7mx/image/fetch/f_auto,q_auto,w_600/https://rajadhanda.me/photographs/images/IMG_0519.jpeg"
           alt="montmartre, paris" loading="eager" decoding="async" fetchpriority="high">
         <div class="photo-caption">montmartre, paris</div>
@@ -435,7 +439,7 @@
           srcset="https://res.cloudinary.com/dd2rpc7mx/image/fetch/f_auto,q_auto,w_400/https://rajadhanda.me/photographs/images/IMG_0787.jpeg 400w,
                   https://res.cloudinary.com/dd2rpc7mx/image/fetch/f_auto,q_auto,w_600/https://rajadhanda.me/photographs/images/IMG_0787.jpeg 600w,
                   https://res.cloudinary.com/dd2rpc7mx/image/fetch/f_auto,q_auto,w_800/https://rajadhanda.me/photographs/images/IMG_0787.jpeg 800w"
-          sizes="(max-width: 768px) 100vw, 50vw"
+          sizes="(max-width: 380px) 100vw, (max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
           src="https://res.cloudinary.com/dd2rpc7mx/image/fetch/f_auto,q_auto,w_600/https://rajadhanda.me/photographs/images/IMG_0787.jpeg"
           alt="louis vuitton, champs-elysées, paris" loading="eager" decoding="async" fetchpriority="high">
         <div class="photo-caption">louis vuitton, champs-elysées, paris</div>
@@ -445,7 +449,7 @@
           srcset="https://res.cloudinary.com/dd2rpc7mx/image/fetch/f_auto,q_auto,w_400/https://rajadhanda.me/photographs/images/IMG_3516.jpeg 400w,
                   https://res.cloudinary.com/dd2rpc7mx/image/fetch/f_auto,q_auto,w_600/https://rajadhanda.me/photographs/images/IMG_3516.jpeg 600w,
                   https://res.cloudinary.com/dd2rpc7mx/image/fetch/f_auto,q_auto,w_800/https://rajadhanda.me/photographs/images/IMG_3516.jpeg 800w"
-          sizes="(max-width: 768px) 100vw, 50vw"
+          sizes="(max-width: 380px) 100vw, (max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
           src="https://res.cloudinary.com/dd2rpc7mx/image/fetch/f_auto,q_auto,w_600/https://rajadhanda.me/photographs/images/IMG_3516.jpeg"
           alt="a room of quiet contemplation, national museum of korea, seoul" loading="lazy" decoding="async">
         <div class="photo-caption">a room of quiet contemplation, national museum of korea, seoul</div>
@@ -455,7 +459,7 @@
           srcset="https://res.cloudinary.com/dd2rpc7mx/image/fetch/f_auto,q_auto,w_400/https://rajadhanda.me/photographs/images/IMG_3534.jpeg 400w,
                   https://res.cloudinary.com/dd2rpc7mx/image/fetch/f_auto,q_auto,w_600/https://rajadhanda.me/photographs/images/IMG_3534.jpeg 600w,
                   https://res.cloudinary.com/dd2rpc7mx/image/fetch/f_auto,q_auto,w_800/https://rajadhanda.me/photographs/images/IMG_3534.jpeg 800w"
-          sizes="(max-width: 768px) 100vw, 50vw"
+          sizes="(max-width: 380px) 100vw, (max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
           src="https://res.cloudinary.com/dd2rpc7mx/image/fetch/f_auto,q_auto,w_600/https://rajadhanda.me/photographs/images/IMG_3534.jpeg"
           alt="a room of quiet contemplation, national museum of korea, seoul" loading="lazy" decoding="async">
         <div class="photo-caption">a room of quiet contemplation, national museum of korea, seoul</div>
@@ -465,7 +469,7 @@
           srcset="https://res.cloudinary.com/dd2rpc7mx/image/fetch/f_auto,q_auto,w_400/https://rajadhanda.me/photographs/images/IMG_3582.jpeg 400w,
                   https://res.cloudinary.com/dd2rpc7mx/image/fetch/f_auto,q_auto,w_600/https://rajadhanda.me/photographs/images/IMG_3582.jpeg 600w,
                   https://res.cloudinary.com/dd2rpc7mx/image/fetch/f_auto,q_auto,w_800/https://rajadhanda.me/photographs/images/IMG_3582.jpeg 800w"
-          sizes="(max-width: 768px) 100vw, 50vw"
+          sizes="(max-width: 380px) 100vw, (max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
           src="https://res.cloudinary.com/dd2rpc7mx/image/fetch/f_auto,q_auto,w_600/https://rajadhanda.me/photographs/images/IMG_3582.jpeg"
           alt="starfield library, coex mall, seoul" loading="lazy" decoding="async">
         <div class="photo-caption">starfield library, coex mall, seoul</div>
@@ -475,7 +479,7 @@
           srcset="https://res.cloudinary.com/dd2rpc7mx/image/fetch/f_auto,q_auto,w_400/https://rajadhanda.me/photographs/images/IMG_4229.jpeg 400w,
                   https://res.cloudinary.com/dd2rpc7mx/image/fetch/f_auto,q_auto,w_600/https://rajadhanda.me/photographs/images/IMG_4229.jpeg 600w,
                   https://res.cloudinary.com/dd2rpc7mx/image/fetch/f_auto,q_auto,w_800/https://rajadhanda.me/photographs/images/IMG_4229.jpeg 800w"
-          sizes="(max-width: 768px) 100vw, 50vw"
+          sizes="(max-width: 380px) 100vw, (max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
           src="https://res.cloudinary.com/dd2rpc7mx/image/fetch/f_auto,q_auto,w_600/https://rajadhanda.me/photographs/images/IMG_4229.jpeg"
           alt="ura-namba, osaka" loading="lazy" decoding="async">
         <div class="photo-caption">ura-namba, osaka</div>
@@ -485,7 +489,7 @@
           srcset="https://res.cloudinary.com/dd2rpc7mx/image/fetch/f_auto,q_auto,w_400/https://rajadhanda.me/photographs/images/IMG_4393.jpeg 400w,
                   https://res.cloudinary.com/dd2rpc7mx/image/fetch/f_auto,q_auto,w_600/https://rajadhanda.me/photographs/images/IMG_4393.jpeg 600w,
                   https://res.cloudinary.com/dd2rpc7mx/image/fetch/f_auto,q_auto,w_800/https://rajadhanda.me/photographs/images/IMG_4393.jpeg 800w"
-          sizes="(max-width: 768px) 100vw, 50vw"
+          sizes="(max-width: 380px) 100vw, (max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
           src="https://res.cloudinary.com/dd2rpc7mx/image/fetch/f_auto,q_auto,w_600/https://rajadhanda.me/photographs/images/IMG_4393.jpeg"
           alt="dōtonbori canal, osaka" loading="lazy" decoding="async">
         <div class="photo-caption">dōtonbori canal, osaka</div>
@@ -495,7 +499,7 @@
           srcset="https://res.cloudinary.com/dd2rpc7mx/image/fetch/f_auto,q_auto,w_400/https://rajadhanda.me/photographs/images/IMG_4887.jpeg 400w,
                   https://res.cloudinary.com/dd2rpc7mx/image/fetch/f_auto,q_auto,w_600/https://rajadhanda.me/photographs/images/IMG_4887.jpeg 600w,
                   https://res.cloudinary.com/dd2rpc7mx/image/fetch/f_auto,q_auto,w_800/https://rajadhanda.me/photographs/images/IMG_4887.jpeg 800w"
-          sizes="(max-width: 768px) 100vw, 50vw"
+          sizes="(max-width: 380px) 100vw, (max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
           src="https://res.cloudinary.com/dd2rpc7mx/image/fetch/f_auto,q_auto,w_600/https://rajadhanda.me/photographs/images/IMG_4887.jpeg"
           alt="yasaka pagoda, gion, kyoto" loading="lazy" decoding="async">
         <div class="photo-caption">yasaka pagoda, gion, kyoto</div>
@@ -505,7 +509,7 @@
           srcset="https://res.cloudinary.com/dd2rpc7mx/image/fetch/f_auto,q_auto,w_400/https://rajadhanda.me/photographs/images/IMG_4921.jpeg 400w,
                   https://res.cloudinary.com/dd2rpc7mx/image/fetch/f_auto,q_auto,w_600/https://rajadhanda.me/photographs/images/IMG_4921.jpeg 600w,
                   https://res.cloudinary.com/dd2rpc7mx/image/fetch/f_auto,q_auto,w_800/https://rajadhanda.me/photographs/images/IMG_4921.jpeg 800w"
-          sizes="(max-width: 768px) 100vw, 50vw"
+          sizes="(max-width: 380px) 100vw, (max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
           src="https://res.cloudinary.com/dd2rpc7mx/image/fetch/f_auto,q_auto,w_600/https://rajadhanda.me/photographs/images/IMG_4921.jpeg"
           alt="fushimi inari taisha, kyoto" loading="lazy" decoding="async">
         <div class="photo-caption">fushimi inari taisha, kyoto</div>
@@ -515,7 +519,7 @@
           srcset="https://res.cloudinary.com/dd2rpc7mx/image/fetch/f_auto,q_auto,w_400/https://rajadhanda.me/photographs/images/IMG_5561.jpeg 400w,
                   https://res.cloudinary.com/dd2rpc7mx/image/fetch/f_auto,q_auto,w_600/https://rajadhanda.me/photographs/images/IMG_5561.jpeg 600w,
                   https://res.cloudinary.com/dd2rpc7mx/image/fetch/f_auto,q_auto,w_800/https://rajadhanda.me/photographs/images/IMG_5561.jpeg 800w"
-          sizes="(max-width: 768px) 100vw, 50vw"
+          sizes="(max-width: 380px) 100vw, (max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
           src="https://res.cloudinary.com/dd2rpc7mx/image/fetch/f_auto,q_auto,w_600/https://rajadhanda.me/photographs/images/IMG_5561.jpeg"
           alt="tokyo tower, tokyo" loading="lazy" decoding="async">
         <div class="photo-caption">tokyo tower, tokyo</div>
@@ -525,7 +529,7 @@
           srcset="https://res.cloudinary.com/dd2rpc7mx/image/fetch/f_auto,q_auto,w_400/https://rajadhanda.me/photographs/images/IMG_5986.jpeg 400w,
                   https://res.cloudinary.com/dd2rpc7mx/image/fetch/f_auto,q_auto,w_600/https://rajadhanda.me/photographs/images/IMG_5986.jpeg 600w,
                   https://res.cloudinary.com/dd2rpc7mx/image/fetch/f_auto,q_auto,w_800/https://rajadhanda.me/photographs/images/IMG_5986.jpeg 800w"
-          sizes="(max-width: 768px) 100vw, 50vw"
+          sizes="(max-width: 380px) 100vw, (max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
           src="https://res.cloudinary.com/dd2rpc7mx/image/fetch/f_auto,q_auto,w_600/https://rajadhanda.me/photographs/images/IMG_5986.jpeg"
           alt="shibuya crossing from shibuya sky, tokyo" loading="lazy" decoding="async">
         <div class="photo-caption">shibuya crossing from shibuya sky, tokyo</div>
@@ -535,7 +539,7 @@
           srcset="https://res.cloudinary.com/dd2rpc7mx/image/fetch/f_auto,q_auto,w_400/https://rajadhanda.me/photographs/images/IMG_7084.jpeg 400w,
                   https://res.cloudinary.com/dd2rpc7mx/image/fetch/f_auto,q_auto,w_600/https://rajadhanda.me/photographs/images/IMG_7084.jpeg 600w,
                   https://res.cloudinary.com/dd2rpc7mx/image/fetch/f_auto,q_auto,w_800/https://rajadhanda.me/photographs/images/IMG_7084.jpeg 800w"
-          sizes="(max-width: 768px) 100vw, 50vw"
+          sizes="(max-width: 380px) 100vw, (max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
           src="https://res.cloudinary.com/dd2rpc7mx/image/fetch/f_auto,q_auto,w_600/https://rajadhanda.me/photographs/images/IMG_7084.jpeg"
           alt="flat whites, keswick, lake district national park" loading="lazy" decoding="async">
         <div class="photo-caption">flat whites, keswick, lake district national park</div>
@@ -545,7 +549,7 @@
           srcset="https://res.cloudinary.com/dd2rpc7mx/image/fetch/f_auto,q_auto,w_400/https://rajadhanda.me/photographs/images/IMG_7101.jpeg 400w,
                   https://res.cloudinary.com/dd2rpc7mx/image/fetch/f_auto,q_auto,w_600/https://rajadhanda.me/photographs/images/IMG_7101.jpeg 600w,
                   https://res.cloudinary.com/dd2rpc7mx/image/fetch/f_auto,q_auto,w_800/https://rajadhanda.me/photographs/images/IMG_7101.jpeg 800w"
-          sizes="(max-width: 768px) 100vw, 50vw"
+          sizes="(max-width: 380px) 100vw, (max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
           src="https://res.cloudinary.com/dd2rpc7mx/image/fetch/f_auto,q_auto,w_600/https://rajadhanda.me/photographs/images/IMG_7101.jpeg"
           alt="homeground coffee + kitchen, windermere, lake district national park" loading="lazy" decoding="async">
         <div class="photo-caption">homeground coffee + kitchen, windermere, lake district national park</div>
@@ -555,10 +559,160 @@
           srcset="https://res.cloudinary.com/dd2rpc7mx/image/fetch/f_auto,q_auto,w_400/https://rajadhanda.me/photographs/images/IMG_8842.jpeg 400w,
                   https://res.cloudinary.com/dd2rpc7mx/image/fetch/f_auto,q_auto,w_600/https://rajadhanda.me/photographs/images/IMG_8842.jpeg 600w,
                   https://res.cloudinary.com/dd2rpc7mx/image/fetch/f_auto,q_auto,w_800/https://rajadhanda.me/photographs/images/IMG_8842.jpeg 800w"
-          sizes="(max-width: 768px) 100vw, 50vw"
+          sizes="(max-width: 380px) 100vw, (max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
           src="https://res.cloudinary.com/dd2rpc7mx/image/fetch/f_auto,q_auto,w_600/https://rajadhanda.me/photographs/images/IMG_8842.jpeg"
           alt="long island iced tea, the oligarch, milton keynes" loading="lazy" decoding="async">
         <div class="photo-caption">long island iced tea, the oligarch, milton keynes</div>
+      </div>
+      <div class="photo-item" data-caption="vltava river, prague" data-full="https://res.cloudinary.com/dd2rpc7mx/image/fetch/f_auto,q_auto,w_1600/https://rajadhanda.me/photographs/images/vltava-river-prague.jpg">
+        <img
+          srcset="https://res.cloudinary.com/dd2rpc7mx/image/fetch/f_auto,q_auto,w_400/https://rajadhanda.me/photographs/images/vltava-river-prague.jpg 400w,
+                  https://res.cloudinary.com/dd2rpc7mx/image/fetch/f_auto,q_auto,w_600/https://rajadhanda.me/photographs/images/vltava-river-prague.jpg 600w,
+                  https://res.cloudinary.com/dd2rpc7mx/image/fetch/f_auto,q_auto,w_800/https://rajadhanda.me/photographs/images/vltava-river-prague.jpg 800w"
+          sizes="(max-width: 380px) 100vw, (max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
+          src="https://res.cloudinary.com/dd2rpc7mx/image/fetch/f_auto,q_auto,w_600/https://rajadhanda.me/photographs/images/vltava-river-prague.jpg"
+          alt="vltava river, prague" loading="lazy" decoding="async">
+        <div class="photo-caption">vltava river, prague</div>
+      </div>
+      <div class="photo-item" data-caption="national palace of sintra, sintra" data-full="https://res.cloudinary.com/dd2rpc7mx/image/fetch/f_auto,q_auto,w_1600/https://rajadhanda.me/photographs/images/national-palace-of-sintra-sintra.jpg">
+        <img
+          srcset="https://res.cloudinary.com/dd2rpc7mx/image/fetch/f_auto,q_auto,w_400/https://rajadhanda.me/photographs/images/national-palace-of-sintra-sintra.jpg 400w,
+                  https://res.cloudinary.com/dd2rpc7mx/image/fetch/f_auto,q_auto,w_600/https://rajadhanda.me/photographs/images/national-palace-of-sintra-sintra.jpg 600w,
+                  https://res.cloudinary.com/dd2rpc7mx/image/fetch/f_auto,q_auto,w_800/https://rajadhanda.me/photographs/images/national-palace-of-sintra-sintra.jpg 800w"
+          sizes="(max-width: 380px) 100vw, (max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
+          src="https://res.cloudinary.com/dd2rpc7mx/image/fetch/f_auto,q_auto,w_600/https://rajadhanda.me/photographs/images/national-palace-of-sintra-sintra.jpg"
+          alt="national palace of sintra, sintra" loading="lazy" decoding="async">
+        <div class="photo-caption">national palace of sintra, sintra</div>
+      </div>
+      <div class="photo-item" data-caption="top of the moorish castle, sintra" data-full="https://res.cloudinary.com/dd2rpc7mx/image/fetch/f_auto,q_auto,w_1600/https://rajadhanda.me/photographs/images/top-of-the-moorish-castle-sintra.jpeg">
+        <img
+          srcset="https://res.cloudinary.com/dd2rpc7mx/image/fetch/f_auto,q_auto,w_400/https://rajadhanda.me/photographs/images/top-of-the-moorish-castle-sintra.jpeg 400w,
+                  https://res.cloudinary.com/dd2rpc7mx/image/fetch/f_auto,q_auto,w_600/https://rajadhanda.me/photographs/images/top-of-the-moorish-castle-sintra.jpeg 600w,
+                  https://res.cloudinary.com/dd2rpc7mx/image/fetch/f_auto,q_auto,w_800/https://rajadhanda.me/photographs/images/top-of-the-moorish-castle-sintra.jpeg 800w"
+          sizes="(max-width: 380px) 100vw, (max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
+          src="https://res.cloudinary.com/dd2rpc7mx/image/fetch/f_auto,q_auto,w_600/https://rajadhanda.me/photographs/images/top-of-the-moorish-castle-sintra.jpeg"
+          alt="top of the moorish castle, sintra" loading="lazy" decoding="async">
+        <div class="photo-caption">top of the moorish castle, sintra</div>
+      </div>
+      <div class="photo-item" data-caption="air and space museum, seattle" data-full="https://res.cloudinary.com/dd2rpc7mx/image/fetch/f_auto,q_auto,w_1600/https://rajadhanda.me/photographs/images/air-and-space-museum-seattle.jpeg">
+        <img
+          srcset="https://res.cloudinary.com/dd2rpc7mx/image/fetch/f_auto,q_auto,w_400/https://rajadhanda.me/photographs/images/air-and-space-museum-seattle.jpeg 400w,
+                  https://res.cloudinary.com/dd2rpc7mx/image/fetch/f_auto,q_auto,w_600/https://rajadhanda.me/photographs/images/air-and-space-museum-seattle.jpeg 600w,
+                  https://res.cloudinary.com/dd2rpc7mx/image/fetch/f_auto,q_auto,w_800/https://rajadhanda.me/photographs/images/air-and-space-museum-seattle.jpeg 800w"
+          sizes="(max-width: 380px) 100vw, (max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
+          src="https://res.cloudinary.com/dd2rpc7mx/image/fetch/f_auto,q_auto,w_600/https://rajadhanda.me/photographs/images/air-and-space-museum-seattle.jpeg"
+          alt="air and space museum, seattle" loading="lazy" decoding="async">
+        <div class="photo-caption">air and space museum, seattle</div>
+      </div>
+      <div class="photo-item" data-caption="saturn v f-1 engine, museum of flight, seattle" data-full="https://res.cloudinary.com/dd2rpc7mx/image/fetch/f_auto,q_auto,w_1600/https://rajadhanda.me/photographs/images/saturn-v-f1-engine-museum-of-flight-seattle.jpg">
+        <img
+          srcset="https://res.cloudinary.com/dd2rpc7mx/image/fetch/f_auto,q_auto,w_400/https://rajadhanda.me/photographs/images/saturn-v-f1-engine-museum-of-flight-seattle.jpg 400w,
+                  https://res.cloudinary.com/dd2rpc7mx/image/fetch/f_auto,q_auto,w_600/https://rajadhanda.me/photographs/images/saturn-v-f1-engine-museum-of-flight-seattle.jpg 600w,
+                  https://res.cloudinary.com/dd2rpc7mx/image/fetch/f_auto,q_auto,w_800/https://rajadhanda.me/photographs/images/saturn-v-f1-engine-museum-of-flight-seattle.jpg 800w"
+          sizes="(max-width: 380px) 100vw, (max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
+          src="https://res.cloudinary.com/dd2rpc7mx/image/fetch/f_auto,q_auto,w_600/https://rajadhanda.me/photographs/images/saturn-v-f1-engine-museum-of-flight-seattle.jpg"
+          alt="saturn v f-1 engine, museum of flight, seattle" loading="lazy" decoding="async">
+        <div class="photo-caption">saturn v f-1 engine, museum of flight, seattle</div>
+      </div>
+      <div class="photo-item" data-caption="top of the space needle, seattle" data-full="https://res.cloudinary.com/dd2rpc7mx/image/fetch/f_auto,q_auto,w_1600/https://rajadhanda.me/photographs/images/top-of-the-space-needle-seattle.jpeg">
+        <img
+          srcset="https://res.cloudinary.com/dd2rpc7mx/image/fetch/f_auto,q_auto,w_400/https://rajadhanda.me/photographs/images/top-of-the-space-needle-seattle.jpeg 400w,
+                  https://res.cloudinary.com/dd2rpc7mx/image/fetch/f_auto,q_auto,w_600/https://rajadhanda.me/photographs/images/top-of-the-space-needle-seattle.jpeg 600w,
+                  https://res.cloudinary.com/dd2rpc7mx/image/fetch/f_auto,q_auto,w_800/https://rajadhanda.me/photographs/images/top-of-the-space-needle-seattle.jpeg 800w"
+          sizes="(max-width: 380px) 100vw, (max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
+          src="https://res.cloudinary.com/dd2rpc7mx/image/fetch/f_auto,q_auto,w_600/https://rajadhanda.me/photographs/images/top-of-the-space-needle-seattle.jpeg"
+          alt="top of the space needle, seattle" loading="lazy" decoding="async">
+        <div class="photo-caption">top of the space needle, seattle</div>
+      </div>
+      <div class="photo-item" data-caption="bottom of the space needle, seattle" data-full="https://res.cloudinary.com/dd2rpc7mx/image/fetch/f_auto,q_auto,w_1600/https://rajadhanda.me/photographs/images/bottom-of-the-space-needle-seattle.jpeg">
+        <img
+          srcset="https://res.cloudinary.com/dd2rpc7mx/image/fetch/f_auto,q_auto,w_400/https://rajadhanda.me/photographs/images/bottom-of-the-space-needle-seattle.jpeg 400w,
+                  https://res.cloudinary.com/dd2rpc7mx/image/fetch/f_auto,q_auto,w_600/https://rajadhanda.me/photographs/images/bottom-of-the-space-needle-seattle.jpeg 600w,
+                  https://res.cloudinary.com/dd2rpc7mx/image/fetch/f_auto,q_auto,w_800/https://rajadhanda.me/photographs/images/bottom-of-the-space-needle-seattle.jpeg 800w"
+          sizes="(max-width: 380px) 100vw, (max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
+          src="https://res.cloudinary.com/dd2rpc7mx/image/fetch/f_auto,q_auto,w_600/https://rajadhanda.me/photographs/images/bottom-of-the-space-needle-seattle.jpeg"
+          alt="bottom of the space needle, seattle" loading="lazy" decoding="async">
+        <div class="photo-caption">bottom of the space needle, seattle</div>
+      </div>
+      <div class="photo-item" data-caption="the harbour, seattle" data-full="https://res.cloudinary.com/dd2rpc7mx/image/fetch/f_auto,q_auto,w_1600/https://rajadhanda.me/photographs/images/the-harbour-seattle.jpeg">
+        <img
+          srcset="https://res.cloudinary.com/dd2rpc7mx/image/fetch/f_auto,q_auto,w_400/https://rajadhanda.me/photographs/images/the-harbour-seattle.jpeg 400w,
+                  https://res.cloudinary.com/dd2rpc7mx/image/fetch/f_auto,q_auto,w_600/https://rajadhanda.me/photographs/images/the-harbour-seattle.jpeg 600w,
+                  https://res.cloudinary.com/dd2rpc7mx/image/fetch/f_auto,q_auto,w_800/https://rajadhanda.me/photographs/images/the-harbour-seattle.jpeg 800w"
+          sizes="(max-width: 380px) 100vw, (max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
+          src="https://res.cloudinary.com/dd2rpc7mx/image/fetch/f_auto,q_auto,w_600/https://rajadhanda.me/photographs/images/the-harbour-seattle.jpeg"
+          alt="the harbour, seattle" loading="lazy" decoding="async">
+        <div class="photo-caption">the harbour, seattle</div>
+      </div>
+      <div class="photo-item" data-caption="ballard locks, seattle" data-full="https://res.cloudinary.com/dd2rpc7mx/image/fetch/f_auto,q_auto,w_1600/https://rajadhanda.me/photographs/images/ballard-locks-seattle.jpg">
+        <img
+          srcset="https://res.cloudinary.com/dd2rpc7mx/image/fetch/f_auto,q_auto,w_400/https://rajadhanda.me/photographs/images/ballard-locks-seattle.jpg 400w,
+                  https://res.cloudinary.com/dd2rpc7mx/image/fetch/f_auto,q_auto,w_600/https://rajadhanda.me/photographs/images/ballard-locks-seattle.jpg 600w,
+                  https://res.cloudinary.com/dd2rpc7mx/image/fetch/f_auto,q_auto,w_800/https://rajadhanda.me/photographs/images/ballard-locks-seattle.jpg 800w"
+          sizes="(max-width: 380px) 100vw, (max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
+          src="https://res.cloudinary.com/dd2rpc7mx/image/fetch/f_auto,q_auto,w_600/https://rajadhanda.me/photographs/images/ballard-locks-seattle.jpg"
+          alt="ballard locks, seattle" loading="lazy" decoding="async">
+        <div class="photo-caption">ballard locks, seattle</div>
+      </div>
+      <div class="photo-item" data-caption="ube pancakes, seattle" data-full="https://res.cloudinary.com/dd2rpc7mx/image/fetch/f_auto,q_auto,w_1600/https://rajadhanda.me/photographs/images/ube-pancakes-seattle.jpg">
+        <img
+          srcset="https://res.cloudinary.com/dd2rpc7mx/image/fetch/f_auto,q_auto,w_400/https://rajadhanda.me/photographs/images/ube-pancakes-seattle.jpg 400w,
+                  https://res.cloudinary.com/dd2rpc7mx/image/fetch/f_auto,q_auto,w_600/https://rajadhanda.me/photographs/images/ube-pancakes-seattle.jpg 600w,
+                  https://res.cloudinary.com/dd2rpc7mx/image/fetch/f_auto,q_auto,w_800/https://rajadhanda.me/photographs/images/ube-pancakes-seattle.jpg 800w"
+          sizes="(max-width: 380px) 100vw, (max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
+          src="https://res.cloudinary.com/dd2rpc7mx/image/fetch/f_auto,q_auto,w_600/https://rajadhanda.me/photographs/images/ube-pancakes-seattle.jpg"
+          alt="ube pancakes, seattle" loading="lazy" decoding="async">
+        <div class="photo-caption">ube pancakes, seattle</div>
+      </div>
+      <div class="photo-item" data-caption="banff" data-full="https://res.cloudinary.com/dd2rpc7mx/image/fetch/f_auto,q_auto,w_1600/https://rajadhanda.me/photographs/images/banff.jpeg">
+        <img
+          srcset="https://res.cloudinary.com/dd2rpc7mx/image/fetch/f_auto,q_auto,w_400/https://rajadhanda.me/photographs/images/banff.jpeg 400w,
+                  https://res.cloudinary.com/dd2rpc7mx/image/fetch/f_auto,q_auto,w_600/https://rajadhanda.me/photographs/images/banff.jpeg 600w,
+                  https://res.cloudinary.com/dd2rpc7mx/image/fetch/f_auto,q_auto,w_800/https://rajadhanda.me/photographs/images/banff.jpeg 800w"
+          sizes="(max-width: 380px) 100vw, (max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
+          src="https://res.cloudinary.com/dd2rpc7mx/image/fetch/f_auto,q_auto,w_600/https://rajadhanda.me/photographs/images/banff.jpeg"
+          alt="banff" loading="lazy" decoding="async">
+        <div class="photo-caption">banff</div>
+      </div>
+      <div class="photo-item" data-caption="lake louise, banff" data-full="https://res.cloudinary.com/dd2rpc7mx/image/fetch/f_auto,q_auto,w_1600/https://rajadhanda.me/photographs/images/lake-louise-banff.jpeg">
+        <img
+          srcset="https://res.cloudinary.com/dd2rpc7mx/image/fetch/f_auto,q_auto,w_400/https://rajadhanda.me/photographs/images/lake-louise-banff.jpeg 400w,
+                  https://res.cloudinary.com/dd2rpc7mx/image/fetch/f_auto,q_auto,w_600/https://rajadhanda.me/photographs/images/lake-louise-banff.jpeg 600w,
+                  https://res.cloudinary.com/dd2rpc7mx/image/fetch/f_auto,q_auto,w_800/https://rajadhanda.me/photographs/images/lake-louise-banff.jpeg 800w"
+          sizes="(max-width: 380px) 100vw, (max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
+          src="https://res.cloudinary.com/dd2rpc7mx/image/fetch/f_auto,q_auto,w_600/https://rajadhanda.me/photographs/images/lake-louise-banff.jpeg"
+          alt="lake louise, banff" loading="lazy" decoding="async">
+        <div class="photo-caption">lake louise, banff</div>
+      </div>
+      <div class="photo-item" data-caption="fairmont chateau, lake louise, banff" data-full="https://res.cloudinary.com/dd2rpc7mx/image/fetch/f_auto,q_auto,w_1600/https://rajadhanda.me/photographs/images/fairmont-chateau-lake-louise-banff.jpeg">
+        <img
+          srcset="https://res.cloudinary.com/dd2rpc7mx/image/fetch/f_auto,q_auto,w_400/https://rajadhanda.me/photographs/images/fairmont-chateau-lake-louise-banff.jpeg 400w,
+                  https://res.cloudinary.com/dd2rpc7mx/image/fetch/f_auto,q_auto,w_600/https://rajadhanda.me/photographs/images/fairmont-chateau-lake-louise-banff.jpeg 600w,
+                  https://res.cloudinary.com/dd2rpc7mx/image/fetch/f_auto,q_auto,w_800/https://rajadhanda.me/photographs/images/fairmont-chateau-lake-louise-banff.jpeg 800w"
+          sizes="(max-width: 380px) 100vw, (max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
+          src="https://res.cloudinary.com/dd2rpc7mx/image/fetch/f_auto,q_auto,w_600/https://rajadhanda.me/photographs/images/fairmont-chateau-lake-louise-banff.jpeg"
+          alt="fairmont chateau, lake louise, banff" loading="lazy" decoding="async">
+        <div class="photo-caption">fairmont chateau, lake louise, banff</div>
+      </div>
+      <div class="photo-item" data-caption="johnston canyon, banff" data-full="https://res.cloudinary.com/dd2rpc7mx/image/fetch/f_auto,q_auto,w_1600/https://rajadhanda.me/photographs/images/johnston-canyon-banff.jpg">
+        <img
+          srcset="https://res.cloudinary.com/dd2rpc7mx/image/fetch/f_auto,q_auto,w_400/https://rajadhanda.me/photographs/images/johnston-canyon-banff.jpg 400w,
+                  https://res.cloudinary.com/dd2rpc7mx/image/fetch/f_auto,q_auto,w_600/https://rajadhanda.me/photographs/images/johnston-canyon-banff.jpg 600w,
+                  https://res.cloudinary.com/dd2rpc7mx/image/fetch/f_auto,q_auto,w_800/https://rajadhanda.me/photographs/images/johnston-canyon-banff.jpg 800w"
+          sizes="(max-width: 380px) 100vw, (max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
+          src="https://res.cloudinary.com/dd2rpc7mx/image/fetch/f_auto,q_auto,w_600/https://rajadhanda.me/photographs/images/johnston-canyon-banff.jpg"
+          alt="johnston canyon, banff" loading="lazy" decoding="async">
+        <div class="photo-caption">johnston canyon, banff</div>
+      </div>
+      <div class="photo-item" data-caption="the local walk" data-full="https://res.cloudinary.com/dd2rpc7mx/image/fetch/f_auto,q_auto,w_1600/https://rajadhanda.me/photographs/images/the-local-walk.jpeg">
+        <img
+          srcset="https://res.cloudinary.com/dd2rpc7mx/image/fetch/f_auto,q_auto,w_400/https://rajadhanda.me/photographs/images/the-local-walk.jpeg 400w,
+                  https://res.cloudinary.com/dd2rpc7mx/image/fetch/f_auto,q_auto,w_600/https://rajadhanda.me/photographs/images/the-local-walk.jpeg 600w,
+                  https://res.cloudinary.com/dd2rpc7mx/image/fetch/f_auto,q_auto,w_800/https://rajadhanda.me/photographs/images/the-local-walk.jpeg 800w"
+          sizes="(max-width: 380px) 100vw, (max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
+          src="https://res.cloudinary.com/dd2rpc7mx/image/fetch/f_auto,q_auto,w_600/https://rajadhanda.me/photographs/images/the-local-walk.jpeg"
+          alt="the local walk" loading="lazy" decoding="async">
+        <div class="photo-caption">the local walk</div>
       </div>
     </div>
   </main>
