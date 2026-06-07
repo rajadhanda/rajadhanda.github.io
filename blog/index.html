@@ -504,24 +504,32 @@
       });
     }
 
-    // ── Notes: fetch via OpenRSS → rss2json, fall back to notes.json ──
+    // ── Notes: try Substack profile feed via rss2json, then notes.json ──
 
     async function fetchNotesRSS() {
-      // OpenRSS creates an RSS feed for Substack Notes pages
-      const feedUrl = 'https://openrss.org/substack.com/@rajadhanda';
-      const s = sig(8000);
-      const res = await fetch(
-        `https://api.rss2json.com/v1/api.json?rss_url=${encodeURIComponent(feedUrl)}&count=12`,
-        s ? { signal: s } : {}
-      );
-      if (!res.ok) return null;
-      const data = await res.json();
-      if (data.status !== 'ok' || !data.items?.length) return null;
-      return data.items.map(item => ({
-        text: stripHtml(item.description || item.content || '').trim(),
-        date: item.pubDate || '',
-        link: item.link || 'https://substack.com/@rajadhanda'
-      }));
+      // Try Substack's own profile feed URLs — no &count param, free tier rejects it
+      const feedUrls = [
+        'https://substack.com/@rajadhanda/feed',
+        'https://rajadhanda.substack.com/feed'
+      ];
+      for (const feedUrl of feedUrls) {
+        try {
+          const s = sig(8000);
+          const res = await fetch(
+            `https://api.rss2json.com/v1/api.json?rss_url=${encodeURIComponent(feedUrl)}`,
+            s ? { signal: s } : {}
+          );
+          if (!res.ok) continue;
+          const data = await res.json();
+          if (data.status !== 'ok' || !data.items?.length) continue;
+          return data.items.map(item => ({
+            text: stripHtml(item.description || item.content || '').trim(),
+            date: item.pubDate || '',
+            link: item.link || 'https://substack.com/@rajadhanda'
+          }));
+        } catch(_) { /* try next */ }
+      }
+      return null;
     }
 
     async function fetchNotesJSON() {
