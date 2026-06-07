@@ -1,0 +1,72 @@
+name: Add Substack Note
+
+on:
+  workflow_dispatch:
+    inputs:
+      text:
+        description: 'Full text of the Substack Note'
+        required: true
+        type: string
+      date:
+        description: 'Date posted (YYYY-MM-DD) — leave blank to use today'
+        required: false
+        type: string
+        default: ''
+      link:
+        description: 'Direct URL to the Substack Note'
+        required: false
+        type: string
+        default: 'https://substack.com/@rajadhanda'
+
+jobs:
+  add-note:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Prepend note to notes.json
+        env:
+          NOTE_TEXT: ${{ inputs.text }}
+          NOTE_DATE: ${{ inputs.date }}
+          NOTE_LINK: ${{ inputs.link }}
+        run: |
+          python3 - <<'PYEOF'
+          import json, os
+          from datetime import date as today_date
+
+          path = 'blog/notes.json'
+          with open(path, 'r', encoding='utf-8') as f:
+              notes = json.load(f)
+
+          text = os.environ.get('NOTE_TEXT', '').strip()
+          date = (os.environ.get('NOTE_DATE') or today_date.today().isoformat()).strip()
+          link = (os.environ.get('NOTE_LINK') or 'https://substack.com/@rajadhanda').strip()
+
+          if not text:
+              print('No text provided, skipping.')
+              raise SystemExit(0)
+
+          notes.insert(0, {'text': text, 'date': date, 'link': link})
+
+          with open(path, 'w', encoding='utf-8') as f:
+              json.dump(notes, f, indent=2, ensure_ascii=False)
+              f.write('\n')
+
+          print(f'Added note ({len(text)} chars): {text[:80]}...')
+          PYEOF
+
+      - name: Commit and push
+        run: |
+          git config user.name  "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add blog/notes.json
+          if git diff --staged --quiet; then
+            echo "Nothing to commit — note may already exist"
+          else
+            git commit -m "chore: add Substack note [skip ci]"
+            git push
+          fi
