@@ -73,4 +73,4 @@ rajadhanda.me/
 
 ## License
 
-© 2025 Raja Dhanda – All rights reserved
+© 2026 Raja Dhanda – All rights reserved
