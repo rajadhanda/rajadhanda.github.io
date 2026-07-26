@@ -161,11 +161,11 @@
       touch-action:manipulation;
     }
     /* Arc: ends ride higher and tilt outward, following the curve */
-    .social-link:nth-child(1){--arc-y:-18px; --arc-r:-15deg; --pop-delay:0s;   --float-dur:16s}
-    .social-link:nth-child(2){--arc-y:-7px;  --arc-r:-7deg;  --pop-delay:.07s; --float-dur:19s}
-    .social-link:nth-child(3){--arc-y:0px;   --arc-r:0deg;   --pop-delay:.14s; --float-dur:17s}
-    .social-link:nth-child(4){--arc-y:-7px;  --arc-r:7deg;   --pop-delay:.21s; --float-dur:20s}
-    .social-link:nth-child(5){--arc-y:-18px; --arc-r:15deg;  --pop-delay:.28s; --float-dur:18s}
+    .social-link:nth-child(1){--arc-y:-18px; --arc-r:-15deg; --pop-delay:0s;   --float-dur:9s}
+    .social-link:nth-child(2){--arc-y:-7px;  --arc-r:-7deg;  --pop-delay:.07s; --float-dur:13s}
+    .social-link:nth-child(3){--arc-y:0px;   --arc-r:0deg;   --pop-delay:.14s; --float-dur:10.5s}
+    .social-link:nth-child(4){--arc-y:-7px;  --arc-r:7deg;   --pop-delay:.21s; --float-dur:12.5s}
+    .social-link:nth-child(5){--arc-y:-18px; --arc-r:15deg;  --pop-delay:.28s; --float-dur:11s}
 
     .social-dot{
       display:inline-flex; align-items:center; justify-content:center;
@@ -189,7 +189,13 @@
       animation-fill-mode:both, none;
     }
     @keyframes icon-pop{0%{opacity:0; transform:translateY(6px) scale(.94)}60%{opacity:1; transform:translateY(0) scale(1.045)}100%{opacity:1; transform:translateY(0) scale(1)}}
-    @keyframes satellite-float{0%,100%{transform:translateY(0)}50%{transform:translateY(-1.5px)}}
+    @keyframes satellite-float{
+      0%{transform:translate(0,0) rotate(0deg)}
+      25%{transform:translate(2px,-3.6px) rotate(1.6deg)}
+      50%{transform:translate(0,-5.5px) rotate(0deg)}
+      75%{transform:translate(-2px,-2.4px) rotate(-1.6deg)}
+      100%{transform:translate(0,0) rotate(0deg)}
+    }
 
 
     /* Dock magnification: the hovered orb leads, neighbours follow, rest recede */
@@ -698,7 +704,7 @@
       <!-- Hobby Icons Section -->
       <section id="hobbies" class="hobbies section">
         <div class="hobby-icons">
-          <p class="hobbies-label">always happy to chat about</p>
+          <p class="hobbies-label">chat about</p>
           <a href="mailto:hello@rajadhanda.me?subject=Coffee" class="hobby-icon" aria-label="Coffee" data-tooltip="Coffee">
             <svg class="icon" aria-hidden="true"><use href="/assets/icons/sprite.svg?v=2#mug-hot"/></svg>
           </a>
