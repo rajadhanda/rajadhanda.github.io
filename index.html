@@ -220,6 +220,8 @@
     .social-link[aria-label="Email"]:hover .social-dot{background:#007AFF; border-color:#007AFF}
 
     /* Caption: names where each orb lands, in the hobby row's voice */
+    /* Empty until an icon is hovered or focused; height is reserved so the
+       layout below never shifts when a handle appears. */
     .social-caption{
       position:relative; margin:13px 0 0; height:1.3em;
       font-family:var(--serif); font-style:italic; font-size:.76rem;
@@ -231,9 +233,6 @@
       position:absolute; left:50%; top:0; transform:translateX(-50%);
       opacity:0; transition:opacity .3s var(--ease);
     }
-    .social-caption .is-default{opacity:1}
-    .social-row:has(.social-link:hover) .social-caption .is-default,
-    .social-row:has(.social-link:focus-visible) .social-caption .is-default{opacity:0}
     .social-row:has(.social-link[aria-label="LinkedIn"]:hover) [data-for="LinkedIn"],
     .social-row:has(.social-link[aria-label="LinkedIn"]:focus-visible) [data-for="LinkedIn"],
     .social-row:has(.social-link[aria-label="Instagram"]:hover) [data-for="Instagram"],
@@ -687,7 +686,6 @@
           </a>
         </div>
         <p class="social-caption" aria-hidden="true">
-          <span class="is-default">find me around</span>
           <span data-for="LinkedIn">ramendra raja dhanda</span>
           <span data-for="Instagram">@decodedbyraja</span>
           <span data-for="TikTok">@decodedbyraja</span>
