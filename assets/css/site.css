@@ -1,7 +1,7 @@
 /* ============================================================
    rajadhanda.me — shared styles
    Design tokens, theme, page chrome (theme toggle, home button,
-   wip bar, page transition), icons, and common subpage layout.
+   page transition), icons, and common subpage layout.
    Page <style> blocks load after this file and may override it.
    Subpages opt into the shared layout with <body class="subpage">.
    ============================================================ */
@@ -80,24 +80,6 @@ button:active,.nav-back:active,.lightbox-nav:active,.scroll-to-top:active{
 @media (prefers-reduced-motion: reduce){
   button:active,.nav-back:active,.lightbox-nav:active,.scroll-to-top:active{transform:none}
 }
-
-/* ── Work-in-progress bar ── */
-.wip-bar{
-  position:fixed; top:0; left:0; right:0; height:14px; z-index:2000;
-  background:repeating-linear-gradient(-45deg,#f5c842,#f5c842 10px,#1a1a1a 10px,#1a1a1a 20px);
-  background-size:28.28px 100%; animation:wip-scroll 0.5s linear infinite;
-}
-[data-theme="midnight"] .wip-bar{
-  background:repeating-linear-gradient(-45deg,#d4a72c,#d4a72c 10px,#0a0e27 10px,#0a0e27 20px);
-  background-size:28.28px 100%;
-}
-@keyframes wip-scroll{0%{background-position:0 0} 100%{background-position:28.28px 0}}
-.wip-label{
-  position:fixed; top:22px; left:50%; transform:translateX(-50%); z-index:2001;
-  font-family:var(--sans); font-size:11px; font-weight:400; letter-spacing:0.08em;
-  text-transform:lowercase; color:var(--muted); white-space:nowrap; font-style:italic;
-}
-@media (prefers-reduced-motion: reduce){.wip-bar{animation:none}}
 
 /* ── Shared subpage layout (body.subpage) ── */
 .subpage{display:grid; grid-template-rows:1fr auto; overflow-x:hidden}
