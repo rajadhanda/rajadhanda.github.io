@@ -73,31 +73,18 @@
     }
     [data-theme="midnight"] .project-card{background:rgba(10,14,39,.6)}
     .project-card:hover{transform:translateY(-2px); box-shadow:var(--shadow-medium); border-color:var(--border-hover)}
-    .project-title{margin:0 0 6px; font-weight:600; font-size:1.1rem}
-    .project-meta{display:flex; gap:10px; align-items:center; color:var(--muted); font-size:.9rem; margin-bottom:8px}
     .project-desc{margin:0 0 14px; color:var(--muted)}
-    .project-actions{display:flex; gap:10px; flex-wrap:wrap; margin-top:auto}
-    .btn{display:inline-flex; align-items:center; gap:8px; padding:8px 12px; border-radius:10px; border:1px solid var(--border); background:transparent; cursor:pointer; text-decoration:none; color:inherit}
-    .btn:hover{border-color:var(--border-hover)}
-    .btn.primary{background:var(--fg); color:var(--bg); border-color:transparent}
-    .btn[aria-disabled="true"], .btn.disabled{opacity:.6; cursor:not-allowed}
     @media (max-width:1024px){.projects-grid{grid-template-columns:repeat(2, 1fr)}}
     @media (max-width:640px){.projects-grid{grid-template-columns:1fr}}
 
     /* Hero project */
     .hero-project{
-      grid-column:1 / -1; flex-direction:column; align-items:center; text-align:center;
-      gap:14px; padding:32px 28px;
+      grid-column:1 / -1;
       text-decoration:none; color:inherit; cursor:pointer;
     }
     .hero-project:hover .eyesoff-mark{transform:scale(1.06)}
-    .hero-label{
-      display:inline-block; font-size:.72rem; letter-spacing:.08em; text-transform:uppercase;
-      color:var(--muted); font-weight:600
-    }
-    .hero-project-body{max-width:56ch}
-    .hero-project-head{display:flex; align-items:center; justify-content:center; gap:12px; margin:4px 0 8px}
-    .eyesoff-mark{width:44px; height:44px; flex:none; transition:transform .25s var(--ease)}
+    .hero-project-head{display:flex; align-items:center; gap:10px; margin-bottom:6px}
+    .eyesoff-mark{width:30px; height:30px; flex:none; transition:transform .25s var(--ease)}
     .eyesoff-mark svg{width:100%; height:100%; overflow:visible}
     .eo-eye{fill:#fff; stroke:#0c0c11; stroke-width:2.2}
     .eo-iris-rim{fill:#4c371a}
@@ -119,13 +106,13 @@
       .eo-ring{opacity:1; transform:none}
       .eo-slash{stroke-dashoffset:0; opacity:1}
     }
-    .hero-project-title{margin:0; font-weight:600; font-size:1.4rem}
+    .hero-project-title{margin:0; font-weight:600; font-size:1.1rem}
     .hero-project-link{
       display:inline-flex; align-items:center; gap:6px; font-size:.85rem; color:var(--muted);
-      border:1px solid var(--border); border-radius:999px; padding:6px 14px;
-      transition:border-color .18s var(--ease), color .18s var(--ease)
+      margin-top:auto; align-self:flex-start;
+      transition:color .18s var(--ease)
     }
-    .hero-project:hover .hero-project-link{border-color:var(--border-hover); color:var(--fg)}
+    .hero-project:hover .hero-project-link{color:var(--fg)}
   </style>
 </head>
 <body class="subpage">
@@ -157,52 +144,34 @@
     <p class="subtitle">things I've tried</p>
     <section class="projects-grid" aria-label="Projects">
       <a class="project-card hero-project" href="https://eyesoff.app" target="_blank" rel="noopener noreferrer" aria-label="EyesOff – visit eyesoff.app">
-        <div class="hero-project-body">
-          <span class="hero-label">Featured</span>
-          <div class="hero-project-head">
-            <span class="eyesoff-mark" aria-hidden="true">
-              <svg viewBox="0 0 48 48" fill="none">
-                <g class="eo-eyes">
-                  <ellipse class="eo-eye" cx="14.5" cy="24" rx="8.5" ry="14.5"></ellipse>
-                  <ellipse class="eo-eye" cx="33.5" cy="24" rx="8.5" ry="14.5"></ellipse>
-                  <g class="eo-pupils">
-                    <g class="eo-iris" transform="translate(14.5 24)">
-                      <circle class="eo-iris-rim" r="4.6"></circle>
-                      <circle class="eo-iris-gold" r="4"></circle>
-                      <circle class="eo-pupil" r="2"></circle>
-                    </g>
-                    <g class="eo-iris" transform="translate(33.5 24)">
-                      <circle class="eo-iris-rim" r="4.6"></circle>
-                      <circle class="eo-iris-gold" r="4"></circle>
-                      <circle class="eo-pupil" r="2"></circle>
-                    </g>
+        <div class="hero-project-head">
+          <span class="eyesoff-mark" aria-hidden="true">
+            <svg viewBox="0 0 48 48" fill="none">
+              <g class="eo-eyes">
+                <ellipse class="eo-eye" cx="14.5" cy="24" rx="8.5" ry="14.5"></ellipse>
+                <ellipse class="eo-eye" cx="33.5" cy="24" rx="8.5" ry="14.5"></ellipse>
+                <g class="eo-pupils">
+                  <g class="eo-iris" transform="translate(14.5 24)">
+                    <circle class="eo-iris-rim" r="4.6"></circle>
+                    <circle class="eo-iris-gold" r="4"></circle>
+                    <circle class="eo-pupil" r="2"></circle>
+                  </g>
+                  <g class="eo-iris" transform="translate(33.5 24)">
+                    <circle class="eo-iris-rim" r="4.6"></circle>
+                    <circle class="eo-iris-gold" r="4"></circle>
+                    <circle class="eo-pupil" r="2"></circle>
                   </g>
                 </g>
-                <circle class="eo-ring" cx="24" cy="24" r="22"></circle>
-                <line class="eo-slash" x1="9" y1="9" x2="39" y2="39"></line>
-              </svg>
-            </span>
-            <h2 class="hero-project-title">EyesOff</h2>
-          </div>
-          <p class="project-desc">On-device AI that catches shoulder surfers — it alerts you the moment someone glances at your screen, no cloud, no uploads. For macOS &amp; Windows.</p>
+              </g>
+              <circle class="eo-ring" cx="24" cy="24" r="22"></circle>
+              <line class="eo-slash" x1="9" y1="9" x2="39" y2="39"></line>
+            </svg>
+          </span>
+          <h2 class="hero-project-title">EyesOff</h2>
         </div>
+        <p class="project-desc">On-device AI that alerts you the instant a stranger's eyes hit your screen. Build for MacOS and Windows.</p>
         <span class="hero-project-link">eyesoff.app ↗</span>
       </a>
-      <article class="project-card">
-        <h2 class="project-title">Leave Now?</h2>
-        <p class="project-desc">Tells commuters exactly when to leave and what route to take, driven by ML. No navigation; just the best recommendation.</p>
-        <div class="project-actions">
-          <a class="btn primary" href="https://github.com/rajadhanda/leave-now-ios" target="_blank" rel="noopener noreferrer" aria-label="View Leave Now repository"><svg class="icon" aria-hidden="true"><use href="/assets/icons/sprite.svg?v=2#github"/></svg> GitHub</a>
-          <a class="btn disabled" href="#" aria-disabled="true" title="Coming soon" aria-label="App Store (coming soon)"><svg class="icon" aria-hidden="true"><use href="/assets/icons/sprite.svg?v=2#apple"/></svg> App Store (soon)</a>
-        </div>
-      </article>
-      <article class="project-card">
-        <h2 class="project-title">Resurface</h2>
-        <p class="project-desc">Transforms your consumed content into actionable nudges, perfectly timed for you.</p>
-        <div class="project-actions">
-          <a class="btn primary" href="https://github.com/rajadhanda/resurface" target="_blank" rel="noopener noreferrer" aria-label="View Resurface repository"><svg class="icon" aria-hidden="true"><use href="/assets/icons/sprite.svg?v=2#github"/></svg> GitHub</a>
-        </div>
-      </article>
     </section>
   </main>
   <footer>© 2026 Raja Dhanda – Crafted with care</footer>
