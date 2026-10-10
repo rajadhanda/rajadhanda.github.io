@@ -351,11 +351,6 @@
         .replace(/&/g,'&amp;').replace(/</g,'&lt;')
         .replace(/>/g,'&gt;').replace(/"/g,'&quot;');
     }
-    function stripHtml(html) {
-      const d = document.createElement('div');
-      d.innerHTML = html || '';
-      return d.textContent || d.innerText || '';
-    }
     function fmtDate(s) {
       try {
         return new Date(s).toLocaleDateString('en-GB', {
@@ -390,25 +385,11 @@
       });
     }
 
-    // ── Notes: fetch via OpenRSS → rss2json, fall back to notes.json ──
-
-    async function fetchNotesRSS() {
-      // OpenRSS creates an RSS feed for Substack Notes pages
-      const feedUrl = 'https://openrss.org/substack.com/@rajadhanda';
-      const s = sig(8000);
-      const res = await fetch(
-        `https://api.rss2json.com/v1/api.json?rss_url=${encodeURIComponent(feedUrl)}&count=12`,
-        s ? { signal: s } : {}
-      );
-      if (!res.ok) return null;
-      const data = await res.json();
-      if (data.status !== 'ok' || !data.items?.length) return null;
-      return data.items.map(item => ({
-        text: stripHtml(item.description || item.content || '').trim(),
-        date: item.pubDate || '',
-        link: item.link || 'https://substack.com/@rajadhanda'
-      }));
-    }
+    // ── Notes: cached from Substack by the scheduled GitHub workflow ──
+    //
+    // Substack's profile API does not allow cross-origin browser requests.
+    // Keeping a static cache means the site stays fast and reliable; the
+    // workflow refreshes this file every six hours.
 
     async function fetchNotesJSON() {
       const s = sig(5000);
@@ -448,10 +429,7 @@
       if (!section || !grid) return;
 
       let notes = null;
-      try { notes = await fetchNotesRSS(); } catch(_) {}
-      if (!notes) {
-        try { notes = await fetchNotesJSON(); } catch(_) {}
-      }
+      try { notes = await fetchNotesJSON(); } catch(_) {}
       if (!notes || !notes.length) return;
 
       notes.forEach((note, i) => grid.appendChild(renderNoteCard(note, i)));

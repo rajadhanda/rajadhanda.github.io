@@ -1,0 +1,48 @@
+name: Sync Substack Notes
+
+on:
+  schedule:
+    - cron: '17 */6 * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Fetch the latest notes
+        env:
+          FEED_URL: https://substack.com/api/v1/reader/feed/profile/43989908
+          PROFILE_URL: https://substack.com/@rajadhanda
+        run: |
+          set -euo pipefail
+          temp_file=$(mktemp)
+          curl --fail --location --retry 3 --silent --show-error "$FEED_URL" \
+            | jq --arg profile_url "$PROFILE_URL" '
+                [
+                  .items[]
+                  | select(.type == "comment" and .comment.user_id == 43989908)
+                  | {
+                      text: .comment.body,
+                      date: (.comment.date | split("T")[0]),
+                      link: ($profile_url + "/note/c-" + (.comment.id | tostring))
+                    }
+                ]
+                | if length > 0 then . else error("Substack returned no notes") end
+              ' > "$temp_file"
+          mv "$temp_file" blog/notes.json
+
+      - name: Commit updated cache
+        run: |
+          if git diff --quiet -- blog/notes.json; then
+            exit 0
+          fi
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add blog/notes.json
+          git commit -m 'chore: sync latest Substack notes [skip ci]'
+          git push
