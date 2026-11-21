@@ -1,0 +1,176 @@
+[
+  {
+    "src": "/assets/images/camera-roll/photo-01.jpg",
+    "fallback": "/photographs/images/IMG_4887.jpeg",
+    "alt": "yasaka pagoda, gion, kyoto",
+    "caption": "yasaka pagoda, gion, kyoto"
+  },
+  {
+    "src": "/assets/images/camera-roll/photo-02.jpg",
+    "fallback": "/photographs/images/IMG_0519.jpeg",
+    "alt": "montmartre, paris",
+    "caption": "montmartre, paris"
+  },
+  {
+    "src": "/assets/images/camera-roll/photo-03.jpg",
+    "fallback": "/photographs/images/IMG_0787.jpeg",
+    "alt": "louis vuitton, champs-elysées, paris",
+    "caption": "louis vuitton, champs-elysées, paris"
+  },
+  {
+    "src": "/assets/images/camera-roll/photo-04.jpg",
+    "fallback": "/photographs/images/IMG_3516.jpeg",
+    "alt": "a room of quiet contemplation, national museum of korea, seoul",
+    "caption": "a room of quiet contemplation, national museum of korea, seoul"
+  },
+  {
+    "src": "/assets/images/camera-roll/photo-05.jpg",
+    "fallback": "/photographs/images/IMG_3534.jpeg",
+    "alt": "a room of quiet contemplation, national museum of korea, seoul",
+    "caption": "a room of quiet contemplation, national museum of korea, seoul"
+  },
+  {
+    "src": "/assets/images/camera-roll/photo-06.jpg",
+    "fallback": "/photographs/images/IMG_3582.jpeg",
+    "alt": "starfield library, coex mall, seoul",
+    "caption": "starfield library, coex mall, seoul"
+  },
+  {
+    "src": "/assets/images/camera-roll/photo-07.jpg",
+    "fallback": "/photographs/images/IMG_4229.jpeg",
+    "alt": "ura-namba, osaka",
+    "caption": "ura-namba, osaka"
+  },
+  {
+    "src": "/assets/images/camera-roll/photo-08.jpg",
+    "fallback": "/photographs/images/IMG_4393.jpeg",
+    "alt": "dōtonbori canal, osaka",
+    "caption": "dōtonbori canal, osaka"
+  },
+  {
+    "src": "/assets/images/camera-roll/photo-09.jpg",
+    "fallback": "/photographs/images/IMG_4921.jpeg",
+    "alt": "fushimi inari taisha, kyoto",
+    "caption": "fushimi inari taisha, kyoto"
+  },
+  {
+    "src": "/assets/images/camera-roll/photo-10.jpg",
+    "fallback": "/photographs/images/IMG_5561.jpeg",
+    "alt": "tokyo tower, tokyo",
+    "caption": "tokyo tower, tokyo"
+  },
+  {
+    "src": "/assets/images/camera-roll/photo-11.jpg",
+    "fallback": "/photographs/images/IMG_5986.jpeg",
+    "alt": "shibuya crossing from shibuya sky, tokyo",
+    "caption": "shibuya crossing from shibuya sky, tokyo"
+  },
+  {
+    "src": "/assets/images/camera-roll/photo-12.jpg",
+    "fallback": "/photographs/images/IMG_7084.jpeg",
+    "alt": "flat whites, keswick, lake district national park",
+    "caption": "flat whites, keswick, lake district national park"
+  },
+  {
+    "src": "/assets/images/camera-roll/photo-13.jpg",
+    "fallback": "/photographs/images/IMG_7101.jpeg",
+    "alt": "homeground coffee + kitchen, windermere, lake district national park",
+    "caption": "homeground coffee + kitchen, windermere, lake district national park"
+  },
+  {
+    "src": "/assets/images/camera-roll/photo-14.jpg",
+    "fallback": "/photographs/images/IMG_8842.jpeg",
+    "alt": "long island iced tea, the oligarch, milton keynes",
+    "caption": "long island iced tea, the oligarch, milton keynes"
+  },
+  {
+    "src": "https://res.cloudinary.com/dd2rpc7mx/image/fetch/f_auto,q_auto,w_800/https://rajadhanda.me/photographs/images/vltava-river-prague.jpg",
+    "fallback": "/photographs/images/vltava-river-prague.jpg",
+    "alt": "vltava river, prague",
+    "caption": "vltava river, prague"
+  },
+  {
+    "src": "https://res.cloudinary.com/dd2rpc7mx/image/fetch/f_auto,q_auto,w_800/https://rajadhanda.me/photographs/images/national-palace-of-sintra-sintra.jpg",
+    "fallback": "/photographs/images/national-palace-of-sintra-sintra.jpg",
+    "alt": "national palace of sintra, sintra",
+    "caption": "national palace of sintra, sintra"
+  },
+  {
+    "src": "https://res.cloudinary.com/dd2rpc7mx/image/fetch/f_auto,q_auto,w_800/https://rajadhanda.me/photographs/images/top-of-the-moorish-castle-sintra.jpeg",
+    "fallback": "/photographs/images/top-of-the-moorish-castle-sintra.jpeg",
+    "alt": "top of the moorish castle, sintra",
+    "caption": "top of the moorish castle, sintra"
+  },
+  {
+    "src": "https://res.cloudinary.com/dd2rpc7mx/image/fetch/f_auto,q_auto,w_800/https://rajadhanda.me/photographs/images/air-and-space-museum-seattle.jpeg",
+    "fallback": "/photographs/images/air-and-space-museum-seattle.jpeg",
+    "alt": "air and space museum, seattle",
+    "caption": "air and space museum, seattle"
+  },
+  {
+    "src": "https://res.cloudinary.com/dd2rpc7mx/image/fetch/f_auto,q_auto,w_800/https://rajadhanda.me/photographs/images/saturn-v-f1-engine-museum-of-flight-seattle.jpg",
+    "fallback": "/photographs/images/saturn-v-f1-engine-museum-of-flight-seattle.jpg",
+    "alt": "saturn v f-1 engine, museum of flight, seattle",
+    "caption": "saturn v f-1 engine, museum of flight, seattle"
+  },
+  {
+    "src": "https://res.cloudinary.com/dd2rpc7mx/image/fetch/f_auto,q_auto,w_800/https://rajadhanda.me/photographs/images/top-of-the-space-needle-seattle.jpeg",
+    "fallback": "/photographs/images/top-of-the-space-needle-seattle.jpeg",
+    "alt": "top of the space needle, seattle",
+    "caption": "top of the space needle, seattle"
+  },
+  {
+    "src": "https://res.cloudinary.com/dd2rpc7mx/image/fetch/f_auto,q_auto,w_800/https://rajadhanda.me/photographs/images/bottom-of-the-space-needle-seattle.jpeg",
+    "fallback": "/photographs/images/bottom-of-the-space-needle-seattle.jpeg",
+    "alt": "bottom of the space needle, seattle",
+    "caption": "bottom of the space needle, seattle"
+  },
+  {
+    "src": "https://res.cloudinary.com/dd2rpc7mx/image/fetch/f_auto,q_auto,w_800/https://rajadhanda.me/photographs/images/the-harbour-seattle.jpeg",
+    "fallback": "/photographs/images/the-harbour-seattle.jpeg",
+    "alt": "the harbour, seattle",
+    "caption": "the harbour, seattle"
+  },
+  {
+    "src": "https://res.cloudinary.com/dd2rpc7mx/image/fetch/f_auto,q_auto,w_800/https://rajadhanda.me/photographs/images/ballard-locks-seattle.jpg",
+    "fallback": "/photographs/images/ballard-locks-seattle.jpg",
+    "alt": "ballard locks, seattle",
+    "caption": "ballard locks, seattle"
+  },
+  {
+    "src": "https://res.cloudinary.com/dd2rpc7mx/image/fetch/f_auto,q_auto,w_800/https://rajadhanda.me/photographs/images/ube-pancakes-seattle.jpg",
+    "fallback": "/photographs/images/ube-pancakes-seattle.jpg",
+    "alt": "ube pancakes, seattle",
+    "caption": "ube pancakes, seattle"
+  },
+  {
+    "src": "https://res.cloudinary.com/dd2rpc7mx/image/fetch/f_auto,q_auto,w_800/https://rajadhanda.me/photographs/images/banff.jpeg",
+    "fallback": "/photographs/images/banff.jpeg",
+    "alt": "banff",
+    "caption": "banff"
+  },
+  {
+    "src": "https://res.cloudinary.com/dd2rpc7mx/image/fetch/f_auto,q_auto,w_800/https://rajadhanda.me/photographs/images/lake-louise-banff.jpeg",
+    "fallback": "/photographs/images/lake-louise-banff.jpeg",
+    "alt": "lake louise, banff",
+    "caption": "lake louise, banff"
+  },
+  {
+    "src": "https://res.cloudinary.com/dd2rpc7mx/image/fetch/f_auto,q_auto,w_800/https://rajadhanda.me/photographs/images/fairmont-chateau-lake-louise-banff.jpeg",
+    "fallback": "/photographs/images/fairmont-chateau-lake-louise-banff.jpeg",
+    "alt": "fairmont chateau, lake louise, banff",
+    "caption": "fairmont chateau, lake louise, banff"
+  },
+  {
+    "src": "https://res.cloudinary.com/dd2rpc7mx/image/fetch/f_auto,q_auto,w_800/https://rajadhanda.me/photographs/images/johnston-canyon-banff.jpg",
+    "fallback": "/photographs/images/johnston-canyon-banff.jpg",
+    "alt": "johnston canyon, banff",
+    "caption": "johnston canyon, banff"
+  },
+  {
+    "src": "https://res.cloudinary.com/dd2rpc7mx/image/fetch/f_auto,q_auto,w_800/https://rajadhanda.me/photographs/images/the-local-walk.jpeg",
+    "fallback": "/photographs/images/the-local-walk.jpeg",
+    "alt": "the local walk",
+    "caption": "the local walk"
+  }
+]
