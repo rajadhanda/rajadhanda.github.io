@@ -1,76 +1,53 @@
 # rajadhanda.me
 
-Personal website showcasing projects, blog posts, and photographs.
+Raja Dhanda’s personal website: projects, photographs, writing, and Substack notes.
 
-## Tech Stack
+## Run locally
 
-- **HTML5** - Semantic markup
-- **CSS3** - Custom properties, animations, and responsive design
-- **Vanilla JavaScript** - No framework dependencies
-- **Font Awesome 6.5.2** - Icon library (CDN)
-- **Google Fonts** - Typography (Crimson Text, Inter)
-- **GitHub Pages** - Static hosting
+No build step or dependencies are required. From the repository root:
 
-## Design Philosophy
-
-- **Minimalism First** - Clean, uncluttered interface
-- **Subtle Interactions** - Elegant micro-animations that enhance without distracting
-- **Performance** - 60fps animations, optimized rendering
-- **Accessibility** - Full keyboard navigation, prefers-reduced-motion support
-- **Consistency** - Unified design language across all pages
-
-## Features (e.g.)
-
-- Interactive homepage with physics-based bubble navigation
-- Smooth page transitions
-- Blog with card-based layout
-- Photo gallery with lazy loading
-
-## Setup
-
-This is a static website that can be:
-
-1. **Viewed directly** - Open HTML files in a browser
-2. **Served locally** - Use any static file server:
-   ```bash
-   # Python 3
-   python -m http.server 8000
-   
-   # Node.js (http-server)
-   npx http-server
-   
-   # PHP
-   php -S localhost:8000
-   ```
-3. **Deployed to GitHub Pages** - Automatically deployed from the `main` branch
-
-## Structure
-
-```
-rajadhanda.me/
-├── index.html              # Homepage
-├── about/
-│   └── index.html          # About page
-├── blog/
-│   ├── index.html          # Blog listing
-│   └── posts/               # Blog posts
-├── projects/
-│   └── index.html          # Projects page
-├── photographs/
-│   ├── index.html          # Photo gallery
-│   └── images/             # Photo assets
-└── assets/
-    └── images/              # Site assets
+```sh
+python3 -m http.server 8000
 ```
 
-## Performance
+Open http://localhost:8000. GitHub Pages deploys the `main` branch.
 
-- Minimal JavaScript (vanilla JS only)
-- CSS-based animations for performance
-- Lazy loading for images
-- Optimized animations with `will-change` and `transform`
-- Respects `prefers-reduced-motion` for accessibility
+## Homepage
 
-## License
+The Sunday Edition design uses the existing cream palette and serif typography,
+with Daylight and Midnight modes, interactive social bubbles beside the name,
+and a pointer-following EyesOff feature at the centre. The introduction uses the
+existing portrait and original bio. The framed camera-roll carousel cycles through all 29 gallery photographs every
+six seconds. It pauses on hover, keyboard focus, hidden tabs, when out of view,
+and while an enlarged photo is open. A discreet Play/Pause control appears inside the frame on hover or focus;
+arrow keys, touch swipes, and the enlarged-photo dialog provide manual navigation.
+Each frame follows the photograph’s original proportions. Reduced-motion users
+start with autoplay paused.
 
-© 2026 Raja Dhanda – All rights reserved
+`assets/css/edition.css` and `assets/js/edition.js` power the homepage. Existing
+content pages continue to use `assets/css/site.css` and `assets/js/site.js`.
+The carousel covers the complete gallery listed in `photographs/photos.json`.
+Smaller local derivatives live in `assets/images/camera-roll/`; the remaining
+images reuse the gallery’s existing Cloudinary delivery, with original images
+as fallbacks. Original gallery images remain in `photographs/images/`.
+
+## Substack notes
+
+The homepage reads `/blog/notes.json`, the same file used by the blog. The existing
+`.github/workflows/sync-substack-notes.yml` workflow refreshes it every six hours.
+The homepage displays the newest six valid notes as Post-it notes on a
+board, linking to their originals. Hovering a social bubble shows its username. Note bodies use the site’s readable serif typeface.
+Pre-rendered notes remain visible if JavaScript is disabled or the fetch fails.
+
+## Validation
+
+```sh
+node --check assets/js/edition.js
+node --check assets/js/site.js
+git diff --check
+```
+
+Check desktop and mobile layouts, Daylight/Midnight switching, carousel controls,
+photo-dialog keyboard focus, and the Substack links before publishing.
+
+© 2026 Raja Dhanda. All rights reserved.

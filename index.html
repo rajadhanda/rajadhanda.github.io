@@ -1,1733 +1,1091 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Raja Dhanda</title>
-  <meta name="description" content="Technology optimist working in AI infrastructure. Learning and building, always happy to chat!">
-  
-  <!-- Open Graph / LinkedIn -->
-  <meta property="og:type" content="website">
-  <meta property="og:url" content="https://rajadhanda.me/">
-  <meta property="og:title" content="Raja Dhanda">
-  <meta property="og:description" content="Technology optimist working in AI infrastructure. Learning and building, always happy to chat!">
-  <meta property="og:image" content="https://rajadhanda.me/assets/images/og-image.jpg">
-  
-  <!-- Twitter Card -->
-  <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="Raja Dhanda">
-  <meta name="twitter:description" content="Technology optimist working in AI infrastructure. Learning and building, always happy to chat!">
-  <meta name="twitter:image" content="https://rajadhanda.me/assets/images/og-image.jpg">
-  
-  <!-- Favicons -->
-  <link rel="icon" type="image/png" sizes="32x32" href="/assets/icons/favicons/favicon-32x32.png">
-  <link rel="icon" type="image/png" sizes="16x16" href="/assets/icons/favicons/favicon-16x16.png">
-  <link rel="apple-touch-icon" sizes="180x180" href="/assets/icons/favicons/apple-touch-icon.png">
-  <!-- Pastel elements updated -->
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;1,400&family=Crimson+Text:ital,wght@0,400;0,600;1,400&family=Caveat:wght@400;500&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="/assets/css/edition.css?v=paper-motion" />
+    <script>
+      try {
+        if (localStorage.getItem("theme") === "midnight")
+          document.documentElement.dataset.theme = "midnight";
+      } catch (e) {}
+    </script>
+    <script src="/assets/js/edition.js?v=paper-motion" defer></script>
+    <title>Raja Dhanda</title>
+    <meta
+      name="description"
+      content="Technology optimist working in AI infrastructure. Projects, photographs and notes from Substack."
+    />
+    <link
+      rel="icon"
+      type="image/png"
+      sizes="32x32"
+      href="/assets/icons/favicons/favicon-32x32.png"
+    />
+    <link
+      rel="apple-touch-icon"
+      href="/assets/icons/favicons/apple-touch-icon.png"
+    />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://rajadhanda.me/" />
+    <meta property="og:title" content="Raja Dhanda" />
+    <meta
+      property="og:description"
+      content="Technology optimist working in AI infrastructure. Learning and building, always happy to chat!"
+    />
+    <meta
+      property="og:image"
+      content="https://rajadhanda.me/assets/images/og-image.jpg"
+    />
+    <meta name="twitter:card" content="summary_large_image" />
+    <noscript
+      ><style>
+        .carousel-controls {
+          display: none;
+        }
+        .carousel-photo {
+          cursor: default;
+        }
+      </style></noscript
+    >
+  </head>
+  <body class="edition">
+    <a class="skip-link" href="#main">Skip to content</a>
 
-  <!-- Theme Script (inline to prevent FOUC) -->
-  <style id="theme-init">.theme-loading,.theme-loading *{transition:none!important}</style>
-  <script>
-    (function(){
-      document.documentElement.classList.add('theme-loading');
-      const savedTheme = localStorage.getItem('theme') || 'light';
-      if (savedTheme === 'midnight') {
-        document.documentElement.setAttribute('data-theme', 'midnight');
-      }
-      // Set background immediately to prevent any flash
-      document.documentElement.style.backgroundColor = savedTheme === 'midnight' ? '#0a0e27' : '#FFF8F0';
-      // Remove loading class after first paint
-      requestAnimationFrame(function(){
-        requestAnimationFrame(function(){
-          document.documentElement.classList.remove('theme-loading');
-          document.documentElement.style.backgroundColor = '';
-        });
-      });
-    })();
-  </script>
-
-  <!-- Type -->
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600&family=Crimson+Text:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
-
-  <!-- Shared styles/scripts -->
-  <link rel="stylesheet" href="/assets/css/site.css">
-  <script src="/assets/js/site.js" defer></script>
-
-  <style>
-    :root{
-      --maxw:880px;
-
-      /* Pastel Color Palette */
-      --pastel-mint:#E8F8F5; --pastel-mint-dark:#B8E6D9;
-      --pastel-lavender:#F0E8FF; --pastel-lavender-dark:#D4C2F0;
-      --pastel-peach:#FFE8E0; --pastel-peach-dark:#FFD4C2;
-      --pastel-sky:#E8F4FD; --pastel-sky-dark:#B8D9F0;
-      --pastel-rose:#FFE8F0; --pastel-rose-dark:#FFD4E6;
-      --pastel-cream:#FFF8E8; --pastel-cream-dark:#FFE6B8;
-    }
-
-    /* Midnight Pastel Palette (darker, muted versions) */
-    [data-theme="midnight"]{
-      --pastel-mint:#1a2833; --pastel-mint-dark:#2a3d4d;
-      --pastel-lavender:#1f1f33; --pastel-lavender-dark:#2d2d4a;
-      --pastel-peach:#332020; --pastel-peach-dark:#4a2d2d;
-      --pastel-sky:#1a2433; --pastel-sky-dark:#2a3547;
-      --pastel-rose:#331f28; --pastel-rose-dark:#4a2d3a;
-      --pastel-cream:#332d1f; --pastel-cream-dark:#4a4230;
-    }
-    body{
-      display:grid; grid-template-rows:1fr auto; align-items:center; justify-items:center;
-      overflow-x:hidden;
-    }
-    @media (max-width:768px){
-      body{min-height:100vh; min-height:100dvh}
-    }
-
-    /* Theme toggle reveals after scroll/time on the homepage */
-    .theme-toggle{
-      background:rgba(254,254,254,.92);
-      opacity:0; transform:translateY(16px);
-      transition:opacity .6s var(--ease), transform .6s var(--ease), all .3s var(--ease);
-    }
-    .theme-toggle.reveal{opacity:1; transform:translateY(0)}
-    .theme-toggle.reveal:hover{transform:scale(1.05) translateY(-1px) !important}
-    @media (prefers-reduced-motion: reduce){
-      .theme-toggle{transform:none; transition:opacity .3s var(--ease), all .3s var(--ease)}
-    }
-
-    /* Main */
-    main{width:100%; max-width:var(--maxw); text-align:center; padding:40px 20px; align-self:center; justify-self:center; position:relative; z-index:2}
-    @media (max-width:768px){
-      main{padding:32px 20px 20px}
-    }
-    @media (max-width:560px){
-      main{padding:28px 16px 16px}
-    }
-    @media (max-width:380px){
-      main{padding:24px 14px 14px}
-    }
-    #centerpiece{display:inline-block}
-    /* Profile Photo */
-    .profile-photo-container{
-      margin:0 0 28px 0; display:flex; justify-content:center; align-items:center;
-      opacity:0; transform:translateY(20px) scale(0.9);
-      transition:opacity 1.2s var(--ease), transform 1.2s var(--ease);
-      position:relative;
-    }
-    .profile-photo-container.show{
-      opacity:1; transform:translateY(0) scale(1);
-    }
-    
-    .profile-photo{
-      width:140px; height:161px;
-      border-radius:16px; object-fit:contain; object-position:center;
-      background: var(--bg);
-      max-width: 100%; max-height: 100%;
-    }
-
-    .name{
-      font-family:'Playfair Display',serif;
-      font-size:clamp(2rem,5vw,4rem); line-height:1.08; margin:0 0 16px 0; min-height:1.2em;
-      letter-spacing:-.02em; font-weight:400; position:relative;
-      padding:0 20px;
-    }
-    @media (max-width:560px){
-      .name{padding:0 16px}
-    }
-    @media (max-width:380px){
-      .name{padding:0 12px}
-    }
-    .typing-cursor{display:inline-block; width:3px; height:1em; background:var(--fg); margin-left:4px; transform:translateY(.05em); animation:cursor-blink 1.4s ease-in-out infinite; border-radius:1px}
-    @keyframes cursor-blink{0%,45%{opacity:1}50%,95%{opacity:.1}100%{opacity:1}}
-
-    /* ── Socials: satellite arc ───────────────────────────────
-       Five small orbs on a shallow arc cradling the portrait.
-       .social-link owns arc placement + dock magnification;
-       .social-dot owns the reveal pop and the ambient float, so
-       the two motions never fight over one transform.
-       ------------------------------------------------------- */
-    .social-row{display:flex; flex-direction:column; align-items:center}
-    .social-links{
-      margin-top:0; display:flex; flex-wrap:nowrap; gap:8px;
-      justify-content:center; align-items:center;
-    }
-    .social-link{
-      display:inline-flex; text-decoration:none; color:var(--fg);
-      transform:translateY(calc(var(--arc-y) - var(--lift, 0px))) rotate(var(--arc-r)) scale(var(--mag, 1));
-      transition:transform .42s var(--ease-back);
-      -webkit-tap-highlight-color:transparent;
-      touch-action:manipulation;
-    }
-    /* Arc: ends ride higher and tilt outward, following the curve */
-    .social-link:nth-child(1){--arc-y:-18px; --arc-r:-15deg; --pop-delay:0s;   --float-dur:9s}
-    .social-link:nth-child(2){--arc-y:-7px;  --arc-r:-7deg;  --pop-delay:.07s; --float-dur:13s}
-    .social-link:nth-child(3){--arc-y:0px;   --arc-r:0deg;   --pop-delay:.14s; --float-dur:10.5s}
-    .social-link:nth-child(4){--arc-y:-7px;  --arc-r:7deg;   --pop-delay:.21s; --float-dur:12.5s}
-    .social-link:nth-child(5){--arc-y:-18px; --arc-r:15deg;  --pop-delay:.28s; --float-dur:11s}
-
-    .social-dot{
-      display:inline-flex; align-items:center; justify-content:center;
-      width:30px; height:30px; font-size:12.5px;
-      border:1px solid var(--border); border-radius:4px;
-      background:rgba(255,255,255,.5); backdrop-filter:blur(10px);
-      box-shadow:0 1px 10px rgba(0,0,0,.04);
-      position:relative; overflow:hidden; opacity:0;
-      transition:background .45s var(--ease), border-color .45s var(--ease),
-                 color .45s var(--ease), box-shadow .35s var(--ease);
-    }
-    [data-theme="midnight"] .social-dot{background:rgba(26,30,47,.5)}
-
-    /* Reveal pop, then hand the transform to the ambient float */
-    .social-links.icons-in .social-dot{
-      animation-name:icon-pop, satellite-float;
-      animation-duration:.5s, var(--float-dur);
-      animation-timing-function:var(--ease-back), ease-in-out;
-      animation-delay:var(--pop-delay), calc(var(--pop-delay) + .5s);
-      animation-iteration-count:1, infinite;
-      animation-fill-mode:both, none;
-    }
-    @keyframes icon-pop{0%{opacity:0; transform:translateY(6px) scale(.94)}60%{opacity:1; transform:translateY(0) scale(1.045)}100%{opacity:1; transform:translateY(0) scale(1)}}
-    @keyframes satellite-float{
-      0%{transform:translate(0,0) rotate(0deg)}
-      25%{transform:translate(2px,-3.6px) rotate(1.6deg)}
-      50%{transform:translate(0,-5.5px) rotate(0deg)}
-      75%{transform:translate(-2px,-2.4px) rotate(-1.6deg)}
-      100%{transform:translate(0,0) rotate(0deg)}
-    }
-
-
-    /* Dock magnification: the hovered orb leads, neighbours follow, rest recede */
-    .social-links:has(.social-link:hover) .social-link{--mag:.96}
-    .social-links:has(.social-link:hover) .social-link:hover{--mag:1.24; --lift:4px}
-    .social-links:has(.social-link:hover) .social-link:hover + .social-link{--mag:1.08; --lift:1.5px}
-    .social-links:has(.social-link:hover) .social-link:has(+ .social-link:hover){--mag:1.08; --lift:1.5px}
-    .social-link:focus-visible{--mag:1.24; --lift:4px; outline:none}
-    .social-link:focus-visible .social-dot{box-shadow:0 0 0 2px var(--accent), var(--shadow-medium)}
-    .social-link:hover .social-dot{box-shadow:var(--shadow-medium); border-color:transparent; color:white}
-
-    /* Platform-specific brand colors */
-    .social-link[aria-label="LinkedIn"]:hover .social-dot{background:#0077b5; border-color:#0077b5}
-    .social-link[aria-label="Instagram"]:hover .social-dot{
-      background:linear-gradient(45deg,#f09433 0%,#e6683c 25%,#dc2743 50%,#cc2366 75%,#bc1888 100%);
-    }
-    .social-link[aria-label="TikTok"]:hover .social-dot{background:#010101; border-color:#010101}
-    [data-theme="midnight"] .social-link[aria-label="TikTok"]:hover .social-dot{
-      background:#25f4ee; border-color:#25f4ee; color:#010101;
-    }
-    .social-link[aria-label="YouTube"]:hover .social-dot{background:#ff0000; border-color:#ff0000}
-    .social-link[aria-label="Email"]:hover .social-dot{background:#007AFF; border-color:#007AFF}
-
-    /* Caption: names where each orb lands, in the hobby row's voice */
-    /* Empty until an icon is hovered or focused; height is reserved so the
-       layout below never shifts when a handle appears. */
-    .social-caption{
-      position:relative; margin:13px 0 0; height:1.3em;
-      font-family:var(--serif); font-style:italic; font-size:.76rem;
-      color:var(--muted); line-height:1.3; white-space:nowrap;
-      opacity:0; transition:opacity .5s var(--ease) .35s;
-    }
-    .social-links.icons-in + .social-caption{opacity:1}
-    .social-caption span{
-      position:absolute; left:50%; top:0; transform:translateX(-50%);
-      opacity:0; transition:opacity .3s var(--ease);
-    }
-    .social-row:has(.social-link[aria-label="LinkedIn"]:hover) [data-for="LinkedIn"],
-    .social-row:has(.social-link[aria-label="LinkedIn"]:focus-visible) [data-for="LinkedIn"],
-    .social-row:has(.social-link[aria-label="Instagram"]:hover) [data-for="Instagram"],
-    .social-row:has(.social-link[aria-label="Instagram"]:focus-visible) [data-for="Instagram"],
-    .social-row:has(.social-link[aria-label="TikTok"]:hover) [data-for="TikTok"],
-    .social-row:has(.social-link[aria-label="TikTok"]:focus-visible) [data-for="TikTok"],
-    .social-row:has(.social-link[aria-label="YouTube"]:hover) [data-for="YouTube"],
-    .social-row:has(.social-link[aria-label="YouTube"]:focus-visible) [data-for="YouTube"],
-    .social-row:has(.social-link[aria-label="Email"]:hover) [data-for="Email"],
-    .social-row:has(.social-link[aria-label="Email"]:focus-visible) [data-for="Email"]{opacity:1}
-
-    /* Subtle ripple effect */
-    .social-dot::after{
-      content:''; position:absolute; top:50%; left:50%; width:0; height:0;
-      border-radius:50%; background:rgba(255,255,255,.28); transform:translate(-50%, -50%) scale(0);
-      pointer-events:none; z-index:1;
-    }
-    .social-link:active .social-dot::after{
-      animation:ripple 0.5s var(--ease-back) forwards;
-    }
-    @keyframes ripple{
-      0%{width:0; height:0; opacity:1}
-      100%{width:70px; height:70px; opacity:0}
-    }
-    @media (prefers-reduced-motion: reduce){
-      .social-dot::after{display:none}
-    }
-
-    /* Subtle ornaments */
-    .floating-element{position:absolute; pointer-events:none; opacity:.15; color:var(--muted); font-size:12px; animation:float 8s ease-in-out infinite; z-index:-1}
-    .floating-element.pastel-1{color:var(--pastel-lavender-dark); opacity:.4; font-size:16px; animation:float 10s ease-in-out infinite}
-    .floating-element.pastel-2{color:var(--pastel-mint-dark); opacity:.35; font-size:12px; animation:float 12s ease-in-out infinite}
-    @keyframes float{0%,100%{transform:translateY(0) rotate(0)}33%{transform:translateY(-8px) rotate(2deg)}66%{transform:translateY(4px) rotate(-1deg)}}
-    .floating-element:nth-child(1){top:15%; right:10%; animation-delay:-2s}
-    .floating-element:nth-child(2){bottom:20%; left:8%; animation-delay:-5s; animation-duration:12s}
-    .floating-element.pastel-1{top:25%; left:12%; animation-delay:-8s; animation-duration:15s}
-    .floating-element.pastel-2{bottom:35%; right:15%; animation-delay:-12s; animation-duration:18s}
-
-    /* Bubble navigation (grid fallback for reduced motion) */
-    .bubble-nav{
-      margin-top:6vh; display:grid; grid-template-columns:repeat(2, minmax(160px,1fr));
-      gap:clamp(16px,5vw,36px); align-items:center; justify-items:center;
-    }
-    @media (max-width:768px){
-      .bubble-nav{gap:clamp(14px,4vw,28px); margin-top:5vh}
-    }
-    @media (max-width:560px){
-      .bubble-nav{grid-template-columns:1fr 1fr; gap:16px; margin-top:4vh}
-    }
-    @media (max-width:380px){
-      .bubble-nav{gap:14px; margin-top:3vh}
-    }
-
-    .bubble{
-      position:relative; width:clamp(120px,18vw,165px); aspect-ratio:1/1; border-radius:50%;
-      border:2px solid var(--border); display:grid; place-items:center; text-decoration:none; color:var(--fg);
-      overflow:hidden; background:transparent;
-      /* JS owns transform entirely for silky motion */
-      transition: border-color .18s var(--ease), box-shadow .18s var(--ease);
-      will-change: transform;
-      backface-visibility:hidden; transform:translate3d(0,0,0);
-      /* Better touch targets on mobile */
-      -webkit-tap-highlight-color:rgba(0,0,0,0.05);
-      touch-action:manipulation;
-    }
-    .bubble:hover{border-color:var(--muted); box-shadow:0 10px 24px rgba(0,0,0,.08)}
-    .bubble:focus-visible{outline:none; box-shadow:0 0 0 3px rgba(0,0,0,.10), 0 10px 24px rgba(0,0,0,.08); border-color:var(--muted)}
-    .bubble:active{transform:scale(0.98)}
-    @media (max-width:560px){
-      .bubble{-webkit-tap-highlight-color:rgba(0,0,0,0.08)}
-    }
-    
-    /* Subtle pulse animation on hover */
-    .bubble::before{
-      content:''; position:absolute; inset:-4px; border-radius:50%; border:2px solid transparent;
-      pointer-events:none; opacity:0; transition:opacity 0.3s var(--ease);
-    }
-    .bubble:hover::before{
-      opacity:1; animation:gentle-pulse 2s ease-in-out infinite;
-      border-color:rgba(255,255,255,0.4);
-    }
-    @keyframes gentle-pulse{
-      0%, 100%{transform:scale(1); opacity:0.4}
-      50%{transform:scale(1.05); opacity:0.6}
-    }
-    @media (prefers-reduced-motion: reduce){
-      .bubble::before{display:none}
-    }
-    
-    /* Page transition overlay */
-    .page-transition{
-      position:fixed; top:0; left:0; width:0; height:0; border-radius:50%;
-      background:var(--bg); transform:translate(-50%, -50%);
-      opacity:0; pointer-events:none; z-index:1500; transition:width 0.6s var(--ease-back), height 0.6s var(--ease-back), opacity 0.3s var(--ease);
-      will-change: width, height;
-    }
-    .page-transition.active{
-      opacity:1; pointer-events:all;
-      width:200vw; height:200vh;
-    }
-    @media (prefers-reduced-motion: reduce){
-      .page-transition{display:none}
-    }
-
-    .bubble-title{
-      font-size:clamp(0.8rem,1.65vw,1.05rem); font-weight:500; line-height:1.2; text-align:center; pointer-events:none; color:#8c8c8c;
-      position:relative; transition:transform .2s var(--ease);
-    }
-    .bubble:hover .bubble-title, .bubble[data-armed="1"] .bubble-title{
-      transform:translateY(-8px);
-    }
-    .bubble-label{
-      position:absolute; bottom:12px; left:50%; transform:translate(-50%,6px);
-      font-style:italic; font-size:clamp(.62rem,1.2vw,.72rem); color:var(--muted);
-      opacity:0; transition:opacity .2s var(--ease), transform .2s var(--ease);
-      pointer-events:none; text-align:center; max-width:88%; line-height:1.25; white-space:normal; word-break:break-word
-    }
-    .bubble:hover .bubble-label,.bubble:focus-within .bubble-label,.bubble[data-armed="1"] .bubble-label{opacity:1; transform:translate(-50%,0)}
-    /* Armed state on touch: subtle emphasis */
-    .bubble[data-armed="1"]{ border-color:var(--muted); box-shadow:0 10px 24px rgba(0,0,0,.08) }
-    .bubble[data-armed="1"] .bubble-label{ font-size:.62rem }
-
-    /* Populated bubble styles - Photos (warm tones) */
-    .photos-bubble{
-      background:linear-gradient(135deg, var(--pastel-peach), var(--pastel-cream));
-      border:2px solid var(--pastel-peach-dark);
-      box-shadow:0 4px 20px rgba(255, 212, 194, 0.25), 0 8px 40px rgba(255, 230, 184, 0.15);
-      animation:gentlePulse 4s ease-in-out infinite;
-    }
-    .photos-bubble:hover{
-      background:linear-gradient(135deg, var(--pastel-peach-dark), var(--pastel-cream-dark));
-      border-color:var(--muted);
-      box-shadow:0 6px 30px rgba(255, 212, 194, 0.35), 0 12px 50px rgba(255, 230, 184, 0.25);
-    }
-    .photos-bubble .bubble-title{
-      color:var(--accent);
-      font-weight:600;
-    }
-    .photos-bubble .bubble-label{
-      color:var(--fg-light);
-    }
-
-    /* Populated bubble styles - Blog (cool tones) */
-    .blog-bubble{
-      background:linear-gradient(135deg, var(--pastel-mint), var(--pastel-sky));
-      border:2px solid var(--pastel-mint-dark);
-      box-shadow:0 4px 20px rgba(184, 230, 217, 0.25), 0 8px 40px rgba(184, 217, 240, 0.15);
-      animation:gentlePulse 4s ease-in-out infinite;
-    }
-    .blog-bubble:hover{
-      background:linear-gradient(135deg, var(--pastel-mint-dark), var(--pastel-sky-dark));
-      border-color:var(--muted);
-      box-shadow:0 6px 30px rgba(184, 230, 217, 0.35), 0 12px 50px rgba(184, 217, 240, 0.25);
-    }
-    .blog-bubble .bubble-title{
-      color:var(--accent);
-      font-weight:600;
-    }
-    .blog-bubble .bubble-label{
-      color:var(--fg-light);
-    }
-
-    /* Populated bubble styles - Projects (warm-cool blend) */
-    .projects-bubble{
-      background:linear-gradient(135deg, var(--pastel-lavender), var(--pastel-rose));
-      border:2px solid var(--pastel-lavender-dark);
-      box-shadow:0 4px 20px rgba(212, 194, 240, 0.25), 0 8px 40px rgba(255, 212, 230, 0.15);
-      animation:gentlePulse 4s ease-in-out infinite;
-    }
-    .projects-bubble:hover{
-      background:linear-gradient(135deg, var(--pastel-lavender-dark), var(--pastel-rose-dark));
-      border-color:var(--muted);
-      box-shadow:0 6px 30px rgba(212, 194, 240, 0.35), 0 12px 50px rgba(255, 212, 230, 0.25);
-    }
-    .projects-bubble .bubble-title{
-      color:var(--accent);
-      font-weight:600;
-    }
-    .projects-bubble .bubble-label{
-      color:var(--fg-light);
-    }
-
-    /* Unpopulated bubble styles - muted and dimmed */
-    .unpopulated-bubble{
-      background:rgba(255, 255, 255, 0.3);
-      border:2px solid var(--border);
-      opacity:0.7;
-      transition:opacity .3s var(--ease), border-color .3s var(--ease);
-    }
-    .unpopulated-bubble:hover{
-      opacity:0.85;
-      border-color:var(--muted);
-    }
-    .unpopulated-bubble:hover .bubble-label{
-      opacity:0.8;
-    }
-    .unpopulated-bubble .bubble-title{
-      color:var(--muted);
-      font-weight:400;
-    }
-    .unpopulated-bubble .bubble-label{
-      color:var(--muted);
-      opacity:0;
-    }
-
-    /* Gentle pulse animation for populated bubbles */
-    @keyframes gentlePulse{
-      0%, 100%{box-shadow:0 4px 20px rgba(184, 230, 217, 0.15), 0 8px 40px rgba(184, 217, 240, 0.1)}
-      50%{box-shadow:0 6px 25px rgba(184, 230, 217, 0.2), 0 12px 45px rgba(184, 217, 240, 0.15)}
-    }
-
-    /* Viewport-pinned physics layer */
-    .bubble-nav.freeflow{
-      position: fixed;
-      inset: 0;              /* pin to viewport; avoids 100vw scrollbar shift */
-      pointer-events: none;
-      z-index: 3;            /* above main so bubbles remain hoverable near text */
-      display: block;
-      margin: 0;
-      opacity: 0;            /* fade in when ready */
-      transition: opacity .5s var(--ease);
-    }
-    .bubble-nav.freeflow .bubble{
-      position: absolute;
-      left: 0;               /* ensure transform origin is the viewport's top-left */
-      top: 0;
-      pointer-events: auto;
-    }
-    .bubble-nav.freeflow.ready{opacity:1}
-
-    /* Reduced motion: keep centred positions without animation */
-    @media (prefers-reduced-motion: reduce){
-      .bubble-nav.freeflow{position:fixed; inset:0; width:100vw; height:100dvh; display:block; pointer-events:none; opacity:1 !important}
-      .bubble-nav.freeflow .bubble{position:absolute}
-      .social-link{transition:none}
-      .social-dot{opacity:1 !important; animation:none !important}
-    }
-
-    /* Section base */
-    .section{
-      margin-top:48px; opacity:0; transform:translateY(16px);
-      transition:opacity .6s var(--ease), transform .6s var(--ease);
-    }
-    .section.reveal{
-      opacity:1; transform:translateY(0);
-    }
-    @media (prefers-reduced-motion: reduce){
-      .section{transform:none; transition:opacity .3s var(--ease)}
-    }
-
-    /* Inline About Section */
-    #about-inline.section{
-      margin-top:32px; max-width:480px; margin-left:auto; margin-right:auto;
-      text-align:center; color:var(--fg-light);
-    }
-    #about-inline .portrait{
-      width:88px; height:88px; border-radius:50%; object-fit:cover; display:block; margin:0 auto 12px auto;
-    }
-    #about-inline .lede{
-      font-size:clamp(0.95rem, 1.8vw, 1.05rem); line-height:1.5; margin:0; font-weight:400;
-    }
-    @media (max-width:768px){
-      #about-inline .lede{
-        font-size:0.9rem; line-height:1.4;
-      }
-    }
-    @media (max-width:560px){
-      #about-inline .lede{
-        font-size:0.85rem; line-height:1.35;
-      }
-    }
-    @media (max-width:380px){
-      #about-inline .lede{
-        font-size:0.8rem; line-height:1.3;
-      }
-    }
-
-
-    /* Hobby Icons Section */
-    #hobbies{
-      margin-top:80px; max-width:500px; margin-left:auto; margin-right:auto;
-      text-align:center;
-      padding:0 20px;
-      position:fixed; bottom:20px; left:50%;
-      width:100%; max-width:500px;
-      transform:translateX(-50%) translateY(20px);
-      opacity:0;
-      visibility:hidden;
-      pointer-events:none;
-      transition:opacity 0.5s var(--ease), transform 0.5s var(--ease), visibility 0.5s var(--ease);
-      z-index:10;
-    }
-    #hobbies.reveal{
-      transform:translateX(-50%) translateY(0);
-      opacity:1;
-      visibility:visible;
-      pointer-events:auto;
-    }
-    .hobbies-label{
-      font-family:var(--sans); font-size:0.75rem; color:var(--muted);
-      margin:0; margin-right:10px; font-weight:400; font-style:italic;
-      white-space:nowrap;
-    }
-    .hobby-icons{
-      display:flex; flex-wrap:wrap; gap:12px; justify-content:center;
-      align-items:center;
-    }
-    .hobby-icon{
-      display:inline-flex; align-items:center; justify-content:center;
-      width:28px; height:28px;
-      border:none; background:transparent;
-      color:var(--muted); text-decoration:none;
-      font-size:14px; transition:transform .3s var(--ease), color .4s var(--ease);
-      position:relative;
-      -webkit-tap-highlight-color:rgba(0,0,0,0.05);
-      touch-action:manipulation;
-    }
-    .hobby-icon .icon{
-      transition:transform .4s var(--ease-back), color .4s var(--ease);
-    }
-    .hobby-icon:hover .icon{
-      transform:rotate(15deg);
-    }
-    .hobby-icon:hover{
-      color:var(--fg);
-      transform:scale(1.05) translateY(-1px);
-    }
-    .hobby-icon:focus-visible{
-      outline:none; box-shadow:0 0 0 2px var(--accent);
-    }
-    @media (prefers-reduced-motion: reduce){
-      .hobby-icon:hover{transform:none}
-    }
-    @media (max-width:768px){
-      #hobbies{bottom:16px; padding:0 20px; max-width:450px}
-      .hobby-icons{gap:12px}
-      .hobby-icon{width:26px; height:26px; font-size:13px}
-      .hobbies-label{font-size:0.72rem; margin-right:10px}
-    }
-    @media (max-width:560px){
-      #hobbies{bottom:12px; padding:0 16px; max-width:380px}
-      .hobby-icons{gap:10px}
-      .hobby-icon{width:24px; height:24px; font-size:12px}
-      .hobbies-label{font-size:0.7rem; margin-right:8px}
-    }
-    @media (max-width:380px){
-      #hobbies{bottom:10px; padding:0 14px; max-width:340px}
-      .hobby-icons{gap:8px}
-      .hobby-icon{width:22px; height:22px; font-size:11px}
-      .hobbies-label{font-size:0.68rem; margin-right:6px}
-    }
-    @media (prefers-reduced-motion: reduce){
-      #hobbies{transform:translateX(-50%)}
-    }
-
-    /* Responsive tweaks */
-    @media (max-width:768px){
-      .theme-toggle{top:20px; right:20px; width:48px; height:48px}
-      .social-links{margin-top:0; gap:7px}
-      .social-dot{width:29px; height:29px; font-size:12px}
-      .social-caption{font-size:.74rem; margin-top:12px}
-      .floating-element{display:none}
-      .section{margin-top:32px}
-      main{padding:32px 20px 20px}
-      #about-inline{margin-top:28px; padding:0 12px}
-      #about-inline .lede{font-size:1rem; line-height:1.7}
-    }
-
-    /* Mobile typography and bubble size tuning */
-    @media (max-width:560px){
-      .theme-toggle{top:16px; right:16px; width:44px; height:44px}
-      main{padding:28px 16px 16px}
-      .profile-photo{width:110px; height:127px; border-radius:14px; object-fit:contain; max-width: 100%; max-height: 100%;}
-      .profile-photo-container{margin-bottom:20px}
-      .name{font-size:clamp(1.4rem, 6vw, 2rem); margin-bottom:12px; line-height:1.1}
-      .social-links{margin-top:0; gap:6px}
-      .social-dot{width:28px; height:28px; font-size:11.5px}
-      .social-caption{font-size:.72rem; margin-top:11px}
-      .bubble{width:clamp(85px, 22vw, 110px)}
-      .bubble-title{font-size:clamp(0.7rem, 1.8vw, 0.85rem); font-weight:500}
-      .bubble:hover .bubble-title, .bubble[data-armed="1"] .bubble-title{
-        transform:translateY(-6px);
-      }
-      .bubble-label{font-size:.55rem; bottom:10px; max-width:90%}
-      .bubble[data-armed="1"] .bubble-label{font-size:.52rem}
-      #about-inline{margin-top:24px; padding:0 8px}
-      #about-inline .lede{font-size:0.95rem; line-height:1.65}
-      .section{margin-top:28px}
-    }
-    @media (max-width:380px){
-      .theme-toggle{top:14px; right:14px; width:42px; height:42px}
-      main{padding:24px 14px 14px}
-      .profile-photo{width:100px; height:115px; border-radius:12px; object-fit:contain; max-width: 100%; max-height: 100%;}
-      .profile-photo-container{margin-bottom:18px}
-      .name{font-size:clamp(1.3rem, 6.5vw, 1.8rem); margin-bottom:10px}
-      .social-links{margin-top:0; gap:6px}
-      .social-dot{width:26px; height:26px; font-size:11px}
-      .social-caption{font-size:.7rem; margin-top:10px}
-      .bubble{width:clamp(78px, 24vw, 98px)}
-      .bubble-title{font-size:clamp(0.65rem, 1.6vw, 0.78rem)}
-      .bubble:hover .bubble-title, .bubble[data-armed="1"] .bubble-title{
-        transform:translateY(-5px);
-      }
-      .bubble-label{font-size:.52rem; bottom:8px}
-      .bubble[data-armed="1"] .bubble-label{font-size:.48rem}
-      #about-inline{margin-top:20px; padding:0 6px}
-      #about-inline .lede{font-size:0.9rem; line-height:1.6}
-      .section{margin-top:24px}
-    }
-
-  </style>
-</head>
-<body>
-
-  <!-- Theme Toggle Button -->
-  <button class="theme-toggle" id="themeToggle" aria-label="Toggle midnight mode">
-    <svg class="icon icon-moon" aria-hidden="true"><use href="/assets/icons/sprite.svg?v=2#moon"/></svg>
-    <svg class="icon icon-sun" aria-hidden="true"><use href="/assets/icons/sprite.svg?v=2#sun"/></svg>
-  </button>
-
-  <!-- Ornaments -->
-  <div class="floating-element">✦</div>
-  <div class="floating-element">◇</div>
-  <div class="floating-element pastel-1">◈</div>
-  <div class="floating-element pastel-2">◊</div>
-
-  <!-- Main -->
-  <main>
-    <div id="centerpiece">
-      <h1 class="name" id="name" data-text="Raja Dhanda"></h1>
-      <div class="profile-photo-container">
-        <img src="/assets/images/profile.webp" alt="Raja Dhanda" class="profile-photo" id="profilePhoto" loading="lazy" width="140" height="161">
-      </div>
-
-      <div class="social-row">
-        <div class="social-links" aria-label="Connect with me">
-          <a class="social-link" href="https://www.linkedin.com/in/ramendra-raja-dhanda/" target="_blank" rel="noopener" aria-label="LinkedIn">
-            <span class="social-dot"><svg class="icon" aria-hidden="true"><use href="/assets/icons/sprite.svg?v=2#linkedin"/></svg></span>
-          </a>
-          <a class="social-link" href="https://www.instagram.com/decodedwithraja/" target="_blank" rel="noopener" aria-label="Instagram">
-            <span class="social-dot"><svg class="icon" aria-hidden="true"><use href="/assets/icons/sprite.svg?v=2#instagram"/></svg></span>
-          </a>
-          <a class="social-link" href="https://www.tiktok.com/@decodedwithraja" target="_blank" rel="noopener" aria-label="TikTok">
-            <span class="social-dot"><svg class="icon" aria-hidden="true"><use href="/assets/icons/sprite.svg?v=2#tiktok"/></svg></span>
-          </a>
-          <a class="social-link" href="https://www.youtube.com/@decodedwithraja" target="_blank" rel="noopener" aria-label="YouTube">
-            <span class="social-dot"><svg class="icon" aria-hidden="true"><use href="/assets/icons/sprite.svg?v=2#youtube"/></svg></span>
-          </a>
-          <a class="social-link" href="mailto:hello@rajadhanda.me" target="_blank" rel="noopener" aria-label="Email">
-            <span class="social-dot"><svg class="icon" aria-hidden="true"><use href="/assets/icons/sprite.svg?v=2#envelope"/></svg></span>
-          </a>
+    <main class="edition-paper" id="main">
+      <div class="edition-masthead">
+        <div class="masthead-title-row">
+          <div class="masthead-identity">
+            <img
+              class="masthead-portrait"
+              src="/assets/images/profile.webp"
+              alt="Raja Dhanda"
+              width="140"
+              height="161"
+            />
+            <div class="masthead-person">
+              <h1 data-type-masthead>Raja Dhanda</h1>
+              <p class="masthead-bio">
+                Technology optimist working in AI infrastructure.
+              </p>
+            </div>
+          </div>
+          <div class="masthead-actions">
+            <div class="socials">
+              <a
+                href="https://www.linkedin.com/in/ramendra-raja-dhanda/"
+                target="_blank"
+                rel="noopener"
+                aria-label="LinkedIn"
+                 title="ramendra-raja-dhanda" aria-describedby="handle-linkedin"><svg class="icon" viewBox="0 0 448 512" aria-hidden="true" focusable="false"><path d="M416 32H31.9C14.3 32 0 46.5 0 64.3v383.4C0 465.5 14.3 480 31.9 480H416c17.6 0 32-14.5 32-32.3V64.3c0-17.8-14.4-32.3-32-32.3zM135.4 416H69V202.2h66.5V416zm-33.2-243c-21.3 0-38.5-17.3-38.5-38.5S80.9 96 102.2 96c21.2 0 38.5 17.3 38.5 38.5 0 21.3-17.2 38.5-38.5 38.5zm282.1 243h-66.4V312c0-24.8-.5-56.7-34.5-56.7-34.6 0-39.9 27-39.9 54.9V416h-66.4V202.2h63.7v29.2h.9c8.9-16.8 30.6-34.5 62.9-34.5 67.2 0 79.7 44.3 79.7 101.9V416z"/></svg><span class="social-handle" id="handle-linkedin" role="tooltip">ramendra-raja-dhanda</span></a
+              ><a
+                href="https://www.instagram.com/decodedwithraja/"
+                target="_blank"
+                rel="noopener"
+                aria-label="Instagram"
+                 title="@decodedwithraja" aria-describedby="handle-instagram"><svg class="icon" viewBox="0 0 448 512" aria-hidden="true" focusable="false"><path d="M224.1 141c-63.6 0-114.9 51.3-114.9 114.9s51.3 114.9 114.9 114.9S339 319.5 339 255.9 287.7 141 224.1 141zm0 189.6c-41.1 0-74.7-33.5-74.7-74.7s33.5-74.7 74.7-74.7 74.7 33.5 74.7 74.7-33.6 74.7-74.7 74.7zm146.4-194.3c0 14.9-12 26.8-26.8 26.8-14.9 0-26.8-12-26.8-26.8s12-26.8 26.8-26.8 26.8 12 26.8 26.8zm76.1 27.2c-1.7-35.9-9.9-67.7-36.2-93.9-26.2-26.2-58-34.4-93.9-36.2-37-2.1-147.9-2.1-184.9 0-35.8 1.7-67.6 9.9-93.9 36.1s-34.4 58-36.2 93.9c-2.1 37-2.1 147.9 0 184.9 1.7 35.9 9.9 67.7 36.2 93.9s58 34.4 93.9 36.2c37 2.1 147.9 2.1 184.9 0 35.9-1.7 67.7-9.9 93.9-36.2 26.2-26.2 34.4-58 36.2-93.9 2.1-37 2.1-147.8 0-184.8zM398.8 388c-7.8 19.6-22.9 34.7-42.6 42.6-29.5 11.7-99.5 9-132.1 9s-102.7 2.6-132.1-9c-19.6-7.8-34.7-22.9-42.6-42.6-11.7-29.5-9-99.5-9-132.1s-2.6-102.7 9-132.1c7.8-19.6 22.9-34.7 42.6-42.6 29.5-11.7 99.5-9 132.1-9s102.7-2.6 132.1 9c19.6 7.8 34.7 22.9 42.6 42.6 11.7 29.5 9 99.5 9 132.1s2.7 102.7-9 132.1z"/></svg><span class="social-handle" id="handle-instagram" role="tooltip">@decodedwithraja</span></a
+              ><a
+                href="https://www.tiktok.com/@decodedwithraja"
+                target="_blank"
+                rel="noopener"
+                aria-label="TikTok"
+                 title="@decodedwithraja" aria-describedby="handle-tiktok"><svg class="icon" viewBox="0 0 448 512" aria-hidden="true" focusable="false"><path d="M448 209.9a210.1 210.1 0 0 1 -122.8-39.3V349.4A162.6 162.6 0 1 1 185 188.3V278.2a74.6 74.6 0 1 0 52.2 71.2V0l88 0a121.2 121.2 0 0 0 1.9 22.2h0A122.2 122.2 0 0 0 381 102.4a121.4 121.4 0 0 0 67 20.1z"/></svg><span class="social-handle" id="handle-tiktok" role="tooltip">@decodedwithraja</span></a
+              ><a
+                href="https://www.youtube.com/@decodedwithraja"
+                target="_blank"
+                rel="noopener"
+                aria-label="YouTube"
+                 title="@decodedwithraja" aria-describedby="handle-youtube"><svg class="icon" viewBox="0 0 576 512" aria-hidden="true" focusable="false"><path d="M549.7 124.1c-6.3-23.7-24.8-42.3-48.3-48.6C458.8 64 288 64 288 64S117.2 64 74.6 75.5c-23.5 6.3-42 24.9-48.3 48.6-11.4 42.9-11.4 132.3-11.4 132.3s0 89.4 11.4 132.3c6.3 23.7 24.8 41.5 48.3 47.8C117.2 448 288 448 288 448s170.8 0 213.4-11.5c23.5-6.3 42-24.2 48.3-47.8 11.4-42.9 11.4-132.3 11.4-132.3s0-89.4-11.4-132.3zm-317.5 213.5V175.2l142.7 81.2-142.7 81.2z"/></svg><span class="social-handle" id="handle-youtube" role="tooltip">@decodedwithraja</span></a>
+            </div>
+            <button
+              class="mode"
+              aria-label="Switch to Midnight mode"
+              aria-pressed="false"
+              title="Switch to Midnight mode"
+            >
+              <svg
+                class="mode-moon"
+                viewBox="0 0 24 24"
+                aria-hidden="true"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="1.5"
+              >
+                <path
+                  d="M20.4 15.3A8.8 8.8 0 0 1 8.7 3.6a8.8 8.8 0 1 0 11.7 11.7Z"
+                /></svg
+              ><svg
+                class="mode-sun"
+                viewBox="0 0 24 24"
+                aria-hidden="true"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="1.5"
+              >
+                <circle cx="12" cy="12" r="4" />
+                <path
+                  d="M12 2v2m0 16v2M2 12h2m16 0h2M4.9 4.9l1.4 1.4m11.4 11.4 1.4 1.4M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"
+                />
+              </svg>
+            </button>
+          </div>
         </div>
-        <p class="social-caption" aria-hidden="true">
-          <span data-for="LinkedIn">ramendra raja dhanda</span>
-          <span data-for="Instagram">@decodedwithraja</span>
-          <span data-for="TikTok">@decodedwithraja</span>
-          <span data-for="YouTube">@decodedwithraja</span>
-          <span data-for="Email">hello@rajadhanda.me</span>
-        </p>
       </div>
-
-      <!-- Inline About Section -->
-      <section id="about-inline" class="section">
-        <p class="lede">Technology optimist working in AI infrastructure.<br>Learning and building, always happy to chat!</p>
+      <div class="masthead-dateline" hidden>
+        <time></time>
+        <span class="dateline-place" hidden></span>
+      </div>
+      <section class="edition-lead">
+        <section class="eyesoff-hero" aria-labelledby="eyesoff-title">
+          <a
+            class="edition-eyesoff interactive-eye-link"
+            aria-label="Visit EyesOff at eyesoff.app"
+            href="https://eyesoff.app"
+            target="_blank"
+            rel="noopener noreferrer"
+            ><span class="eyesoff-mark" aria-hidden="true">
+              <svg viewBox="0 0 48 48" fill="none">
+                <g class="eo-eyes">
+                  <ellipse
+                    class="eo-eye"
+                    cx="14.5"
+                    cy="24"
+                    rx="8.5"
+                    ry="14.5"
+                  ></ellipse>
+                  <ellipse
+                    class="eo-eye"
+                    cx="33.5"
+                    cy="24"
+                    rx="8.5"
+                    ry="14.5"
+                  ></ellipse>
+                  <g class="eo-pupils">
+                    <g class="eo-iris" transform="translate(14.5 24)">
+                      <circle class="eo-iris-rim" r="4.6"></circle>
+                      <circle class="eo-iris-gold" r="4"></circle>
+                      <circle class="eo-pupil" r="2"></circle>
+                    </g>
+                    <g class="eo-iris" transform="translate(33.5 24)">
+                      <circle class="eo-iris-rim" r="4.6"></circle>
+                      <circle class="eo-iris-gold" r="4"></circle>
+                      <circle class="eo-pupil" r="2"></circle>
+                    </g>
+                  </g>
+                </g>
+                <circle class="eo-ring" cx="24" cy="24" r="22"></circle>
+                <line class="eo-slash" x1="9" y1="9" x2="39" y2="39"></line>
+              </svg>
+            </span>
+            <h2 id="eyesoff-title">EyesOff</h2>
+            <p class="eyesoff-tagline">On-device AI that alerts you when a stranger’s eyes hit your screen.</p>
+          </a>
+        </section>
+        <section
+          class="photo-carousel"
+          aria-label="Photographs"
+          aria-roledescription="carousel"
+          aria-description="Photographs change automatically. Use the pause button, arrow keys or swipes to control the carousel."
+          tabindex="0"
+        >
+          <div class="carousel-heading"><a href="/photographs/" aria-label="View all photographs"><svg class="camera-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M3 7h4l2-3h6l2 3h4v13H3Z"/><circle cx="12" cy="13" r="4"/></svg><span>All</span></a></div>
+          <div class="carousel-slides">
+            <figure class="carousel-slide">
+              <div class="framed-photo">
+                <button
+                  type="button"
+                  class="carousel-photo"
+                  data-open-photo="0"
+                  aria-label="Enlarge photograph: yasaka pagoda, gion, kyoto"
+                >
+                  <img
+                    src="/assets/images/camera-roll/photo-01.jpg"
+                    data-fallback-src="/photographs/images/IMG_4887.jpeg"
+                    alt="yasaka pagoda, gion, kyoto"
+                    loading="eager"
+                    decoding="async"
+                  />
+                </button>
+                <button
+                  type="button"
+                  class="frame-play"
+                  data-carousel-play
+                  aria-label="Pause photo carousel"
+                  data-paused="false"
+                >
+                  Pause
+                </button>
+              </div>
+              <figcaption>yasaka pagoda, gion, kyoto</figcaption>
+            </figure>
+            <figure class="carousel-slide" hidden>
+              <div class="framed-photo">
+                <button
+                  type="button"
+                  class="carousel-photo"
+                  data-open-photo="1"
+                  aria-label="Enlarge photograph: montmartre, paris"
+                >
+                  <img
+                    src="/assets/images/camera-roll/photo-02.jpg"
+                    data-fallback-src="/photographs/images/IMG_0519.jpeg"
+                    alt="montmartre, paris"
+                    loading="lazy"
+                    decoding="async"
+                  />
+                </button>
+                <button
+                  type="button"
+                  class="frame-play"
+                  data-carousel-play
+                  aria-label="Pause photo carousel"
+                  data-paused="false"
+                >
+                  Pause
+                </button>
+              </div>
+              <figcaption>montmartre, paris</figcaption>
+            </figure>
+            <figure class="carousel-slide" hidden>
+              <div class="framed-photo">
+                <button
+                  type="button"
+                  class="carousel-photo"
+                  data-open-photo="2"
+                  aria-label="Enlarge photograph: louis vuitton, champs-elysées, paris"
+                >
+                  <img
+                    src="/assets/images/camera-roll/photo-03.jpg"
+                    data-fallback-src="/photographs/images/IMG_0787.jpeg"
+                    alt="louis vuitton, champs-elysées, paris"
+                    loading="lazy"
+                    decoding="async"
+                  />
+                </button>
+                <button
+                  type="button"
+                  class="frame-play"
+                  data-carousel-play
+                  aria-label="Pause photo carousel"
+                  data-paused="false"
+                >
+                  Pause
+                </button>
+              </div>
+              <figcaption>louis vuitton, champs-elysées, paris</figcaption>
+            </figure>
+            <figure class="carousel-slide" hidden>
+              <div class="framed-photo">
+                <button
+                  type="button"
+                  class="carousel-photo"
+                  data-open-photo="3"
+                  aria-label="Enlarge photograph: a room of quiet contemplation, national museum of korea, seoul"
+                >
+                  <img
+                    src="/assets/images/camera-roll/photo-04.jpg"
+                    data-fallback-src="/photographs/images/IMG_3516.jpeg"
+                    alt="a room of quiet contemplation, national museum of korea, seoul"
+                    loading="lazy"
+                    decoding="async"
+                  />
+                </button>
+                <button
+                  type="button"
+                  class="frame-play"
+                  data-carousel-play
+                  aria-label="Pause photo carousel"
+                  data-paused="false"
+                >
+                  Pause
+                </button>
+              </div>
+              <figcaption>
+                a room of quiet contemplation, national museum of korea, seoul
+              </figcaption>
+            </figure>
+            <figure class="carousel-slide" hidden>
+              <div class="framed-photo">
+                <button
+                  type="button"
+                  class="carousel-photo"
+                  data-open-photo="4"
+                  aria-label="Enlarge photograph: a room of quiet contemplation, national museum of korea, seoul"
+                >
+                  <img
+                    src="/assets/images/camera-roll/photo-05.jpg"
+                    data-fallback-src="/photographs/images/IMG_3534.jpeg"
+                    alt="a room of quiet contemplation, national museum of korea, seoul"
+                    loading="lazy"
+                    decoding="async"
+                  />
+                </button>
+                <button
+                  type="button"
+                  class="frame-play"
+                  data-carousel-play
+                  aria-label="Pause photo carousel"
+                  data-paused="false"
+                >
+                  Pause
+                </button>
+              </div>
+              <figcaption>
+                a room of quiet contemplation, national museum of korea, seoul
+              </figcaption>
+            </figure>
+            <figure class="carousel-slide" hidden>
+              <div class="framed-photo">
+                <button
+                  type="button"
+                  class="carousel-photo"
+                  data-open-photo="5"
+                  aria-label="Enlarge photograph: starfield library, coex mall, seoul"
+                >
+                  <img
+                    src="/assets/images/camera-roll/photo-06.jpg"
+                    data-fallback-src="/photographs/images/IMG_3582.jpeg"
+                    alt="starfield library, coex mall, seoul"
+                    loading="lazy"
+                    decoding="async"
+                  />
+                </button>
+                <button
+                  type="button"
+                  class="frame-play"
+                  data-carousel-play
+                  aria-label="Pause photo carousel"
+                  data-paused="false"
+                >
+                  Pause
+                </button>
+              </div>
+              <figcaption>starfield library, coex mall, seoul</figcaption>
+            </figure>
+            <figure class="carousel-slide" hidden>
+              <div class="framed-photo">
+                <button
+                  type="button"
+                  class="carousel-photo"
+                  data-open-photo="6"
+                  aria-label="Enlarge photograph: ura-namba, osaka"
+                >
+                  <img
+                    src="/assets/images/camera-roll/photo-07.jpg"
+                    data-fallback-src="/photographs/images/IMG_4229.jpeg"
+                    alt="ura-namba, osaka"
+                    loading="lazy"
+                    decoding="async"
+                  />
+                </button>
+                <button
+                  type="button"
+                  class="frame-play"
+                  data-carousel-play
+                  aria-label="Pause photo carousel"
+                  data-paused="false"
+                >
+                  Pause
+                </button>
+              </div>
+              <figcaption>ura-namba, osaka</figcaption>
+            </figure>
+            <figure class="carousel-slide" hidden>
+              <div class="framed-photo">
+                <button
+                  type="button"
+                  class="carousel-photo"
+                  data-open-photo="7"
+                  aria-label="Enlarge photograph: dōtonbori canal, osaka"
+                >
+                  <img
+                    src="/assets/images/camera-roll/photo-08.jpg"
+                    data-fallback-src="/photographs/images/IMG_4393.jpeg"
+                    alt="dōtonbori canal, osaka"
+                    loading="lazy"
+                    decoding="async"
+                  />
+                </button>
+                <button
+                  type="button"
+                  class="frame-play"
+                  data-carousel-play
+                  aria-label="Pause photo carousel"
+                  data-paused="false"
+                >
+                  Pause
+                </button>
+              </div>
+              <figcaption>dōtonbori canal, osaka</figcaption>
+            </figure>
+            <figure class="carousel-slide" hidden>
+              <div class="framed-photo">
+                <button
+                  type="button"
+                  class="carousel-photo"
+                  data-open-photo="8"
+                  aria-label="Enlarge photograph: fushimi inari taisha, kyoto"
+                >
+                  <img
+                    src="/assets/images/camera-roll/photo-09.jpg"
+                    data-fallback-src="/photographs/images/IMG_4921.jpeg"
+                    alt="fushimi inari taisha, kyoto"
+                    loading="lazy"
+                    decoding="async"
+                  />
+                </button>
+                <button
+                  type="button"
+                  class="frame-play"
+                  data-carousel-play
+                  aria-label="Pause photo carousel"
+                  data-paused="false"
+                >
+                  Pause
+                </button>
+              </div>
+              <figcaption>fushimi inari taisha, kyoto</figcaption>
+            </figure>
+            <figure class="carousel-slide" hidden>
+              <div class="framed-photo">
+                <button
+                  type="button"
+                  class="carousel-photo"
+                  data-open-photo="9"
+                  aria-label="Enlarge photograph: tokyo tower, tokyo"
+                >
+                  <img
+                    src="/assets/images/camera-roll/photo-10.jpg"
+                    data-fallback-src="/photographs/images/IMG_5561.jpeg"
+                    alt="tokyo tower, tokyo"
+                    loading="lazy"
+                    decoding="async"
+                  />
+                </button>
+                <button
+                  type="button"
+                  class="frame-play"
+                  data-carousel-play
+                  aria-label="Pause photo carousel"
+                  data-paused="false"
+                >
+                  Pause
+                </button>
+              </div>
+              <figcaption>tokyo tower, tokyo</figcaption>
+            </figure>
+            <figure class="carousel-slide" hidden>
+              <div class="framed-photo">
+                <button
+                  type="button"
+                  class="carousel-photo"
+                  data-open-photo="10"
+                  aria-label="Enlarge photograph: shibuya crossing from shibuya sky, tokyo"
+                >
+                  <img
+                    src="/assets/images/camera-roll/photo-11.jpg"
+                    data-fallback-src="/photographs/images/IMG_5986.jpeg"
+                    alt="shibuya crossing from shibuya sky, tokyo"
+                    loading="lazy"
+                    decoding="async"
+                  />
+                </button>
+                <button
+                  type="button"
+                  class="frame-play"
+                  data-carousel-play
+                  aria-label="Pause photo carousel"
+                  data-paused="false"
+                >
+                  Pause
+                </button>
+              </div>
+              <figcaption>shibuya crossing from shibuya sky, tokyo</figcaption>
+            </figure>
+            <figure class="carousel-slide" hidden>
+              <div class="framed-photo">
+                <button
+                  type="button"
+                  class="carousel-photo"
+                  data-open-photo="11"
+                  aria-label="Enlarge photograph: flat whites, keswick, lake district national park"
+                >
+                  <img
+                    src="/assets/images/camera-roll/photo-12.jpg"
+                    data-fallback-src="/photographs/images/IMG_7084.jpeg"
+                    alt="flat whites, keswick, lake district national park"
+                    loading="lazy"
+                    decoding="async"
+                  />
+                </button>
+                <button
+                  type="button"
+                  class="frame-play"
+                  data-carousel-play
+                  aria-label="Pause photo carousel"
+                  data-paused="false"
+                >
+                  Pause
+                </button>
+              </div>
+              <figcaption>
+                flat whites, keswick, lake district national park
+              </figcaption>
+            </figure>
+            <figure class="carousel-slide" hidden>
+              <div class="framed-photo">
+                <button
+                  type="button"
+                  class="carousel-photo"
+                  data-open-photo="12"
+                  aria-label="Enlarge photograph: homeground coffee + kitchen, windermere, lake district national park"
+                >
+                  <img
+                    src="/assets/images/camera-roll/photo-13.jpg"
+                    data-fallback-src="/photographs/images/IMG_7101.jpeg"
+                    alt="homeground coffee + kitchen, windermere, lake district national park"
+                    loading="lazy"
+                    decoding="async"
+                  />
+                </button>
+                <button
+                  type="button"
+                  class="frame-play"
+                  data-carousel-play
+                  aria-label="Pause photo carousel"
+                  data-paused="false"
+                >
+                  Pause
+                </button>
+              </div>
+              <figcaption>
+                homeground coffee + kitchen, windermere, lake district national
+                park
+              </figcaption>
+            </figure>
+            <figure class="carousel-slide" hidden>
+              <div class="framed-photo">
+                <button
+                  type="button"
+                  class="carousel-photo"
+                  data-open-photo="13"
+                  aria-label="Enlarge photograph: long island iced tea, the oligarch, milton keynes"
+                >
+                  <img
+                    src="/assets/images/camera-roll/photo-14.jpg"
+                    data-fallback-src="/photographs/images/IMG_8842.jpeg"
+                    alt="long island iced tea, the oligarch, milton keynes"
+                    loading="lazy"
+                    decoding="async"
+                  />
+                </button>
+                <button
+                  type="button"
+                  class="frame-play"
+                  data-carousel-play
+                  aria-label="Pause photo carousel"
+                  data-paused="false"
+                >
+                  Pause
+                </button>
+              </div>
+              <figcaption>
+                long island iced tea, the oligarch, milton keynes
+              </figcaption>
+            </figure>
+            <figure class="carousel-slide" hidden>
+              <div class="framed-photo">
+                <button
+                  type="button"
+                  class="carousel-photo"
+                  data-open-photo="14"
+                  aria-label="Enlarge photograph: vltava river, prague"
+                >
+                  <img
+                    src="https://res.cloudinary.com/dd2rpc7mx/image/fetch/f_auto,q_auto,w_800/https://rajadhanda.me/photographs/images/vltava-river-prague.jpg"
+                    data-fallback-src="/photographs/images/vltava-river-prague.jpg"
+                    alt="vltava river, prague"
+                    loading="lazy"
+                    decoding="async"
+                  />
+                </button>
+                <button
+                  type="button"
+                  class="frame-play"
+                  data-carousel-play
+                  aria-label="Pause photo carousel"
+                  data-paused="false"
+                >
+                  Pause
+                </button>
+              </div>
+              <figcaption>vltava river, prague</figcaption>
+            </figure>
+            <figure class="carousel-slide" hidden>
+              <div class="framed-photo">
+                <button
+                  type="button"
+                  class="carousel-photo"
+                  data-open-photo="15"
+                  aria-label="Enlarge photograph: national palace of sintra, sintra"
+                >
+                  <img
+                    src="https://res.cloudinary.com/dd2rpc7mx/image/fetch/f_auto,q_auto,w_800/https://rajadhanda.me/photographs/images/national-palace-of-sintra-sintra.jpg"
+                    data-fallback-src="/photographs/images/national-palace-of-sintra-sintra.jpg"
+                    alt="national palace of sintra, sintra"
+                    loading="lazy"
+                    decoding="async"
+                  />
+                </button>
+                <button
+                  type="button"
+                  class="frame-play"
+                  data-carousel-play
+                  aria-label="Pause photo carousel"
+                  data-paused="false"
+                >
+                  Pause
+                </button>
+              </div>
+              <figcaption>national palace of sintra, sintra</figcaption>
+            </figure>
+            <figure class="carousel-slide" hidden>
+              <div class="framed-photo">
+                <button
+                  type="button"
+                  class="carousel-photo"
+                  data-open-photo="16"
+                  aria-label="Enlarge photograph: top of the moorish castle, sintra"
+                >
+                  <img
+                    src="https://res.cloudinary.com/dd2rpc7mx/image/fetch/f_auto,q_auto,w_800/https://rajadhanda.me/photographs/images/top-of-the-moorish-castle-sintra.jpeg"
+                    data-fallback-src="/photographs/images/top-of-the-moorish-castle-sintra.jpeg"
+                    alt="top of the moorish castle, sintra"
+                    loading="lazy"
+                    decoding="async"
+                  />
+                </button>
+                <button
+                  type="button"
+                  class="frame-play"
+                  data-carousel-play
+                  aria-label="Pause photo carousel"
+                  data-paused="false"
+                >
+                  Pause
+                </button>
+              </div>
+              <figcaption>top of the moorish castle, sintra</figcaption>
+            </figure>
+            <figure class="carousel-slide" hidden>
+              <div class="framed-photo">
+                <button
+                  type="button"
+                  class="carousel-photo"
+                  data-open-photo="17"
+                  aria-label="Enlarge photograph: air and space museum, seattle"
+                >
+                  <img
+                    src="https://res.cloudinary.com/dd2rpc7mx/image/fetch/f_auto,q_auto,w_800/https://rajadhanda.me/photographs/images/air-and-space-museum-seattle.jpeg"
+                    data-fallback-src="/photographs/images/air-and-space-museum-seattle.jpeg"
+                    alt="air and space museum, seattle"
+                    loading="lazy"
+                    decoding="async"
+                  />
+                </button>
+                <button
+                  type="button"
+                  class="frame-play"
+                  data-carousel-play
+                  aria-label="Pause photo carousel"
+                  data-paused="false"
+                >
+                  Pause
+                </button>
+              </div>
+              <figcaption>air and space museum, seattle</figcaption>
+            </figure>
+            <figure class="carousel-slide" hidden>
+              <div class="framed-photo">
+                <button
+                  type="button"
+                  class="carousel-photo"
+                  data-open-photo="18"
+                  aria-label="Enlarge photograph: saturn v f-1 engine, museum of flight, seattle"
+                >
+                  <img
+                    src="https://res.cloudinary.com/dd2rpc7mx/image/fetch/f_auto,q_auto,w_800/https://rajadhanda.me/photographs/images/saturn-v-f1-engine-museum-of-flight-seattle.jpg"
+                    data-fallback-src="/photographs/images/saturn-v-f1-engine-museum-of-flight-seattle.jpg"
+                    alt="saturn v f-1 engine, museum of flight, seattle"
+                    loading="lazy"
+                    decoding="async"
+                  />
+                </button>
+                <button
+                  type="button"
+                  class="frame-play"
+                  data-carousel-play
+                  aria-label="Pause photo carousel"
+                  data-paused="false"
+                >
+                  Pause
+                </button>
+              </div>
+              <figcaption>
+                saturn v f-1 engine, museum of flight, seattle
+              </figcaption>
+            </figure>
+            <figure class="carousel-slide" hidden>
+              <div class="framed-photo">
+                <button
+                  type="button"
+                  class="carousel-photo"
+                  data-open-photo="19"
+                  aria-label="Enlarge photograph: top of the space needle, seattle"
+                >
+                  <img
+                    src="https://res.cloudinary.com/dd2rpc7mx/image/fetch/f_auto,q_auto,w_800/https://rajadhanda.me/photographs/images/top-of-the-space-needle-seattle.jpeg"
+                    data-fallback-src="/photographs/images/top-of-the-space-needle-seattle.jpeg"
+                    alt="top of the space needle, seattle"
+                    loading="lazy"
+                    decoding="async"
+                  />
+                </button>
+                <button
+                  type="button"
+                  class="frame-play"
+                  data-carousel-play
+                  aria-label="Pause photo carousel"
+                  data-paused="false"
+                >
+                  Pause
+                </button>
+              </div>
+              <figcaption>top of the space needle, seattle</figcaption>
+            </figure>
+            <figure class="carousel-slide" hidden>
+              <div class="framed-photo">
+                <button
+                  type="button"
+                  class="carousel-photo"
+                  data-open-photo="20"
+                  aria-label="Enlarge photograph: bottom of the space needle, seattle"
+                >
+                  <img
+                    src="https://res.cloudinary.com/dd2rpc7mx/image/fetch/f_auto,q_auto,w_800/https://rajadhanda.me/photographs/images/bottom-of-the-space-needle-seattle.jpeg"
+                    data-fallback-src="/photographs/images/bottom-of-the-space-needle-seattle.jpeg"
+                    alt="bottom of the space needle, seattle"
+                    loading="lazy"
+                    decoding="async"
+                  />
+                </button>
+                <button
+                  type="button"
+                  class="frame-play"
+                  data-carousel-play
+                  aria-label="Pause photo carousel"
+                  data-paused="false"
+                >
+                  Pause
+                </button>
+              </div>
+              <figcaption>bottom of the space needle, seattle</figcaption>
+            </figure>
+            <figure class="carousel-slide" hidden>
+              <div class="framed-photo">
+                <button
+                  type="button"
+                  class="carousel-photo"
+                  data-open-photo="21"
+                  aria-label="Enlarge photograph: the harbour, seattle"
+                >
+                  <img
+                    src="https://res.cloudinary.com/dd2rpc7mx/image/fetch/f_auto,q_auto,w_800/https://rajadhanda.me/photographs/images/the-harbour-seattle.jpeg"
+                    data-fallback-src="/photographs/images/the-harbour-seattle.jpeg"
+                    alt="the harbour, seattle"
+                    loading="lazy"
+                    decoding="async"
+                  />
+                </button>
+                <button
+                  type="button"
+                  class="frame-play"
+                  data-carousel-play
+                  aria-label="Pause photo carousel"
+                  data-paused="false"
+                >
+                  Pause
+                </button>
+              </div>
+              <figcaption>the harbour, seattle</figcaption>
+            </figure>
+            <figure class="carousel-slide" hidden>
+              <div class="framed-photo">
+                <button
+                  type="button"
+                  class="carousel-photo"
+                  data-open-photo="22"
+                  aria-label="Enlarge photograph: ballard locks, seattle"
+                >
+                  <img
+                    src="https://res.cloudinary.com/dd2rpc7mx/image/fetch/f_auto,q_auto,w_800/https://rajadhanda.me/photographs/images/ballard-locks-seattle.jpg"
+                    data-fallback-src="/photographs/images/ballard-locks-seattle.jpg"
+                    alt="ballard locks, seattle"
+                    loading="lazy"
+                    decoding="async"
+                  />
+                </button>
+                <button
+                  type="button"
+                  class="frame-play"
+                  data-carousel-play
+                  aria-label="Pause photo carousel"
+                  data-paused="false"
+                >
+                  Pause
+                </button>
+              </div>
+              <figcaption>ballard locks, seattle</figcaption>
+            </figure>
+            <figure class="carousel-slide" hidden>
+              <div class="framed-photo">
+                <button
+                  type="button"
+                  class="carousel-photo"
+                  data-open-photo="23"
+                  aria-label="Enlarge photograph: ube pancakes, seattle"
+                >
+                  <img
+                    src="https://res.cloudinary.com/dd2rpc7mx/image/fetch/f_auto,q_auto,w_800/https://rajadhanda.me/photographs/images/ube-pancakes-seattle.jpg"
+                    data-fallback-src="/photographs/images/ube-pancakes-seattle.jpg"
+                    alt="ube pancakes, seattle"
+                    loading="lazy"
+                    decoding="async"
+                  />
+                </button>
+                <button
+                  type="button"
+                  class="frame-play"
+                  data-carousel-play
+                  aria-label="Pause photo carousel"
+                  data-paused="false"
+                >
+                  Pause
+                </button>
+              </div>
+              <figcaption>ube pancakes, seattle</figcaption>
+            </figure>
+            <figure class="carousel-slide" hidden>
+              <div class="framed-photo">
+                <button
+                  type="button"
+                  class="carousel-photo"
+                  data-open-photo="24"
+                  aria-label="Enlarge photograph: banff"
+                >
+                  <img
+                    src="https://res.cloudinary.com/dd2rpc7mx/image/fetch/f_auto,q_auto,w_800/https://rajadhanda.me/photographs/images/banff.jpeg"
+                    data-fallback-src="/photographs/images/banff.jpeg"
+                    alt="banff"
+                    loading="lazy"
+                    decoding="async"
+                  />
+                </button>
+                <button
+                  type="button"
+                  class="frame-play"
+                  data-carousel-play
+                  aria-label="Pause photo carousel"
+                  data-paused="false"
+                >
+                  Pause
+                </button>
+              </div>
+              <figcaption>banff</figcaption>
+            </figure>
+            <figure class="carousel-slide" hidden>
+              <div class="framed-photo">
+                <button
+                  type="button"
+                  class="carousel-photo"
+                  data-open-photo="25"
+                  aria-label="Enlarge photograph: lake louise, banff"
+                >
+                  <img
+                    src="https://res.cloudinary.com/dd2rpc7mx/image/fetch/f_auto,q_auto,w_800/https://rajadhanda.me/photographs/images/lake-louise-banff.jpeg"
+                    data-fallback-src="/photographs/images/lake-louise-banff.jpeg"
+                    alt="lake louise, banff"
+                    loading="lazy"
+                    decoding="async"
+                  />
+                </button>
+                <button
+                  type="button"
+                  class="frame-play"
+                  data-carousel-play
+                  aria-label="Pause photo carousel"
+                  data-paused="false"
+                >
+                  Pause
+                </button>
+              </div>
+              <figcaption>lake louise, banff</figcaption>
+            </figure>
+            <figure class="carousel-slide" hidden>
+              <div class="framed-photo">
+                <button
+                  type="button"
+                  class="carousel-photo"
+                  data-open-photo="26"
+                  aria-label="Enlarge photograph: fairmont chateau, lake louise, banff"
+                >
+                  <img
+                    src="https://res.cloudinary.com/dd2rpc7mx/image/fetch/f_auto,q_auto,w_800/https://rajadhanda.me/photographs/images/fairmont-chateau-lake-louise-banff.jpeg"
+                    data-fallback-src="/photographs/images/fairmont-chateau-lake-louise-banff.jpeg"
+                    alt="fairmont chateau, lake louise, banff"
+                    loading="lazy"
+                    decoding="async"
+                  />
+                </button>
+                <button
+                  type="button"
+                  class="frame-play"
+                  data-carousel-play
+                  aria-label="Pause photo carousel"
+                  data-paused="false"
+                >
+                  Pause
+                </button>
+              </div>
+              <figcaption>fairmont chateau, lake louise, banff</figcaption>
+            </figure>
+            <figure class="carousel-slide" hidden>
+              <div class="framed-photo">
+                <button
+                  type="button"
+                  class="carousel-photo"
+                  data-open-photo="27"
+                  aria-label="Enlarge photograph: johnston canyon, banff"
+                >
+                  <img
+                    src="https://res.cloudinary.com/dd2rpc7mx/image/fetch/f_auto,q_auto,w_800/https://rajadhanda.me/photographs/images/johnston-canyon-banff.jpg"
+                    data-fallback-src="/photographs/images/johnston-canyon-banff.jpg"
+                    alt="johnston canyon, banff"
+                    loading="lazy"
+                    decoding="async"
+                  />
+                </button>
+                <button
+                  type="button"
+                  class="frame-play"
+                  data-carousel-play
+                  aria-label="Pause photo carousel"
+                  data-paused="false"
+                >
+                  Pause
+                </button>
+              </div>
+              <figcaption>johnston canyon, banff</figcaption>
+            </figure>
+            <figure class="carousel-slide" hidden>
+              <div class="framed-photo">
+                <button
+                  type="button"
+                  class="carousel-photo"
+                  data-open-photo="28"
+                  aria-label="Enlarge photograph: the local walk"
+                >
+                  <img
+                    src="https://res.cloudinary.com/dd2rpc7mx/image/fetch/f_auto,q_auto,w_800/https://rajadhanda.me/photographs/images/the-local-walk.jpeg"
+                    data-fallback-src="/photographs/images/the-local-walk.jpeg"
+                    alt="the local walk"
+                    loading="lazy"
+                    decoding="async"
+                  />
+                </button>
+                <button
+                  type="button"
+                  class="frame-play"
+                  data-carousel-play
+                  aria-label="Pause photo carousel"
+                  data-paused="false"
+                >
+                  Pause
+                </button>
+              </div>
+              <figcaption>the local walk</figcaption>
+            </figure>
+          </div>
+          <span class="carousel-status sr-only" role="status" aria-live="off"
+            >1 of 29</span
+          >
+        </section>
       </section>
+      <section class="substack-section" aria-labelledby="substack-title">
+        <header class="substack-heading">
+          <div>
+            <h2 id="substack-title" class="sr-only">Notes from Substack</h2>
+          </div>
+          <a
+            class="substack-subscribe"
+            href="https://substack.com/@rajadhanda"
+            target="_blank"
+            rel="noopener noreferrer"
+            ><svg viewBox="0 0 24 24" aria-hidden="true">
+              <path
+                d="M22.539 8.242H1.46V5.406h21.08v2.836zM1.46 10.812V24L12 18.11 22.54 24V10.812H1.46zM22.54 0H1.46v2.836h21.08V0z"
+              /></svg
+            >Follow on Substack</a
+          >
+        </header>
+        <div class="front-notes" data-notes-source="/blog/notes.json"><!-- prettier-ignore -->
+<a class="front-note" href="https://substack.com/@rajadhanda/note/c-392744390" target="_blank" rel="noopener noreferrer"><time datetime="2026-11-20">20 Nov 2026</time><p>the most valuable and satisfying part of my day is closing my laptop, whacking out a pen and paper, and thinking for myself</p><span>Read on Substack</span></a>
+<!-- prettier-ignore -->
+<a class="front-note" href="https://substack.com/@rajadhanda/note/c-392743149" target="_blank" rel="noopener noreferrer"><time datetime="2026-11-20">20 Nov 2026</time><p>there is no such thing as work life balance
 
-      <!-- Hobby Icons Section -->
-      <section id="hobbies" class="hobbies section">
-        <div class="hobby-icons">
-          <p class="hobbies-label">chat about</p>
-          <a href="mailto:hello@rajadhanda.me?subject=Coffee" class="hobby-icon" aria-label="Coffee" data-tooltip="Coffee">
-            <svg class="icon" aria-hidden="true"><use href="/assets/icons/sprite.svg?v=2#mug-hot"/></svg>
-          </a>
-          <a href="mailto:hello@rajadhanda.me?subject=Quantum%20Computing" class="hobby-icon" aria-label="Quantum Computing" data-tooltip="Quantum Computing">
-            <svg class="icon" aria-hidden="true"><use href="/assets/icons/sprite.svg?v=2#microchip"/></svg>
-          </a>
-          <a href="mailto:hello@rajadhanda.me?subject=Football" class="hobby-icon" aria-label="Football" data-tooltip="Football">
-            <svg class="icon" aria-hidden="true"><use href="/assets/icons/sprite.svg?v=2#futbol"/></svg>
-          </a>
-          <a href="/paddock/" class="hobby-icon" aria-label="F1" data-tooltip="F1">
-            <svg class="icon" aria-hidden="true"><use href="/assets/icons/sprite.svg?v=2#flag-checkered"/></svg>
-          </a>
+protect what needs protecting; sleep, diet, exercise, relationships
+
+while working as hard as you can on something you enjoy</p><span>Read on Substack</span></a>
+<!-- prettier-ignore -->
+<a class="front-note" href="https://substack.com/@rajadhanda/note/c-392740047" target="_blank" rel="noopener noreferrer"><time datetime="2026-11-20">20 Nov 2026</time><p>The distance between deciding and doing is the single largest predictor between your life being ordinary or extraordinary</p><span>Read on Substack</span></a>
+<!-- prettier-ignore -->
+<a class="front-note" href="https://substack.com/@rajadhanda/note/c-386177987" target="_blank" rel="noopener noreferrer"><time datetime="2026-11-13">13 Nov 2026</time><p>what a privilege it is to be exhausted by an ambition of your own choosing</p><span>Read on Substack</span></a>
+<!-- prettier-ignore -->
+<a class="front-note" href="https://substack.com/@rajadhanda/note/c-382668028" target="_blank" rel="noopener noreferrer"><time datetime="2026-11-09">9 Nov 2026</time><p>what would you do if you knew you couldn’t fail?</p><span>Read on Substack</span></a>
+<!-- prettier-ignore -->
+<a class="front-note" href="https://substack.com/@rajadhanda/note/c-381919175" target="_blank" rel="noopener noreferrer"><time datetime="2026-11-08">8 Nov 2026</time><p>if attention is the most valuable currency, the best thing you can do is hold yours close</p><span>Read on Substack</span></a>
+</div>
+      </section>
+        <div class="lead-copy writing-intro notebook-below">
+          <a class="edition-essay" href="/blog/this-website-was-vibe-coded.html"
+            ><span class="edition-category">From the notebook</span>
+            <h2>This website was vibe coded</h2>
+            <p>Vibe coding is everywhere…but I still think it’s underrated.</p>
+            <span class="essay-meta">23 November 2025 · 3 min read</span></a
+          >
         </div>
-      </section>
-    </div>
-  </main>
-
-  <!-- Page Transition Overlay -->
-  <div class="page-transition" id="pageTransition"></div>
-
-  <!-- Bubble navigation (freeflow enables physics) -->
-  <nav id="bubbleNav" class="bubble-nav freeflow" aria-label="Primary">
-    <a class="bubble photos-bubble" href="/photographs/" data-key="photos" aria-label="Photographs">
-      <span class="bubble-title">Photographs</span>
-      <em class="bubble-label">frames from my camera roll</em>
-    </a>
-    <a class="bubble blog-bubble" href="/blog/" data-key="blog" aria-label="Blog">
-      <span class="bubble-title">Blog</span>
-      <em class="bubble-label">notes and thought experiments</em>
-    </a>
-    <a class="bubble projects-bubble" href="/projects/" data-key="projects" aria-label="Projects">
-      <span class="bubble-title">Projects</span>
-      <em class="bubble-label">things I've tried</em>
-    </a>
-  </nav>
-
-  <script>
-    // ===== CRITICAL: Reset page state on load (especially for back navigation) =====
-    (function(){
-      function resetPageState() {
-        // Immediately reset page transition overlay to ensure content is visible
-        const pageTransition = document.getElementById('pageTransition');
-        if (pageTransition) {
-          pageTransition.classList.remove('active');
-          // Force reset styles in case they're stuck
-          pageTransition.style.width = '0';
-          pageTransition.style.height = '0';
-          pageTransition.style.opacity = '0';
-          pageTransition.style.pointerEvents = 'none';
-        }
-        
-        // Ensure body is visible and not blocked
-        document.body.style.overflow = '';
-        document.body.style.visibility = 'visible';
-        
-        // Reset ALL visibility states for animations to replay
-        // Reset profile photo
-        const profilePhotoContainer = document.querySelector('.profile-photo-container');
-        if (profilePhotoContainer) {
-          profilePhotoContainer.classList.remove('show');
-        }
-        
-        // Reset social links
-        const socialLinksEl = document.querySelector('.social-links');
-        if (socialLinksEl) {
-          socialLinksEl.classList.remove('icons-in');
-          // Reset individual social link animations
-          socialLinksEl.querySelectorAll('.social-dot').forEach(dot => {
-            dot.style.removeProperty('opacity');
-            dot.style.removeProperty('transform');
-          });
-        }
-        
-        // Reset all sections (about, hobbies, etc.)
-        document.querySelectorAll('.section').forEach(section => {
-          section.classList.remove('reveal');
-        });
-        
-        // Reset hobbies section
-        const hobbies = document.getElementById('hobbies');
-        if (hobbies) {
-          hobbies.classList.remove('reveal');
-        }
-        
-        // Reset theme toggle
-        const themeToggle = document.getElementById('themeToggle');
-        if (themeToggle) {
-          themeToggle.classList.remove('reveal');
-        }
-        
-        // Reset bubbles navigation
-        const bubbleNav = document.getElementById('bubbleNav');
-        if (bubbleNav) {
-          bubbleNav.classList.remove('ready');
-        }
-      }
-      
-      // Reset immediately
-      resetPageState();
-      
-      // Reset on pageshow event (handles back/forward navigation from cache)
-      window.addEventListener('pageshow', function(event) {
-        // event.persisted is true when page is loaded from cache (back navigation)
-        if (event.persisted) {
-          resetPageState();
-          // Force a reflow to ensure styles are applied
-          void document.body.offsetHeight;
-        }
-      });
-      
-      // Also reset on DOMContentLoaded as a safety measure
-      if (document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', resetPageState);
-      }
-    })();
-
-    // ===== Theme Toggle: reveal on scroll or after time (same logic as hobbies) =====
-    (function(){
-      const themeToggle = document.getElementById('themeToggle');
-      if (!themeToggle) return;
-
-      const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-      let revealed = false;
-      let scrollRevealed = false;
-      let timeRevealed = false;
-      let timeRevealTimeout = null;
-      let fallbackTimeout = null;
-      
-      function resetThemeToggleState() {
-        revealed = false;
-        scrollRevealed = false;
-        timeRevealed = false;
-        if (timeRevealTimeout) {
-          clearTimeout(timeRevealTimeout);
-          timeRevealTimeout = null;
-        }
-        if (fallbackTimeout) {
-          clearTimeout(fallbackTimeout);
-          fallbackTimeout = null;
-        }
-        themeToggle.classList.remove('reveal');
-      }
-      
-      function revealThemeToggle() {
-        if (revealed) return;
-        revealed = true;
-        themeToggle.classList.add('reveal');
-      }
-      
-      function setupThemeToggleReveal() {
-        resetThemeToggleState();
-        
-        // Scroll-based reveal
-        function checkScroll() {
-          if (scrollRevealed) return;
-          const scrollY = window.pageYOffset || document.documentElement.scrollTop;
-          if (scrollY > 200) {
-            scrollRevealed = true;
-            revealThemeToggle();
-          }
-        }
-        
-        // Time-based reveal (after user has been on page for a while)
-        function handleIconsReady() {
-          timeRevealTimeout = setTimeout(() => {
-            if (!timeRevealed && !revealed) {
-              timeRevealed = true;
-              // Only reveal via time if user hasn't scrolled yet
-              if (!scrollRevealed) {
-                revealThemeToggle();
-              }
-            }
-          }, 4000); // 4 seconds after icons appear
-        }
-        window.addEventListener('icons:ready', handleIconsReady);
-        
-        // Scroll listener
-        window.addEventListener('scroll', checkScroll, { passive: true });
-        
-        // Initial check in case page is already scrolled
-        checkScroll();
-        
-        // Fallback: show after 6 seconds if nothing else triggered it
-        fallbackTimeout = setTimeout(() => {
-          if (!revealed) {
-            revealThemeToggle();
-          }
-        }, 6000);
-        
-        // Show immediately on reduced motion
-        if (reducedMotion) {
-          revealThemeToggle();
-        }
-      }
-      
-      // Setup initially
-      if (document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', setupThemeToggleReveal);
-      } else {
-        setupThemeToggleReveal();
-      }
-      
-      // Reset and re-setup on pageshow (back navigation from cache)
-      window.addEventListener('pageshow', function(event) {
-        if (event.persisted) {
-          setupThemeToggleReveal();
-        }
-      });
-    })();
-
-    // ===== Bubble freeflow — robust centreing and mobile-safe viewport =====
-    (function () {
-      const nav = document.getElementById('bubbleNav');
-      if (!nav) return;
-
-      const bubbles = Array.from(nav.querySelectorAll('.bubble'));
-      if (!bubbles.length) return;
-
-      const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-
-      // --- Helpers ----------------------------------------------------------
-      function clamp(v, lo, hi){ return Math.max(lo, Math.min(hi, v)); }
-      function clearGapForViewport(){
-        if (innerWidth <= 380) return 56;
-        if (innerWidth <= 560) return 48;
-        return 28;
-      }
-
-      function getCenterpieceCenter() {
-        const cp = document.getElementById('centerpiece');
-        if (cp) {
-          const rect = cp.getBoundingClientRect();
-          return {
-            x: rect.left + rect.width / 2,
-            y: rect.top + rect.height / 2,
-            w: rect.width,
-            h: rect.height,
-          };
-        }
-        // Fallback to viewport center if centerpiece missing
-        return { x: innerWidth / 2, y: innerHeight / 2, w: 0, h: 0 };
-      }
-
-      // Get bounds of all elements in centerpiece that bubbles should bounce off
-      function getCenterpieceElementBounds() {
-        const bounds = [];
-        const cp = document.getElementById('centerpiece');
-        if (!cp) return bounds;
-        
-        // Add padding around elements for collision detection
-        const padding = 60;
-        
-        // Profile photo
-        const photo = document.getElementById('profilePhoto');
-        if (photo) {
-          const rect = photo.getBoundingClientRect();
-          if (rect.width > 0 && rect.height > 0) {
-            bounds.push({
-              left: rect.left - padding,
-              right: rect.right + padding,
-              top: rect.top - padding,
-              bottom: rect.bottom + padding,
-              centerX: rect.left + rect.width / 2,
-              centerY: rect.top + rect.height / 2
-            });
-          }
-        }
-        
-        // Name text
-        const name = document.getElementById('name');
-        if (name) {
-          const rect = name.getBoundingClientRect();
-          if (rect.width > 0 && rect.height > 0) {
-            bounds.push({
-              left: rect.left - padding,
-              right: rect.right + padding,
-              top: rect.top - padding,
-              bottom: rect.bottom + padding,
-              centerX: rect.left + rect.width / 2,
-              centerY: rect.top + rect.height / 2
-            });
-          }
-        }
-        
-        // Social links
-        const socialLinks = document.querySelectorAll('.social-link');
-        socialLinks.forEach(link => {
-          const rect = link.getBoundingClientRect();
-          if (rect.width > 0 && rect.height > 0) {
-            bounds.push({
-              left: rect.left - padding,
-              right: rect.right + padding,
-              top: rect.top - padding,
-              bottom: rect.bottom + padding,
-              centerX: rect.left + rect.width / 2,
-              centerY: rect.top + rect.height / 2
-            });
-          }
-        });
-        
-        // About section (lede text)
-        const aboutInline = document.getElementById('about-inline');
-        if (aboutInline) {
-          const rect = aboutInline.getBoundingClientRect();
-          if (rect.width > 0 && rect.height > 0) {
-            bounds.push({
-              left: rect.left - padding,
-              right: rect.right + padding,
-              top: rect.top - padding,
-              bottom: rect.bottom + padding,
-              centerX: rect.left + rect.width / 2,
-              centerY: rect.top + rect.height / 2
-            });
-          }
-        }
-        
-        // Hobbies section
-        const hobbies = document.getElementById('hobbies');
-        if (hobbies) {
-          const rect = hobbies.getBoundingClientRect();
-          if (rect.width > 0 && rect.height > 0) {
-            bounds.push({
-              left: rect.left - padding,
-              right: rect.right + padding,
-              top: rect.top - padding,
-              bottom: rect.bottom + padding,
-              centerX: rect.left + rect.width / 2,
-              centerY: rect.top + rect.height / 2
-            });
-          }
-        }
-        
-        return bounds;
-      }
-
-      // Simple gentle collision prevention - no complex physics, just gentle push away
-      function calculateCollisionResponse(currentIndex, posX, posY, halfW, halfH) {
-        let posCorrectionX = 0;
-        let posCorrectionY = 0;
-        let hasCollision = false;
-        
-        // Check collision with centerpiece elements (using current position only)
-        const elementBounds = getCenterpieceElementBounds();
-        elementBounds.forEach(bounds => {
-          const bubbleLeft = posX - halfW;
-          const bubbleRight = posX + halfW;
-          const bubbleTop = posY - halfH;
-          const bubbleBottom = posY + halfH;
-          
-          // Check if bubble overlaps with element
-          const overlapX = Math.min(bubbleRight - bounds.left, bounds.right - bubbleLeft);
-          const overlapY = Math.min(bubbleBottom - bounds.top, bounds.bottom - bubbleTop);
-          
-          if (overlapX > 0 && overlapY > 0) {
-            hasCollision = true;
-            // Calculate direction away from element center
-            const dx = posX - bounds.centerX;
-            const dy = posY - bounds.centerY;
-            const dist = Math.hypot(dx, dy);
-            
-            if (dist > 0.0001) {
-              const overlapDepth = Math.min(overlapX, overlapY);
-              // Very gentle position correction - just enough to prevent overlap
-              posCorrectionX += (dx / dist) * overlapDepth * 0.5;
-              posCorrectionY += (dy / dist) * overlapDepth * 0.5;
-            }
-          }
-        });
-        
-        // Check collisions with other bubbles
-        for (let i = 0; i < state.length; i++) {
-          if (i === currentIndex) continue;
-          
-          const otherBubble = state[i];
-          const otherX = otherBubble.pos.x;
-          const otherY = otherBubble.pos.y;
-          const otherRect = otherBubble.el.getBoundingClientRect();
-          const otherHalfW = otherRect.width / 2;
-          const otherHalfH = otherRect.height / 2;
-          
-          const dx = posX - otherX;
-          const dy = posY - otherY;
-          const dist = Math.hypot(dx, dy);
-          const minDist = Math.max(halfW, halfH) + Math.max(otherHalfW, otherHalfH) + 24;
-          
-          if (dist < minDist && dist > 0.0001) {
-            hasCollision = true;
-            const overlapDepth = minDist - dist;
-            // Gentle position correction for bubble collisions
-            posCorrectionX += (dx / dist) * overlapDepth * 0.4;
-            posCorrectionY += (dy / dist) * overlapDepth * 0.4;
-          }
-        }
-        
-        return { posCorrectionX, posCorrectionY, hasCollision };
-      }
-
-      // Gentle parameters
-      const DRIFT_AMP   = 16;    // lively ambient drift
-      const DRIFT_FREQ  = 0.18;  // drift cycle
-      const BOUNCE_AMP  = 8;     // soft radial bounce
-      const BOUNCE_FREQ = 0.08;
-      const SPIN        = 0.010; // slightly faster orbit
-      const MAG_PULL    = 0.015; // subtle magnetic pull on hover
-      const SPRING      = 0.035; // smoother pursuit
-      const SPRING_INIT = 0.12;  // faster initial float-in
-      const DAMP        = 0.90;  // softer, more organic motion
-      const MAX_VEL     = 5;     // allow brisk but smooth entry
-
-      const state = bubbles.map((el, i) => ({
-        el,
-        angle: (i / bubbles.length) * Math.PI * 2 + (Math.random()-0.5)*0.4,
-        radiusMul: 0.9 + Math.random()*0.2,
-        pos: { x: 0, y: 0 },
-        vel: { x: 0, y: 0 },
-        hovering: false,
-        hoverT: 0,   // target [0..1]
-        hover: 0,    // eased [0..1]
-        driftPhase: Math.random() * Math.PI * 2,
-        target: { x: 0, y: 0 }
-      }));
-
-      // Hover flags (kept even for reduced-motion so we can slightly bias position if desired)
-      state.forEach(s => {
-        s.el.addEventListener('pointerenter', () => { s.hovering = true; s.hoverT = 1; });
-        s.el.addEventListener('pointerleave', () => { s.hovering = false; s.hoverT = 0; });
-      });
-
-      // Smoothed pointer (used only when not reduced motion)
-      let rawPointer = { x: innerWidth/2, y: innerHeight/2, active: false };
-      let filtPointer = { x: rawPointer.x, y: rawPointer.y };
-      window.addEventListener('pointermove', (e) => { rawPointer = { x: e.clientX, y: e.clientY, active: true }; }, { passive:true });
-
-      let last = performance.now();
-      let initialized = false;
-      let rafId = 0;
-
-      function layoutOnce(center, initialPlacement = false){
-        // Use a more reasonable base radius calculation
-        const baseR = Math.min(
-          Math.max(180, 220),
-          Math.min(innerWidth, innerHeight) * 0.3
-        );
-        
-        //
-        
-        state.forEach((s, index) => {
-          const rect = s.el.getBoundingClientRect();
-          const halfW = rect.width/2;
-          const halfH = rect.height/2;
-          const pad = 40; // Increased padding for better edge handling
-
-          // Calculate safe boundaries - ensure bubbles stay fully visible
-          const minX = halfW + pad;
-          const maxX = innerWidth - halfW - pad;
-          const minY = halfH + pad;
-          const maxY = innerHeight - halfH - pad;
-
-          // Calculate radius with reasonable constraints
-          // Ensure clearance from centerpiece bounds by at least bubble radius + gap
-          const centerHalfDiag = Math.hypot(center.w/2, center.h/2);
-          const minClear = centerHalfDiag + Math.max(halfW, halfH) + clearGapForViewport();
-          const maxRadiusX = Math.min(center.x - minX, maxX - center.x);
-          const maxRadiusY = Math.min(center.y - minY, maxY - center.y);
-          const maxRadius = Math.min(maxRadiusX, maxRadiusY);
-          const R = clamp(baseR * s.radiusMul, Math.max(120, minClear), maxRadius);
-
-          let targetX = center.x + Math.cos(s.angle) * R;
-          let targetY = center.y + Math.sin(s.angle) * R;
-
-          if (initialPlacement) {
-            // Start slightly outside target ring along the radial line, then spring inward
-            const offR = R + 220;
-            s.pos.x = center.x + Math.cos(s.angle) * offR;
-            s.pos.y = center.y + Math.sin(s.angle) * offR;
-          } else {
-            // Clamp to safe boundaries
-            s.pos.x = clamp(targetX, minX, maxX);
-            s.pos.y = clamp(targetY, minY, maxY);
-          }
-          
-          //
-          
-          s.vel.x = 0; s.vel.y = 0;     // reset velocities to avoid bounce on re-layout
-          // Clamp and enforce centerpiece clearance on initial placement
-          let tx = clamp(targetX, minX, maxX);
-          let ty = clamp(targetY, minY, maxY);
-          const dx0 = tx - center.x;
-          const dy0 = ty - center.y;
-          const dist0 = Math.hypot(dx0, dy0);
-          const centerHalfDiag2 = Math.hypot(center.w/2, center.h/2);
-          const minClear2 = centerHalfDiag2 + Math.max(halfW, halfH) + 24;
-          if (dist0 < minClear2 && dist0 > 0.0001){
-            const sc = minClear2 / dist0;
-            tx = center.x + dx0 * sc;
-            ty = center.y + dy0 * sc;
-            tx = clamp(tx, minX, maxX);
-            ty = clamp(ty, minY, maxY);
-          }
-          s.target.x = tx;
-          s.target.y = ty;
-          s.el.style.transform = `translate3d(${s.pos.x - halfW}px, ${s.pos.y - halfH}px, 0)`;
-        });
-        // leave `initialized` false so first tick uses SPRING_INIT
-      }
-
-      function tick(t){
-        const dt = Math.min(0.032, (t - last) / 1000);
-        last = t;
-
-        // pointer smoothing
-        const ALPHA = 0.15;
-        filtPointer.x += (rawPointer.x - filtPointer.x) * ALPHA;
-        filtPointer.y += (rawPointer.y - filtPointer.y) * ALPHA;
-
-        const center = getCenterpieceCenter();
-        // Keep orbit radius independent of typing width to prevent re-spread
-        const baseR = Math.min(
-          Math.max(180, 220),
-          Math.min(innerWidth, innerHeight) * 0.3
-        );
-
-        state.forEach((s, idx) => {
-          const rect = s.el.getBoundingClientRect();
-          const halfW = rect.width/2;
-          const halfH = rect.height/2;
-          const pad = 40;
-
-          // Calculate safe boundaries
-          const minX = halfW + pad;
-          const maxX = innerWidth - halfW - pad;
-          const minY = halfH + pad;
-          const maxY = innerHeight - halfH - pad;
-
-          // ease hover amount for transform and magnet strength
-          s.hover += (s.hoverT - s.hover) * 0.18;
-          const spinNow = s.hover > 0 ? SPIN * 0.3 : SPIN;
-          s.angle += spinNow * dt;
-
-          const time = t * 0.001;
-          const drift = Math.sin(time * (DRIFT_FREQ * 2 * Math.PI) + s.driftPhase) * DRIFT_AMP
-                       + Math.sin(time * (BOUNCE_FREQ * 2 * Math.PI) + s.driftPhase*0.7) * BOUNCE_AMP;
-          
-          // Calculate radius - allow bubbles to get closer (collisions will bounce)
-          const maxRadiusX = Math.min(center.x - minX, maxX - center.x);
-          const maxRadiusY = Math.min(center.y - minY, maxY - center.y);
-          const maxRadius = Math.min(maxRadiusX, maxRadiusY);
-          const R = clamp(baseR * s.radiusMul + drift, 100, maxRadius); // Lower min radius to allow closer approach
-
-          let tx = center.x + Math.cos(s.angle) * R;
-          let ty = center.y + Math.sin(s.angle) * R;
-
-          if (s.hover > 0.001 && rawPointer.active) {
-            const pull = MAG_PULL * s.hover; // scale with hover easing
-            tx += (filtPointer.x - tx) * pull;
-            ty += (filtPointer.y - ty) * pull;
-          }
-
-          // Clamp to viewport safe bounds
-          tx = clamp(tx, minX, maxX);
-          ty = clamp(ty, minY, maxY);
-
-          s.target.x = tx;
-          s.target.y = ty;
-
-          const k = initialized ? SPRING : SPRING_INIT;
-          s.vel.x = (s.vel.x + (s.target.x - s.pos.x) * k) * DAMP;
-          s.vel.y = (s.vel.y + (s.target.y - s.pos.y) * k) * DAMP;
-
-          const speed = Math.hypot(s.vel.x, s.vel.y);
-          if (speed > MAX_VEL){
-            const scale = MAX_VEL / speed;
-            s.vel.x *= scale; s.vel.y *= scale;
-          }
-
-          // Update position with velocity
-          s.pos.x += s.vel.x;
-          s.pos.y += s.vel.y;
-
-          // Apply gentle collision prevention - only position correction, no velocity forces
-          // Only apply collision detection after initial load animation (preserve smooth entry)
-          if (initialized) {
-            const collision = calculateCollisionResponse(
-              idx,
-              s.pos.x,
-              s.pos.y,
-              halfW,
-              halfH
-            );
-            
-            // Only apply position correction if there's actual collision
-            // This prevents overlap gently without causing vibration
-            if (collision.hasCollision && (collision.posCorrectionX !== 0 || collision.posCorrectionY !== 0)) {
-              // Very gentle, smoothed correction to prevent overlap
-              s.pos.x += collision.posCorrectionX * 0.4;
-              s.pos.y += collision.posCorrectionY * 0.4;
-            }
-          }
-          
-          // Final clamp to ensure we stay in bounds
-          s.pos.x = clamp(s.pos.x, minX, maxX);
-          s.pos.y = clamp(s.pos.y, minY, maxY);
-          const scaleStr = s.hover > 0.001 ? ` scale(${1 + 0.05 * s.hover})` : '';
-          s.el.style.transform = `translate3d(${s.pos.x - halfW}px, ${s.pos.y - halfH}px, 0)${scaleStr}`;
-        });
-
-        initialized = true;
-        rafId = requestAnimationFrame(tick);
-      }
-
-      // --- Start logic: orchestrated to begin after icons pop in ---------------
-      let started = false;
-      function start(initialPlacement = false){
-        if (started) return;
-        started = true;
-        const center = getCenterpieceCenter();
-        layoutOnce(center, initialPlacement);
-        nav.classList.add('ready');
-        if (!reducedMotion){
-          last = performance.now();
-          rafId = requestAnimationFrame(tick);
-        }
-      }
-      
-      // Reset started flag on page load (important for back navigation)
-      // This ensures bubbles reinitialize when navigating back
-      function resetBubbleState() {
-        started = false;
-        initialized = false;
-        if (rafId) {
-          cancelAnimationFrame(rafId);
-          rafId = 0;
-        }
-        nav.classList.remove('ready');
-        // Reset bubble positions to initial state
-        bubbles.forEach(bubble => {
-          bubble.style.transform = '';
-          bubble.style.opacity = '';
-        });
-      }
-      
-      // Reset on page load
-      if (document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', resetBubbleState);
-      } else {
-        resetBubbleState();
-      }
-      
-      // Reset on pageshow event (handles back navigation from cache)
-      window.addEventListener('pageshow', function(event) {
-        if (event.persisted) {
-          resetBubbleState();
-        }
-      });
-      
-      // Allow external trigger after icons reveal - remove once:true to allow re-triggering
-      function handleBubblesStart() {
-        start(true);
-      }
-      window.addEventListener('bubbles:start', handleBubblesStart);
-
-      // Mobile: first tap acts like hover, second tap navigates
-      const elToState = new Map(state.map(s => [s.el, s]));
-      const isTouch = 'ontouchstart' in window || (navigator.maxTouchPoints||0) > 0;
-      function tryVibrate(ms){ try{ if (navigator && typeof navigator.vibrate === 'function') navigator.vibrate(ms); } catch(_){} }
-      if (isTouch){
-        bubbles.forEach(el => {
-          el.addEventListener('click', (e) => {
-            const s = elToState.get(el);
-            if (!s) return;
-            const armed = el.dataset.armed === '1';
-            if (!armed){
-              // arm and simulate hover
-              el.dataset.armed = '1';
-              s.hoverT = 1; s.hover = 1;
-              tryVibrate(25);
-              // auto-disarm after a short window if no second tap
-              setTimeout(() => { if (el.dataset.armed === '1') { el.dataset.armed = ''; s.hoverT = 0; } }, 1400);
-              e.preventDefault(); e.stopPropagation();
-              return false;
-            } else {
-              // navigate manually and clear
-              el.dataset.armed = '';
-              window.location.assign(el.href);
-              e.preventDefault(); e.stopPropagation();
-              return false;
-            }
-          }, { passive:false });
-        });
-      }
-
-      // Removed ResizeObserver on centerpiece/body to avoid re-initialization
-      // while typing (which caused a visible re-spread/bounce). Viewport
-      // resizes are still handled below.
-
-      // Recenter on viewport changes
-      let resizeTimer;
-      function handleResize(){
-        clearTimeout(resizeTimer);
-        resizeTimer = setTimeout(() => {
-          cancelAnimationFrame(rafId);
-          started = false; 
-          initialized = false;
-          start(false);
-        }, 150);
-      }
-      window.addEventListener('resize', handleResize);
-      window.addEventListener('orientationchange', handleResize);
-    })();
-
-    // Typing (~5s total, natural jitter)
-    const nameEl = document.getElementById('name');
-    const socialLinksEl = document.querySelector('.social-links');
-    const profilePhotoEl = document.getElementById('profilePhoto');
-    const profilePhotoContainer = document.querySelector('.profile-photo-container');
-    const fullText = nameEl.dataset.text;
-    const totalMs = 2200; // faster typing again
-    const stepMs = Math.max(30, Math.floor(totalMs / Math.max(1, fullText.length)));
-    let idx = 0;
-    let typingTimeout = null;
-    
-    function resetTypingState() {
-      // Clear any ongoing typing animation
-      if (typingTimeout) {
-        clearTimeout(typingTimeout);
-        typingTimeout = null;
-      }
-      idx = 0;
-      // Reset visibility states
-      if (profilePhotoContainer) profilePhotoContainer.classList.remove('show');
-      if (socialLinksEl) socialLinksEl.classList.remove('icons-in');
-    }
-    
-    function typeNext(){
-      if (idx <= fullText.length){
-        nameEl.innerHTML = fullText.slice(0, idx) + '<span class="typing-cursor"></span>';
-        idx++; 
-        typingTimeout = setTimeout(typeNext, stepMs + Math.random()*40);
-      } else {
-        nameEl.innerHTML = fullText + '<span class="typing-cursor"></span>';
-        setTimeout(()=> {
-          // Show profile photo first
-          profilePhotoContainer?.classList.add('show');
-          setTimeout(()=> {
-            // Pop in icons after photo
-            socialLinksEl?.classList.add('icons-in');
-            // Notify that icons are ready so About section can begin reveal observation
-            window.dispatchEvent(new Event('icons:ready'));
-            // After icons pop, start bubbles with initial offscreen placement
-            setTimeout(()=>{ window.dispatchEvent(new Event('bubbles:start')); }, 450);
-          }, 300);
-        }, 400);
-      }
-    }
-    
-    function startTyping() {
-      resetTypingState();
-      nameEl.textContent = '';
-      typingTimeout = setTimeout(typeNext, 300);
-    }
-    
-    // Kick off typing as soon as DOM is ready; also on load as redundancy
-    // Always reset and restart on page load (important for back navigation)
-    if (document.readyState === 'loading') {
-      document.addEventListener('DOMContentLoaded', startTyping);
-    } else {
-      startTyping();
-    }
-    
-    // Handle pageshow event for back navigation (page loaded from cache)
-    window.addEventListener('pageshow', function(event) {
-      if (event.persisted) {
-        // Page was loaded from cache (back navigation)
-        // Reset and restart typing animation
-        startTyping();
-      }
-    });
-    
-    window.addEventListener('load', () => {
-      // Fallback: if typing didn't start, start it now
-      if (nameEl && (!nameEl.textContent || nameEl.textContent.trim() === '')) {
-        startTyping();
-      }
-    });
-
-    // Absolute fallbacks so page never feels blank if something blocks animations
-    setTimeout(()=>{
-      if (!profilePhotoContainer?.classList.contains('show')) profilePhotoContainer?.classList.add('show');
-    }, 1200);
-    setTimeout(()=>{
-      if (!socialLinksEl.classList.contains('icons-in')) socialLinksEl.classList.add('icons-in');
-    }, 1800);
-    setTimeout(()=>{
-      // ensure bubbles start even if typing flow didn't dispatch
-      window.dispatchEvent(new Event('bubbles:start'));
-    }, 3200);
-
-    // Tiny parallax on ornaments
-    let scrollPos = 0;
-    window.addEventListener('scroll', ()=>{
-      scrollPos = window.pageYOffset;
-      document.querySelectorAll('.floating-element').forEach((el,i)=>{
-        const speed = (i+1)*0.5;
-        el.style.transform = `translateY(${scrollPos*speed}px)`;
-      });
-    });
-
-
-    // Profile photo parallax removed - keeping it fixed in place
-
-    // Page transition on bubble click (for desktop/non-touch)
-    (function(){
-      const bubbles = document.querySelectorAll('.bubble');
-      const pageTransition = document.getElementById('pageTransition');
-      const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-      const isTouch = 'ontouchstart' in window || (navigator.maxTouchPoints||0) > 0;
-      
-      // Reset is already handled at the top of the script, but ensure it's reset here too
-      if (pageTransition) {
-        pageTransition.classList.remove('active');
-        pageTransition.style.width = '0';
-        pageTransition.style.height = '0';
-        pageTransition.style.opacity = '0';
-        pageTransition.style.pointerEvents = 'none';
-      }
-      
-      if (!bubbles.length || !pageTransition || reducedMotion || isTouch) return;
-      
-      bubbles.forEach(bubble => {
-        // Only add transition for non-touch devices
-        bubble.addEventListener('click', function(e){
-          const href = this.getAttribute('href');
-          if (!href || href === '#' || href.startsWith('mailto:') || href.startsWith('tel:')) return;
-          
-          // Check if it's an internal link
-          try {
-            const url = new URL(href, window.location.origin);
-            if (url.hostname !== window.location.hostname) return;
-          } catch(err) {
-            // Relative URL
-          }
-          
-          e.preventDefault();
-          
-          // Get bubble position at click time
-          const rect = this.getBoundingClientRect();
-          const x = rect.left + rect.width / 2;
-          const y = rect.top + rect.height / 2;
-          
-          // Position transition overlay at bubble center
-          pageTransition.style.left = x + 'px';
-          pageTransition.style.top = y + 'px';
-          pageTransition.style.transform = 'translate(-50%, -50%)';
-          
-          // Activate transition
-          requestAnimationFrame(() => {
-            pageTransition.classList.add('active');
-          });
-          
-          // Navigate after animation - use location.assign to ensure proper history entry
-          setTimeout(() => {
-            window.location.assign(href);
-          }, 400);
-        });
-      });
-    })();
-
-    // ===== IntersectionObserver for section reveal (gated for About+Hobbies) =====
-    (function(){
-      const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-      let observer = null;
-      
-      function setupObserver() {
-        const allSections = Array.from(document.querySelectorAll('.section'));
-        const about = document.getElementById('about-inline');
-        const hobbies = document.getElementById('hobbies');
-        const gated = new Set([about, hobbies]);
-
-        if (reducedMotion) {
-          allSections.forEach(s => {
-            if (s !== hobbies) s.classList.add('reveal');
-          });
-          // For hobbies, show immediately on reduced motion
-          if (hobbies) hobbies.classList.add('reveal');
-          return;
-        }
-
-        // Disconnect existing observer if it exists
-        if (observer) {
-          observer.disconnect();
-        }
-
-        const observerOptions = { root: null, rootMargin: '0px', threshold: 0.1 };
-        observer = new IntersectionObserver((entries) => {
-          entries.forEach(entry => {
-            if (entry.isIntersecting) {
-              entry.target.classList.add('reveal');
-              observer.unobserve(entry.target);
-            }
-          });
-        }, observerOptions);
-
-        // Observe all except the gated ones initially
-        allSections.forEach(section => {
-          if (!gated.has(section)) observer.observe(section);
-        });
-
-        // After icons are in, start observing the gated sections (except hobbies)
-        // Remove once:true to allow re-triggering on back navigation
-        function handleIconsReady() {
-          if (about && observer) observer.observe(about);
-        }
-        window.addEventListener('icons:ready', handleIconsReady);
-      }
-      
-      // Setup observer initially
-      if (document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', setupObserver);
-      } else {
-        setupObserver();
-      }
-      
-      // Re-setup observer on pageshow (back navigation from cache)
-      window.addEventListener('pageshow', function(event) {
-        if (event.persisted) {
-          setupObserver();
-        }
-      });
-    })();
-
-    // ===== Hobbies section: reveal on scroll or after time (for attentive users) =====
-    (function(){
-      const hobbies = document.getElementById('hobbies');
-      if (!hobbies) return;
-
-      const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-      let revealed = false;
-      let scrollRevealed = false;
-      let timeRevealed = false;
-      let timeRevealTimeout = null;
-      let fallbackTimeout = null;
-      
-      function resetHobbiesState() {
-        revealed = false;
-        scrollRevealed = false;
-        timeRevealed = false;
-        if (timeRevealTimeout) {
-          clearTimeout(timeRevealTimeout);
-          timeRevealTimeout = null;
-        }
-        if (fallbackTimeout) {
-          clearTimeout(fallbackTimeout);
-          fallbackTimeout = null;
-        }
-        hobbies.classList.remove('reveal');
-      }
-      
-      function revealHobbies() {
-        if (revealed) return;
-        revealed = true;
-        hobbies.classList.add('reveal');
-      }
-      
-      function setupHobbiesReveal() {
-        resetHobbiesState();
-        
-        // Scroll-based reveal
-        function checkScroll() {
-          if (scrollRevealed) return;
-          const scrollY = window.pageYOffset || document.documentElement.scrollTop;
-          if (scrollY > 200) {
-            scrollRevealed = true;
-            revealHobbies();
-          }
-        }
-        
-        // Time-based reveal (after user has been on page for a while)
-        function handleIconsReady() {
-          timeRevealTimeout = setTimeout(() => {
-            if (!timeRevealed && !revealed) {
-              timeRevealed = true;
-              // Only reveal via time if user hasn't scrolled yet
-              if (!scrollRevealed) {
-                revealHobbies();
-              }
-            }
-          }, 4000); // 4 seconds after icons appear
-        }
-        window.addEventListener('icons:ready', handleIconsReady);
-        
-        // Scroll listener
-        window.addEventListener('scroll', checkScroll, { passive: true });
-        
-        // Initial check in case page is already scrolled
-        checkScroll();
-        
-        // Fallback: show after 6 seconds if nothing else triggered it
-        fallbackTimeout = setTimeout(() => {
-          if (!revealed) {
-            revealHobbies();
-          }
-        }, 6000);
-        
-        // Show immediately on reduced motion
-        if (reducedMotion) {
-          revealHobbies();
-        }
-      }
-      
-      // Setup initially
-      if (document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', setupHobbiesReveal);
-      } else {
-        setupHobbiesReveal();
-      }
-      
-      // Reset and re-setup on pageshow (back navigation from cache)
-      window.addEventListener('pageshow', function(event) {
-        if (event.persisted) {
-          setupHobbiesReveal();
-        }
-      });
-    })();
-
-
-  </script>
-</body>
+    </main>
+    <footer class="edition-footer">
+      <div class="footer-interests" aria-label="Other interests"><a href="mailto:hello@rajadhanda.me?subject=Coffee" aria-label="Coffee" title="Coffee"><svg class="icon" aria-hidden="true"><use href="/assets/icons/sprite.svg#mug-hot"/></svg></a><a href="mailto:hello@rajadhanda.me?subject=Quantum%20computing" aria-label="Quantum computing" title="Quantum computing"><svg class="icon" aria-hidden="true"><use href="/assets/icons/sprite.svg#microchip"/></svg></a><a href="mailto:hello@rajadhanda.me?subject=Football" aria-label="Football" title="Football"><svg class="icon" aria-hidden="true"><use href="/assets/icons/sprite.svg#futbol"/></svg></a><a href="/paddock/" aria-label="Formula 1" title="Formula 1"><svg class="icon" aria-hidden="true"><use href="/assets/icons/sprite.svg#flag-checkered"/></svg></a></div>
+      <a
+        class="footer-chat"
+        href="mailto:hello@rajadhanda.me"
+        aria-label="Contact me by email"
+        ><svg class="icon" aria-hidden="true">
+          <use href="/assets/icons/sprite.svg#envelope" /></svg
+        ><span>Contact me</span></a
+      >
+    </footer>
+    <p class="edition-colophon">© 2026 Raja Dhanda</p>
+    <dialog id="drawer" aria-labelledby="drawer-title">
+      <button class="drawer-close" aria-label="Close preview">×</button>
+      <div id="drawer-content"></div>
+    </dialog>
+  </body>
 </html>
