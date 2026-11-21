@@ -8,33 +8,22 @@ on:
 permissions:
   contents: write
 
+concurrency:
+  group: substack-notes-${{ github.ref }}
+  cancel-in-progress: false
+
 jobs:
   sync:
     runs-on: ubuntu-latest
+    timeout-minutes: 5
     steps:
       - uses: actions/checkout@v4
 
-      - name: Fetch the latest notes
-        env:
-          FEED_URL: https://substack.com/api/v1/reader/feed/profile/43989908
-          PROFILE_URL: https://substack.com/@rajadhanda
-        run: |
-          set -euo pipefail
-          temp_file=$(mktemp)
-          curl --fail --location --retry 3 --silent --show-error "$FEED_URL" \
-            | jq --arg profile_url "$PROFILE_URL" '
-                [
-                  .items[]
-                  | select(.type == "comment" and .comment.user_id == 43989908)
-                  | {
-                      text: .comment.body,
-                      date: (.comment.date | split("T")[0]),
-                      link: ($profile_url + "/note/c-" + (.comment.id | tostring))
-                    }
-                ]
-                | if length > 0 then . else error("Substack returned no notes") end
-              ' > "$temp_file"
-          mv "$temp_file" blog/notes.json
+      - name: Check note validation and cache preservation
+        run: python3 -m unittest discover -s tests -p test_substack_sync.py
+
+      - name: Fetch and validate the latest public notes
+        run: python3 scripts/sync_substack_notes.py
 
       - name: Commit updated cache
         run: |
