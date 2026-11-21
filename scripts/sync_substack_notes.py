@@ -79,6 +79,7 @@ def fetch_notes(opener=urlopen, sleep=time.sleep):
                 failures.append(f"{url}: HTTP {error.code}")
                 # Do not repeatedly retry a refused request. Try the other public host.
                 retry = error.code == 429 or 500 <= error.code < 600
+                error.close()
             except (URLError, TimeoutError, OSError) as error:
                 failures.append(f"{url}: {error}")
                 retry = True
