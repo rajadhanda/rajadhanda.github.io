@@ -14,13 +14,32 @@ concurrency:
 
 jobs:
   sync:
-    runs-on: macos-latest
+    runs-on: ubuntu-latest
     timeout-minutes: 5
     steps:
       - uses: actions/checkout@v4
 
       - name: Check note validation and cache preservation
         run: python3 -m unittest discover -s tests -p test_substack_sync.py
+
+      - name: Diagnose public browser access
+        run: |
+          mkdir -p /tmp/substack-browser-check
+          cd /tmp/substack-browser-check
+          npm install playwright
+          npx playwright install --with-deps chromium
+          node - <<'JS'
+          const {chromium} = require('playwright');
+          (async () => {
+            const browser = await chromium.launch();
+            const page = await browser.newPage();
+            for (const url of ['https://substack.com/@rajadhanda', 'https://rajadhanda.substack.com/api/v1/reader/feed/profile/43989908']) {
+              const response = await page.goto(url);
+              console.log(url, response.status(), (await page.locator('body').innerText()).slice(0, 200));
+            }
+            await browser.close();
+          })();
+          JS
 
       - name: Fetch and validate the latest public notes
         run: python3 scripts/sync_substack_notes.py
