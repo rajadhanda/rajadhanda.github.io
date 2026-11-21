@@ -14,7 +14,7 @@
     btn.setAttribute("aria-pressed", String(dark));
     btn.setAttribute(
       "aria-label",
-      dark ? "Switch to light mode" : "Switch to midnight mode",
+      dark ? "Switch to Daylight mode" : "Switch to Midnight mode",
     );
   };
   syncButton();

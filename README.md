@@ -1,42 +1,78 @@
 # rajadhanda.me
 
-Raja Dhanda’s personal website: projects, writing, and photographs.
+Personal website showcasing projects, blog posts, and photographs.
 
-## Running locally
+## Tech Stack
 
-This is a static HTML, CSS, and vanilla JavaScript site with no build step or runtime dependencies. Serve the repository root:
+- **HTML5** - Semantic markup
+- **CSS3** - Custom properties, animations, and responsive design
+- **Vanilla JavaScript** - No framework dependencies
+- **Font Awesome 6.5.2** - Icon library (CDN)
+- **Google Fonts** - Typography (Crimson Text, Inter)
+- **GitHub Pages** - Static hosting
 
-```sh
-python3 -m http.server 8000
+## Design Philosophy
+
+- **Minimalism First** - Clean, uncluttered interface
+- **Subtle Interactions** - Elegant micro-animations that enhance without distracting
+- **Performance** - 60fps animations, optimized rendering
+- **Accessibility** - Full keyboard navigation, prefers-reduced-motion support
+- **Consistency** - Unified design language across all pages
+
+## Features
+
+- Interactive homepage with physics-based bubble navigation
+- Daylight and Midnight modes, larger social logos, and an animated EyesOff bubble
+- Homepage previews of photography and writing
+- Smooth page transitions
+- Blog with card-based layout
+- Photo gallery with lazy loading
+
+## Setup
+
+This is a static website that can be:
+
+1. **Viewed directly** - Open HTML files in a browser
+2. **Served locally** - Use any static file server:
+   ```bash
+   # Python 3
+   python -m http.server 8000
+
+   # Node.js (http-server)
+   npx http-server
+
+   # PHP
+   php -S localhost:8000
+   ```
+3. **Deployed to GitHub Pages** - Automatically deployed from the `main` branch
+
+## Structure
+
+```
+rajadhanda.me/
+├── index.html              # Homepage
+├── about/
+│   └── index.html          # About page
+├── blog/
+│   ├── index.html          # Blog listing
+│   └── posts/               # Blog posts
+├── projects/
+│   └── index.html          # Projects page
+├── photographs/
+│   ├── index.html          # Photo gallery
+│   └── images/             # Photo assets
+└── assets/
+    └── images/              # Site assets
 ```
 
-Open http://localhost:8000. GitHub Pages deploys the `main` branch.
+## Performance
 
-## Design and structure
+- Minimal JavaScript (vanilla JS only)
+- CSS-based animations for performance
+- Lazy loading for images
+- Optimized animations with `will-change` and `transform`
+- Respects `prefers-reduced-motion` for accessibility
 
-The homepage uses Space Grotesk and DM Sans with an electric blue accent, selected photography, and small hover interactions. Light and midnight themes share the same design tokens. Content and homepage navigation remain available without JavaScript, and motion respects the visitor’s reduced-motion preference.
+## License
 
-- `index.html` — homepage
-- `assets/css/editorial.css` — homepage design and shared content-page refinements
-- `assets/css/site.css` — existing content-page layout and gallery controls
-- `assets/js/site.js` — shared theme switch and content-page navigation
-- `assets/js/home.js` — optional homepage details
-- `assets/images/selected/` — resized homepage photos, derived from the original gallery images
-- `projects/` — projects
-- `blog/` — articles and synced Substack notes
-- `photographs/` — gallery and original photographs
-- `paddock/` — F1 page
-
-The GitHub Actions workflows in `.github/workflows/` keep the Substack notes in sync. The gallery continues to use its existing Cloudinary image delivery and lightbox.
-
-## Quick checks
-
-```sh
-node --check assets/js/site.js
-node --check assets/js/home.js
-git diff --check
-```
-
-Check the homepage and content pages on desktop and mobile, switch themes, and open a gallery photo before publishing design changes.
-
-© 2026 Raja Dhanda. All rights reserved.
+© 2026 Raja Dhanda – All rights reserved
