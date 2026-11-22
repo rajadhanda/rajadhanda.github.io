@@ -183,8 +183,6 @@
   const slides = [...carousel.querySelectorAll(".carousel-slide")];
   const status = carousel.querySelector(".carousel-status");
   const playButtons = [...carousel.querySelectorAll("[data-carousel-play]")];
-  const dialog = document.getElementById("drawer");
-  const content = document.getElementById("drawer-content");
   const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
   const interval = 6000;
   let current = 0;
@@ -202,8 +200,7 @@
       !hovering &&
       !focused &&
       visible &&
-      !document.hidden &&
-      !dialog.open
+      !document.hidden
     );
   }
   function schedule() {
@@ -258,14 +255,17 @@
     clearPhotoFade();
     const outgoing = slides[current];
     const active = document.activeElement;
-    const focusSelector = outgoing.contains(active)
-      ? (active.matches(".frame-play") ? ".frame-play" : ".carousel-photo")
-      : null;
+    let focusSelector = null;
+    if (outgoing.contains(active)) {
+      focusSelector = active.dataset.carousel
+        ? `[data-carousel="${active.dataset.carousel}"]`
+        : active.matches(".frame-play") ? ".frame-play" : ".carousel-photo";
+    }
     incoming.hidden = false;
     current = target;
     if (focusSelector) incoming.querySelector(focusSelector).focus({ preventScroll: true });
 
-    if (reducedMotion.matches || dialog.open || !incoming.animate) {
+    if (reducedMotion.matches || !incoming.animate) {
       outgoing.hidden = true;
     } else {
       outgoing.classList.add("carousel-fading-frame");
@@ -316,15 +316,24 @@
       syncPlayButton();
     }),
   );
-  carousel.querySelectorAll("[data-carousel]").forEach((button) =>
-    button.addEventListener("click", async () => {
-      await selectPhoto(
-        current + (button.dataset.carousel === "next" ? 1 : -1),
-        true,
-      );
-      schedule();
-    }),
-  );
+  slides.forEach((slide) => {
+    const frame = slide.querySelector(".framed-photo");
+    for (const [direction, label, step] of [
+      ["previous", "Previous photo", -1],
+      ["next", "Next photo", 1],
+    ]) {
+      const arrow = document.createElement("button");
+      arrow.type = "button";
+      arrow.className = "frame-arrow";
+      arrow.dataset.carousel = direction;
+      arrow.setAttribute("aria-label", label);
+      arrow.addEventListener("click", async () => {
+        await selectPhoto(current + step, true);
+        schedule();
+      });
+      frame.append(arrow);
+    }
+  });
   carousel.addEventListener("keydown", async (event) => {
     if (event.key !== "ArrowLeft" && event.key !== "ArrowRight") return;
     event.preventDefault();
@@ -399,74 +408,8 @@
     touch = null;
   });
 
-  function showLargePhoto(focusControl) {
-    const slide = slides[current];
-    content.replaceChildren();
-    const heading = document.createElement("h2");
-    heading.id = "drawer-title";
-    heading.textContent = "Photographs";
-    const image = slide.querySelector("img").cloneNode();
-    image.removeAttribute("width");
-    image.removeAttribute("height");
-    image.loading = "eager";
-    const caption = document.createElement("p");
-    caption.className = "drawer-photo-caption";
-    caption.textContent = slide.querySelector("figcaption").textContent;
-    const controls = document.createElement("div");
-    controls.className = "photo-controls";
-    const previous = document.createElement("button");
-    previous.type = "button";
-    previous.textContent = "Previous";
-    const next = document.createElement("button");
-    next.type = "button";
-    next.textContent = "Next";
-    const gallery = document.createElement("a");
-    gallery.href = document.querySelector(".carousel-heading a").href;
-    gallery.textContent = "All photographs";
-    previous.addEventListener("click", async () => {
-      if (await selectPhoto(current - 1, true)) showLargePhoto("previous");
-    });
-    next.addEventListener("click", async () => {
-      if (await selectPhoto(current + 1, true)) showLargePhoto("next");
-    });
-    controls.append(previous, gallery, next);
-    content.append(heading, image, caption, controls);
-    if (focusControl) (focusControl === "previous" ? previous : next).focus();
-  }
-  carousel.querySelectorAll("[data-open-photo]").forEach((button) =>
-    button.addEventListener("click", async () => {
-      if (swiped) return;
-      if (!(await selectPhoto(Number(button.dataset.openPhoto), true))) return;
-      showLargePhoto();
-      dialog.showModal();
-      schedule();
-    }),
-  );
-  document
-    .querySelector(".drawer-close")
-    .addEventListener("click", () => dialog.close());
-  dialog.addEventListener("close", () => {
-    slides[current].querySelector("button").focus();
-    schedule();
-  });
-  dialog.addEventListener("click", (event) => {
-    if (event.target !== dialog) return;
-    const r = dialog.getBoundingClientRect();
-    if (
-      event.clientX < r.left ||
-      event.clientX > r.right ||
-      event.clientY < r.top ||
-      event.clientY > r.bottom
-    )
-      dialog.close();
-  });
-  dialog.addEventListener("keydown", async (event) => {
-    if (event.key !== "ArrowLeft" && event.key !== "ArrowRight") return;
-    event.preventDefault();
-    if (
-      await selectPhoto(current + (event.key === "ArrowRight" ? 1 : -1), true)
-    )
-      showLargePhoto(event.key === "ArrowRight" ? "next" : "previous");
+  carousel.addEventListener("click", (event) => {
+    if (swiped && event.target.closest(".carousel-photo")) event.preventDefault();
   });
   status.setAttribute("aria-live", "off");
   preloadNext();

@@ -1627,3 +1627,63 @@ dialog img {
 .front-notes .front-note p {
   margin-bottom: 0;
 }
+
+.frame-arrow {
+  position: absolute;
+  z-index: 2;
+  inset-block-start: 50%;
+  display: grid;
+  place-items: center;
+  width: 34px;
+  height: 34px;
+  padding: 0;
+  border: 1px solid #51483e55;
+  border-radius: 50%;
+  background: #fffaf2ef;
+  color: #383128;
+  opacity: 0;
+  pointer-events: none;
+  transform: translateY(-50%);
+  transition: opacity 150ms ease;
+}
+
+.frame-arrow[data-carousel="previous"] {
+  inset-inline-start: 8px;
+}
+
+.frame-arrow[data-carousel="next"] {
+  inset-inline-end: 8px;
+}
+
+.frame-arrow::before {
+  content: "";
+  width: 8px;
+  height: 8px;
+  border-top: 1.5px solid currentColor;
+  border-right: 1.5px solid currentColor;
+  transform: translateX(-1px) rotate(45deg);
+}
+
+.frame-arrow[data-carousel="previous"]::before {
+  transform: translateX(1px) rotate(-135deg);
+}
+
+.framed-photo:hover .frame-arrow,
+.framed-photo:focus-within .frame-arrow {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.frame-arrow:hover {
+  background: #fffaf2;
+  border-color: #51483e;
+}
+
+@media (hover: none), (max-width: 700px) {
+  .frame-arrow {
+    width: 36px;
+    height: 36px;
+    opacity: 0.85;
+    pointer-events: auto;
+  }
+}
