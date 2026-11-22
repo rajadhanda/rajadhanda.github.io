@@ -18,9 +18,11 @@ The Sunday Edition design uses the existing cream palette and serif typography,
 with Daylight and Midnight modes, interactive social bubbles beside the name,
 and a pointer-following EyesOff feature at the centre. The introduction uses the
 existing portrait and original bio. The framed camera-roll carousel cycles through all 29 gallery photographs every
-six seconds. It pauses on hover, keyboard focus, hidden tabs, when out of view,
-and while an enlarged photo is open. A discreet Play/Pause control appears inside the frame on hover or focus;
-arrow keys, touch swipes, and the enlarged-photo dialog provide manual navigation.
+six seconds. It pauses on hover, keyboard focus, when out of view,
+and when the page is hidden. Play/Pause and navigation buttons appear inside
+the frame on hover or focus. The arrows are also visible on mobile.
+Arrow keys and touch swipes provide manual navigation. Clicking a photo opens
+the full Photographs page.
 Each frame follows the photograph’s original proportions. Reduced-motion users
 start with autoplay paused.
 
@@ -51,6 +53,6 @@ git diff --check
 ```
 
 Check desktop and mobile layouts, Daylight/Midnight switching, carousel controls,
-photo-dialog keyboard focus, and the Substack links before publishing.
+photo navigation and keyboard focus, and the Substack links before publishing.
 
 © 2026 Raja Dhanda. All rights reserved.

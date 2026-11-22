@@ -9,14 +9,14 @@
       href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;1,400&family=Crimson+Text:ital,wght@0,400;0,600;1,400&family=Caveat:wght@400;500&display=swap"
       rel="stylesheet"
     />
-    <link rel="stylesheet" href="/assets/css/edition.css?v=pinboard-links" />
+    <link rel="stylesheet" href="/assets/css/edition.css?v=photo-arrows" />
     <script>
       try {
         if (localStorage.getItem("theme") === "midnight")
           document.documentElement.dataset.theme = "midnight";
       } catch (e) {}
     </script>
-    <script src="/assets/js/edition.js?v=pinboard-links" defer></script>
+    <script src="/assets/js/edition.js?v=photo-arrows" defer></script>
     <title>Raja Dhanda</title>
     <meta
       name="description"
@@ -191,18 +191,16 @@
           class="photo-carousel"
           aria-label="Photographs"
           aria-roledescription="carousel"
-          aria-description="Photographs change automatically. Use the pause button, arrow keys or swipes to control the carousel."
+          aria-description="Photographs change automatically. Use the previous and next buttons, arrow keys or swipes to browse. Open a photo to visit the Photographs page."
           tabindex="0"
         >
-          <div class="carousel-heading"><a href="/photographs/" aria-label="View all photographs"><svg class="camera-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M3 7h4l2-3h6l2 3h4v13H3Z"/><circle cx="12" cy="13" r="4"/></svg><span>All</span></a></div>
           <div class="carousel-slides">
             <figure class="carousel-slide">
               <div class="framed-photo">
-                <button
-                  type="button"
+                <a
                   class="carousel-photo"
-                  data-open-photo="0"
-                  aria-label="Enlarge photograph: yasaka pagoda, gion, kyoto"
+                  href="/photographs/"
+                  aria-label="Browse photographs: yasaka pagoda, gion, kyoto"
                 >
                   <img
                     src="/assets/images/camera-roll/photo-01.jpg"
@@ -211,7 +209,7 @@
                     loading="eager"
                     decoding="async"
                   />
-                </button>
+                </a>
                 <button
                   type="button"
                   class="frame-play"
@@ -226,11 +224,10 @@
             </figure>
             <figure class="carousel-slide" hidden>
               <div class="framed-photo">
-                <button
-                  type="button"
+                <a
                   class="carousel-photo"
-                  data-open-photo="1"
-                  aria-label="Enlarge photograph: montmartre, paris"
+                  href="/photographs/"
+                  aria-label="Browse photographs: montmartre, paris"
                 >
                   <img
                     src="/assets/images/camera-roll/photo-02.jpg"
@@ -239,7 +236,7 @@
                     loading="lazy"
                     decoding="async"
                   />
-                </button>
+                </a>
                 <button
                   type="button"
                   class="frame-play"
@@ -254,11 +251,10 @@
             </figure>
             <figure class="carousel-slide" hidden>
               <div class="framed-photo">
-                <button
-                  type="button"
+                <a
                   class="carousel-photo"
-                  data-open-photo="2"
-                  aria-label="Enlarge photograph: louis vuitton, champs-elysées, paris"
+                  href="/photographs/"
+                  aria-label="Browse photographs: louis vuitton, champs-elysées, paris"
                 >
                   <img
                     src="/assets/images/camera-roll/photo-03.jpg"
@@ -267,7 +263,7 @@
                     loading="lazy"
                     decoding="async"
                   />
-                </button>
+                </a>
                 <button
                   type="button"
                   class="frame-play"
@@ -282,11 +278,10 @@
             </figure>
             <figure class="carousel-slide" hidden>
               <div class="framed-photo">
-                <button
-                  type="button"
+                <a
                   class="carousel-photo"
-                  data-open-photo="3"
-                  aria-label="Enlarge photograph: a room of quiet contemplation, national museum of korea, seoul"
+                  href="/photographs/"
+                  aria-label="Browse photographs: a room of quiet contemplation, national museum of korea, seoul"
                 >
                   <img
                     src="/assets/images/camera-roll/photo-04.jpg"
@@ -295,7 +290,7 @@
                     loading="lazy"
                     decoding="async"
                   />
-                </button>
+                </a>
                 <button
                   type="button"
                   class="frame-play"
@@ -312,11 +307,10 @@
             </figure>
             <figure class="carousel-slide" hidden>
               <div class="framed-photo">
-                <button
-                  type="button"
+                <a
                   class="carousel-photo"
-                  data-open-photo="4"
-                  aria-label="Enlarge photograph: a room of quiet contemplation, national museum of korea, seoul"
+                  href="/photographs/"
+                  aria-label="Browse photographs: a room of quiet contemplation, national museum of korea, seoul"
                 >
                   <img
                     src="/assets/images/camera-roll/photo-05.jpg"
@@ -325,7 +319,7 @@
                     loading="lazy"
                     decoding="async"
                   />
-                </button>
+                </a>
                 <button
                   type="button"
                   class="frame-play"
@@ -342,11 +336,10 @@
             </figure>
             <figure class="carousel-slide" hidden>
               <div class="framed-photo">
-                <button
-                  type="button"
+                <a
                   class="carousel-photo"
-                  data-open-photo="5"
-                  aria-label="Enlarge photograph: starfield library, coex mall, seoul"
+                  href="/photographs/"
+                  aria-label="Browse photographs: starfield library, coex mall, seoul"
                 >
                   <img
                     src="/assets/images/camera-roll/photo-06.jpg"
@@ -355,7 +348,7 @@
                     loading="lazy"
                     decoding="async"
                   />
-                </button>
+                </a>
                 <button
                   type="button"
                   class="frame-play"
@@ -370,11 +363,10 @@
             </figure>
             <figure class="carousel-slide" hidden>
               <div class="framed-photo">
-                <button
-                  type="button"
+                <a
                   class="carousel-photo"
-                  data-open-photo="6"
-                  aria-label="Enlarge photograph: ura-namba, osaka"
+                  href="/photographs/"
+                  aria-label="Browse photographs: ura-namba, osaka"
                 >
                   <img
                     src="/assets/images/camera-roll/photo-07.jpg"
@@ -383,7 +375,7 @@
                     loading="lazy"
                     decoding="async"
                   />
-                </button>
+                </a>
                 <button
                   type="button"
                   class="frame-play"
@@ -398,11 +390,10 @@
             </figure>
             <figure class="carousel-slide" hidden>
               <div class="framed-photo">
-                <button
-                  type="button"
+                <a
                   class="carousel-photo"
-                  data-open-photo="7"
-                  aria-label="Enlarge photograph: dōtonbori canal, osaka"
+                  href="/photographs/"
+                  aria-label="Browse photographs: dōtonbori canal, osaka"
                 >
                   <img
                     src="/assets/images/camera-roll/photo-08.jpg"
@@ -411,7 +402,7 @@
                     loading="lazy"
                     decoding="async"
                   />
-                </button>
+                </a>
                 <button
                   type="button"
                   class="frame-play"
@@ -426,11 +417,10 @@
             </figure>
             <figure class="carousel-slide" hidden>
               <div class="framed-photo">
-                <button
-                  type="button"
+                <a
                   class="carousel-photo"
-                  data-open-photo="8"
-                  aria-label="Enlarge photograph: fushimi inari taisha, kyoto"
+                  href="/photographs/"
+                  aria-label="Browse photographs: fushimi inari taisha, kyoto"
                 >
                   <img
                     src="/assets/images/camera-roll/photo-09.jpg"
@@ -439,7 +429,7 @@
                     loading="lazy"
                     decoding="async"
                   />
-                </button>
+                </a>
                 <button
                   type="button"
                   class="frame-play"
@@ -454,11 +444,10 @@
             </figure>
             <figure class="carousel-slide" hidden>
               <div class="framed-photo">
-                <button
-                  type="button"
+                <a
                   class="carousel-photo"
-                  data-open-photo="9"
-                  aria-label="Enlarge photograph: tokyo tower, tokyo"
+                  href="/photographs/"
+                  aria-label="Browse photographs: tokyo tower, tokyo"
                 >
                   <img
                     src="/assets/images/camera-roll/photo-10.jpg"
@@ -467,7 +456,7 @@
                     loading="lazy"
                     decoding="async"
                   />
-                </button>
+                </a>
                 <button
                   type="button"
                   class="frame-play"
@@ -482,11 +471,10 @@
             </figure>
             <figure class="carousel-slide" hidden>
               <div class="framed-photo">
-                <button
-                  type="button"
+                <a
                   class="carousel-photo"
-                  data-open-photo="10"
-                  aria-label="Enlarge photograph: shibuya crossing from shibuya sky, tokyo"
+                  href="/photographs/"
+                  aria-label="Browse photographs: shibuya crossing from shibuya sky, tokyo"
                 >
                   <img
                     src="/assets/images/camera-roll/photo-11.jpg"
@@ -495,7 +483,7 @@
                     loading="lazy"
                     decoding="async"
                   />
-                </button>
+                </a>
                 <button
                   type="button"
                   class="frame-play"
@@ -510,11 +498,10 @@
             </figure>
             <figure class="carousel-slide" hidden>
               <div class="framed-photo">
-                <button
-                  type="button"
+                <a
                   class="carousel-photo"
-                  data-open-photo="11"
-                  aria-label="Enlarge photograph: flat whites, keswick, lake district national park"
+                  href="/photographs/"
+                  aria-label="Browse photographs: flat whites, keswick, lake district national park"
                 >
                   <img
                     src="/assets/images/camera-roll/photo-12.jpg"
@@ -523,7 +510,7 @@
                     loading="lazy"
                     decoding="async"
                   />
-                </button>
+                </a>
                 <button
                   type="button"
                   class="frame-play"
@@ -540,11 +527,10 @@
             </figure>
             <figure class="carousel-slide" hidden>
               <div class="framed-photo">
-                <button
-                  type="button"
+                <a
                   class="carousel-photo"
-                  data-open-photo="12"
-                  aria-label="Enlarge photograph: homeground coffee + kitchen, windermere, lake district national park"
+                  href="/photographs/"
+                  aria-label="Browse photographs: homeground coffee + kitchen, windermere, lake district national park"
                 >
                   <img
                     src="/assets/images/camera-roll/photo-13.jpg"
@@ -553,7 +539,7 @@
                     loading="lazy"
                     decoding="async"
                   />
-                </button>
+                </a>
                 <button
                   type="button"
                   class="frame-play"
@@ -571,11 +557,10 @@
             </figure>
             <figure class="carousel-slide" hidden>
               <div class="framed-photo">
-                <button
-                  type="button"
+                <a
                   class="carousel-photo"
-                  data-open-photo="13"
-                  aria-label="Enlarge photograph: long island iced tea, the oligarch, milton keynes"
+                  href="/photographs/"
+                  aria-label="Browse photographs: long island iced tea, the oligarch, milton keynes"
                 >
                   <img
                     src="/assets/images/camera-roll/photo-14.jpg"
@@ -584,7 +569,7 @@
                     loading="lazy"
                     decoding="async"
                   />
-                </button>
+                </a>
                 <button
                   type="button"
                   class="frame-play"
@@ -601,11 +586,10 @@
             </figure>
             <figure class="carousel-slide" hidden>
               <div class="framed-photo">
-                <button
-                  type="button"
+                <a
                   class="carousel-photo"
-                  data-open-photo="14"
-                  aria-label="Enlarge photograph: vltava river, prague"
+                  href="/photographs/"
+                  aria-label="Browse photographs: vltava river, prague"
                 >
                   <img
                     src="https://res.cloudinary.com/dd2rpc7mx/image/fetch/f_auto,q_auto,w_800/https://rajadhanda.me/photographs/images/vltava-river-prague.jpg"
@@ -614,7 +598,7 @@
                     loading="lazy"
                     decoding="async"
                   />
-                </button>
+                </a>
                 <button
                   type="button"
                   class="frame-play"
@@ -629,11 +613,10 @@
             </figure>
             <figure class="carousel-slide" hidden>
               <div class="framed-photo">
-                <button
-                  type="button"
+                <a
                   class="carousel-photo"
-                  data-open-photo="15"
-                  aria-label="Enlarge photograph: national palace of sintra, sintra"
+                  href="/photographs/"
+                  aria-label="Browse photographs: national palace of sintra, sintra"
                 >
                   <img
                     src="https://res.cloudinary.com/dd2rpc7mx/image/fetch/f_auto,q_auto,w_800/https://rajadhanda.me/photographs/images/national-palace-of-sintra-sintra.jpg"
@@ -642,7 +625,7 @@
                     loading="lazy"
                     decoding="async"
                   />
-                </button>
+                </a>
                 <button
                   type="button"
                   class="frame-play"
@@ -657,11 +640,10 @@
             </figure>
             <figure class="carousel-slide" hidden>
               <div class="framed-photo">
-                <button
-                  type="button"
+                <a
                   class="carousel-photo"
-                  data-open-photo="16"
-                  aria-label="Enlarge photograph: top of the moorish castle, sintra"
+                  href="/photographs/"
+                  aria-label="Browse photographs: top of the moorish castle, sintra"
                 >
                   <img
                     src="https://res.cloudinary.com/dd2rpc7mx/image/fetch/f_auto,q_auto,w_800/https://rajadhanda.me/photographs/images/top-of-the-moorish-castle-sintra.jpeg"
@@ -670,7 +652,7 @@
                     loading="lazy"
                     decoding="async"
                   />
-                </button>
+                </a>
                 <button
                   type="button"
                   class="frame-play"
@@ -685,11 +667,10 @@
             </figure>
             <figure class="carousel-slide" hidden>
               <div class="framed-photo">
-                <button
-                  type="button"
+                <a
                   class="carousel-photo"
-                  data-open-photo="17"
-                  aria-label="Enlarge photograph: air and space museum, seattle"
+                  href="/photographs/"
+                  aria-label="Browse photographs: air and space museum, seattle"
                 >
                   <img
                     src="https://res.cloudinary.com/dd2rpc7mx/image/fetch/f_auto,q_auto,w_800/https://rajadhanda.me/photographs/images/air-and-space-museum-seattle.jpeg"
@@ -698,7 +679,7 @@
                     loading="lazy"
                     decoding="async"
                   />
-                </button>
+                </a>
                 <button
                   type="button"
                   class="frame-play"
@@ -713,11 +694,10 @@
             </figure>
             <figure class="carousel-slide" hidden>
               <div class="framed-photo">
-                <button
-                  type="button"
+                <a
                   class="carousel-photo"
-                  data-open-photo="18"
-                  aria-label="Enlarge photograph: saturn v f-1 engine, museum of flight, seattle"
+                  href="/photographs/"
+                  aria-label="Browse photographs: saturn v f-1 engine, museum of flight, seattle"
                 >
                   <img
                     src="https://res.cloudinary.com/dd2rpc7mx/image/fetch/f_auto,q_auto,w_800/https://rajadhanda.me/photographs/images/saturn-v-f1-engine-museum-of-flight-seattle.jpg"
@@ -726,7 +706,7 @@
                     loading="lazy"
                     decoding="async"
                   />
-                </button>
+                </a>
                 <button
                   type="button"
                   class="frame-play"
@@ -743,11 +723,10 @@
             </figure>
             <figure class="carousel-slide" hidden>
               <div class="framed-photo">
-                <button
-                  type="button"
+                <a
                   class="carousel-photo"
-                  data-open-photo="19"
-                  aria-label="Enlarge photograph: top of the space needle, seattle"
+                  href="/photographs/"
+                  aria-label="Browse photographs: top of the space needle, seattle"
                 >
                   <img
                     src="https://res.cloudinary.com/dd2rpc7mx/image/fetch/f_auto,q_auto,w_800/https://rajadhanda.me/photographs/images/top-of-the-space-needle-seattle.jpeg"
@@ -756,7 +735,7 @@
                     loading="lazy"
                     decoding="async"
                   />
-                </button>
+                </a>
                 <button
                   type="button"
                   class="frame-play"
@@ -771,11 +750,10 @@
             </figure>
             <figure class="carousel-slide" hidden>
               <div class="framed-photo">
-                <button
-                  type="button"
+                <a
                   class="carousel-photo"
-                  data-open-photo="20"
-                  aria-label="Enlarge photograph: bottom of the space needle, seattle"
+                  href="/photographs/"
+                  aria-label="Browse photographs: bottom of the space needle, seattle"
                 >
                   <img
                     src="https://res.cloudinary.com/dd2rpc7mx/image/fetch/f_auto,q_auto,w_800/https://rajadhanda.me/photographs/images/bottom-of-the-space-needle-seattle.jpeg"
@@ -784,7 +762,7 @@
                     loading="lazy"
                     decoding="async"
                   />
-                </button>
+                </a>
                 <button
                   type="button"
                   class="frame-play"
@@ -799,11 +777,10 @@
             </figure>
             <figure class="carousel-slide" hidden>
               <div class="framed-photo">
-                <button
-                  type="button"
+                <a
                   class="carousel-photo"
-                  data-open-photo="21"
-                  aria-label="Enlarge photograph: the harbour, seattle"
+                  href="/photographs/"
+                  aria-label="Browse photographs: the harbour, seattle"
                 >
                   <img
                     src="https://res.cloudinary.com/dd2rpc7mx/image/fetch/f_auto,q_auto,w_800/https://rajadhanda.me/photographs/images/the-harbour-seattle.jpeg"
@@ -812,7 +789,7 @@
                     loading="lazy"
                     decoding="async"
                   />
-                </button>
+                </a>
                 <button
                   type="button"
                   class="frame-play"
@@ -827,11 +804,10 @@
             </figure>
             <figure class="carousel-slide" hidden>
               <div class="framed-photo">
-                <button
-                  type="button"
+                <a
                   class="carousel-photo"
-                  data-open-photo="22"
-                  aria-label="Enlarge photograph: ballard locks, seattle"
+                  href="/photographs/"
+                  aria-label="Browse photographs: ballard locks, seattle"
                 >
                   <img
                     src="https://res.cloudinary.com/dd2rpc7mx/image/fetch/f_auto,q_auto,w_800/https://rajadhanda.me/photographs/images/ballard-locks-seattle.jpg"
@@ -840,7 +816,7 @@
                     loading="lazy"
                     decoding="async"
                   />
-                </button>
+                </a>
                 <button
                   type="button"
                   class="frame-play"
@@ -855,11 +831,10 @@
             </figure>
             <figure class="carousel-slide" hidden>
               <div class="framed-photo">
-                <button
-                  type="button"
+                <a
                   class="carousel-photo"
-                  data-open-photo="23"
-                  aria-label="Enlarge photograph: ube pancakes, seattle"
+                  href="/photographs/"
+                  aria-label="Browse photographs: ube pancakes, seattle"
                 >
                   <img
                     src="https://res.cloudinary.com/dd2rpc7mx/image/fetch/f_auto,q_auto,w_800/https://rajadhanda.me/photographs/images/ube-pancakes-seattle.jpg"
@@ -868,7 +843,7 @@
                     loading="lazy"
                     decoding="async"
                   />
-                </button>
+                </a>
                 <button
                   type="button"
                   class="frame-play"
@@ -883,11 +858,10 @@
             </figure>
             <figure class="carousel-slide" hidden>
               <div class="framed-photo">
-                <button
-                  type="button"
+                <a
                   class="carousel-photo"
-                  data-open-photo="24"
-                  aria-label="Enlarge photograph: banff"
+                  href="/photographs/"
+                  aria-label="Browse photographs: banff"
                 >
                   <img
                     src="https://res.cloudinary.com/dd2rpc7mx/image/fetch/f_auto,q_auto,w_800/https://rajadhanda.me/photographs/images/banff.jpeg"
@@ -896,7 +870,7 @@
                     loading="lazy"
                     decoding="async"
                   />
-                </button>
+                </a>
                 <button
                   type="button"
                   class="frame-play"
@@ -911,11 +885,10 @@
             </figure>
             <figure class="carousel-slide" hidden>
               <div class="framed-photo">
-                <button
-                  type="button"
+                <a
                   class="carousel-photo"
-                  data-open-photo="25"
-                  aria-label="Enlarge photograph: lake louise, banff"
+                  href="/photographs/"
+                  aria-label="Browse photographs: lake louise, banff"
                 >
                   <img
                     src="https://res.cloudinary.com/dd2rpc7mx/image/fetch/f_auto,q_auto,w_800/https://rajadhanda.me/photographs/images/lake-louise-banff.jpeg"
@@ -924,7 +897,7 @@
                     loading="lazy"
                     decoding="async"
                   />
-                </button>
+                </a>
                 <button
                   type="button"
                   class="frame-play"
@@ -939,11 +912,10 @@
             </figure>
             <figure class="carousel-slide" hidden>
               <div class="framed-photo">
-                <button
-                  type="button"
+                <a
                   class="carousel-photo"
-                  data-open-photo="26"
-                  aria-label="Enlarge photograph: fairmont chateau, lake louise, banff"
+                  href="/photographs/"
+                  aria-label="Browse photographs: fairmont chateau, lake louise, banff"
                 >
                   <img
                     src="https://res.cloudinary.com/dd2rpc7mx/image/fetch/f_auto,q_auto,w_800/https://rajadhanda.me/photographs/images/fairmont-chateau-lake-louise-banff.jpeg"
@@ -952,7 +924,7 @@
                     loading="lazy"
                     decoding="async"
                   />
-                </button>
+                </a>
                 <button
                   type="button"
                   class="frame-play"
@@ -967,11 +939,10 @@
             </figure>
             <figure class="carousel-slide" hidden>
               <div class="framed-photo">
-                <button
-                  type="button"
+                <a
                   class="carousel-photo"
-                  data-open-photo="27"
-                  aria-label="Enlarge photograph: johnston canyon, banff"
+                  href="/photographs/"
+                  aria-label="Browse photographs: johnston canyon, banff"
                 >
                   <img
                     src="https://res.cloudinary.com/dd2rpc7mx/image/fetch/f_auto,q_auto,w_800/https://rajadhanda.me/photographs/images/johnston-canyon-banff.jpg"
@@ -980,7 +951,7 @@
                     loading="lazy"
                     decoding="async"
                   />
-                </button>
+                </a>
                 <button
                   type="button"
                   class="frame-play"
@@ -995,11 +966,10 @@
             </figure>
             <figure class="carousel-slide" hidden>
               <div class="framed-photo">
-                <button
-                  type="button"
+                <a
                   class="carousel-photo"
-                  data-open-photo="28"
-                  aria-label="Enlarge photograph: the local walk"
+                  href="/photographs/"
+                  aria-label="Browse photographs: the local walk"
                 >
                   <img
                     src="https://res.cloudinary.com/dd2rpc7mx/image/fetch/f_auto,q_auto,w_800/https://rajadhanda.me/photographs/images/the-local-walk.jpeg"
@@ -1008,7 +978,7 @@
                     loading="lazy"
                     decoding="async"
                   />
-                </button>
+                </a>
                 <button
                   type="button"
                   class="frame-play"
@@ -1085,9 +1055,5 @@ while working as hard as you can on something you enjoy</p></a>
       >
     </footer>
     <p class="edition-colophon">© 2026 Raja Dhanda</p>
-    <dialog id="drawer" aria-labelledby="drawer-title">
-      <button class="drawer-close" aria-label="Close preview">×</button>
-      <div id="drawer-content"></div>
-    </dialog>
   </body>
 </html>
