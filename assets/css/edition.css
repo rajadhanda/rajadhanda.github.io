@@ -1622,24 +1622,8 @@ dialog img {
   gap: 5px 14px;
 }
 
-.substack-all {
-  padding: 3px 9px;
-  border: 1px solid var(--line);
-  font-size: 14px;
-  text-decoration: none;
-}
 
-.substack-all:hover {
-  border-color: var(--ink);
-  text-decoration: underline;
-}
 
 .front-notes .front-note p {
   margin-bottom: 0;
-}
-
-@media (max-width: 700px) {
-  .substack-all {
-    font-size: 12px;
-  }
 }
