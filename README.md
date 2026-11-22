@@ -19,7 +19,7 @@ with Daylight and Midnight modes, interactive social bubbles beside the name,
 and a pointer-following EyesOff feature at the centre. The introduction uses the
 existing portrait and original bio. The framed camera-roll carousel cycles through all 29 gallery photographs every
 six seconds. It pauses on hover, keyboard focus, when out of view,
-and when the page is hidden. Play/Pause and navigation buttons appear inside
+and when the page is hidden. Previous and next buttons appear beside
 the frame on hover or focus. The arrows are also visible on mobile.
 Arrow keys and touch swipes provide manual navigation. Clicking a photo opens
 the full Photographs page.
