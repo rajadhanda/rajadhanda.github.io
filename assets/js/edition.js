@@ -182,11 +182,9 @@
   const carousel = document.querySelector(".photo-carousel");
   const slides = [...carousel.querySelectorAll(".carousel-slide")];
   const status = carousel.querySelector(".carousel-status");
-  const playButtons = [...carousel.querySelectorAll("[data-carousel-play]")];
   const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
   const interval = 6000;
   let current = 0;
-  let paused = reducedMotion.matches;
   let hovering = false;
   let focused = false;
   let visible = false;
@@ -196,7 +194,7 @@
 
   function canRun() {
     return (
-      !paused &&
+      !reducedMotion.matches &&
       !hovering &&
       !focused &&
       visible &&
@@ -259,7 +257,7 @@
     if (outgoing.contains(active)) {
       focusSelector = active.dataset.carousel
         ? `[data-carousel="${active.dataset.carousel}"]`
-        : active.matches(".frame-play") ? ".frame-play" : ".carousel-photo";
+        : ".carousel-photo";
     }
     incoming.hidden = false;
     current = target;
@@ -295,27 +293,6 @@
     preloadNext();
     return true;
   }
-  function syncPlayButton() {
-    playButtons.forEach((button) => {
-      button.textContent = paused ? "Play" : "Pause";
-      button.dataset.paused = String(paused);
-      button.setAttribute(
-        "aria-label",
-        paused ? "Play photo carousel" : "Pause photo carousel",
-      );
-    });
-    schedule();
-  }
-  playButtons.forEach((button) =>
-    button.addEventListener("click", () => {
-      paused = !paused;
-      if (!paused) {
-        hovering = false;
-        focused = false;
-      }
-      syncPlayButton();
-    }),
-  );
   slides.forEach((slide) => {
     const frame = slide.querySelector(".framed-photo");
     for (const [direction, label, step] of [
@@ -370,11 +347,8 @@
     { threshold: 0.25 },
   ).observe(carousel);
   reducedMotion.addEventListener("change", () => {
-    if (reducedMotion.matches) {
-      paused = true;
-      clearPhotoFade();
-    }
-    syncPlayButton();
+    if (reducedMotion.matches) clearPhotoFade();
+    schedule();
   });
   let touch = null;
   let swiped = false;
@@ -413,7 +387,7 @@
   });
   status.setAttribute("aria-live", "off");
   preloadNext();
-  syncPlayButton();
+  schedule();
 
   const notes = document.querySelector(".front-notes");
   const formatDate = (date) =>
