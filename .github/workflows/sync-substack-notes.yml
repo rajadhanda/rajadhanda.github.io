@@ -1,48 +1,47 @@
-name: Sync Substack Notes
+name: Validate Substack Notes
 
 on:
-  schedule:
-    - cron: '17 */6 * * *'
+  push:
+    branches: [main]
+    paths:
+      - blog/notes.json
+      - scripts/*substack_notes.py
+      - tests/test_substack_sync.py
+      - .github/workflows/sync-substack-notes.yml
+  pull_request:
+    paths:
+      - blog/notes.json
+      - scripts/*substack_notes.py
+      - tests/test_substack_sync.py
+      - .github/workflows/sync-substack-notes.yml
   workflow_dispatch:
 
 permissions:
-  contents: write
+  contents: read
 
 jobs:
-  sync:
+  validate:
     runs-on: ubuntu-latest
+    timeout-minutes: 5
     steps:
       - uses: actions/checkout@v4
-
-      - name: Fetch the latest notes
-        env:
-          FEED_URL: https://substack.com/api/v1/reader/feed/profile/43989908
-          PROFILE_URL: https://substack.com/@rajadhanda
+      - name: Test note parsing and cache preservation
+        run: python3 -m unittest discover -s tests -p test_substack_sync.py
+      - name: Check the published cache shape
         run: |
-          set -euo pipefail
-          temp_file=$(mktemp)
-          curl --fail --location --retry 3 --silent --show-error "$FEED_URL" \
-            | jq --arg profile_url "$PROFILE_URL" '
-                [
-                  .items[]
-                  | select(.type == "comment" and .comment.user_id == 43989908)
-                  | {
-                      text: .comment.body,
-                      date: (.comment.date | split("T")[0]),
-                      link: ($profile_url + "/note/c-" + (.comment.id | tostring))
-                    }
-                ]
-                | if length > 0 then . else error("Substack returned no notes") end
-              ' > "$temp_file"
-          mv "$temp_file" blog/notes.json
+          python3 - <<'PY'
+          from datetime import date
+          from pathlib import Path
+          from urllib.parse import urlsplit
+          import json
 
-      - name: Commit updated cache
-        run: |
-          if git diff --quiet -- blog/notes.json; then
-            exit 0
-          fi
-          git config user.name 'github-actions[bot]'
-          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git add blog/notes.json
-          git commit -m 'chore: sync latest Substack notes [skip ci]'
-          git push
+          notes = json.loads(Path("blog/notes.json").read_text())
+          assert isinstance(notes, list) and notes, "Expected a nonempty list of notes"
+          for note in notes:
+              assert isinstance(note["text"], str) and note["text"].strip()
+              assert date.fromisoformat(note["date"]).isoformat() == note["date"]
+              url = urlsplit(note["link"])
+              assert url.scheme == "https" and (
+                  url.hostname == "substack.com" or (url.hostname or "").endswith(".substack.com")
+              )
+          PY

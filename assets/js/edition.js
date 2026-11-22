@@ -511,9 +511,7 @@
     time.textContent = formatDate(note.date);
     const text = document.createElement("p");
     text.textContent = note.text.trim();
-    const label = document.createElement("span");
-    label.textContent = "Read on Substack";
-    a.append(time, text, label);
+    a.append(time, text);
     return a;
   }
   async function refreshNotes() {

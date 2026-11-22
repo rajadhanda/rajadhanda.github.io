@@ -33,11 +33,16 @@ as fallbacks. Original gallery images remain in `photographs/images/`.
 
 ## Substack notes
 
-The homepage reads `/blog/notes.json`, the same file used by the blog. The existing
-`.github/workflows/sync-substack-notes.yml` workflow refreshes it every six hours.
-The homepage displays the newest six valid notes as Post-it notes on a
-board, linking to their originals. Hovering a social bubble shows its username. Note bodies use the site’s readable serif typeface.
-Pre-rendered notes remain visible if JavaScript is disabled or the fetch fails.
+The homepage and blog read `/blog/notes.json`. The six newest valid notes appear
+on the homepage pinboard, linking to the originals. The homepage also includes
+fallback notes for visitors without JavaScript or when the cache cannot be read.
+
+Substack's public Notes endpoint responds from the local machine and refuses
+GitHub-hosted runners. The local scheduled task runs
+`python3 scripts/publish_substack_notes.py` with the signed-in GitHub CLI.
+It publishes only changed, validated Notes data to `main`. The commit triggers
+GitHub Pages, and the GitHub Actions workflow validates the saved cache.
+If the request fails, the last published notes remain available.
 
 ## Validation
 
