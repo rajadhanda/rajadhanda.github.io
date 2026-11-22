@@ -37,12 +37,10 @@ The homepage and blog read `/blog/notes.json`. The six newest valid notes appear
 on the homepage pinboard, linking to the originals. The homepage also includes
 fallback notes for visitors without JavaScript or when the cache cannot be read.
 
-Substack's public Notes endpoint responds from the local machine and refuses
-GitHub-hosted runners. The local scheduled task runs
-`python3 scripts/publish_substack_notes.py` with the signed-in GitHub CLI.
-It publishes only changed, validated Notes data to `main`. The commit triggers
-GitHub Pages, and the GitHub Actions workflow validates the saved cache.
-If the request fails, the last published notes remain available.
+GitHub Actions refreshes the cache every six hours using the public Open RSS
+feed for the profile. It adds only verified original notes, preserves the
+existing cache on a feed failure, and requests a Pages build when the live cache
+differs. The workflow can also be run manually from GitHub Actions.
 
 ## Validation
 
