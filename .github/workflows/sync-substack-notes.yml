@@ -3,9 +3,7 @@ name: Sync Substack Notes
 on:
   schedule:
     - cron: '17 */6 * * *'
-  push:
-    branches:
-      - codex/github-hosted-note-sync
+  pull_request:
     paths:
       - .github/workflows/sync-substack-notes.yml
       - scripts/sync_substack_rss.py
