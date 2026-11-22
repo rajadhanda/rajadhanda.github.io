@@ -535,17 +535,6 @@ h2 {
   margin: 0 0 18px;
   letter-spacing: 0;
 }
-.front-notes .front-note > span {
-  font:
-    italic 13px/1.3 "Crimson Text",
-    Georgia,
-    serif;
-  color: #76694b;
-  margin-top: auto;
-  text-decoration: underline;
-  text-decoration-color: #b8a677;
-  text-underline-offset: 4px;
-}
 [data-theme="midnight"] .front-notes {
   background-color: #6d6454;
   border-color: #81725b;
@@ -893,9 +882,6 @@ dialog img {
   .front-notes .front-note time {
     font-size: 12px;
     margin-bottom: 12px;
-  }
-  .front-notes .front-note > span {
-    font-size: 13px;
   }
   .edition-bottom {
     margin-top: 20px;
@@ -1625,5 +1611,35 @@ dialog img {
 
   .masthead-typed {
     display: none;
+  }
+}
+
+.substack-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 5px 14px;
+}
+
+.substack-all {
+  padding: 3px 9px;
+  border: 1px solid var(--line);
+  font-size: 14px;
+  text-decoration: none;
+}
+
+.substack-all:hover {
+  border-color: var(--ink);
+  text-decoration: underline;
+}
+
+.front-notes .front-note p {
+  margin-bottom: 0;
+}
+
+@media (max-width: 700px) {
+  .substack-all {
+    font-size: 12px;
   }
 }
