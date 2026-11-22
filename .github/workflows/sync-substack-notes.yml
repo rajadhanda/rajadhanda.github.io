@@ -1,47 +1,83 @@
-name: Validate Substack Notes
+name: Sync Substack Notes
 
 on:
+  schedule:
+    - cron: '17 */6 * * *'
   push:
-    branches: [main]
+    branches:
+      - codex/github-hosted-note-sync
     paths:
-      - blog/notes.json
-      - scripts/*substack_notes.py
-      - tests/test_substack_sync.py
       - .github/workflows/sync-substack-notes.yml
-  pull_request:
-    paths:
-      - blog/notes.json
-      - scripts/*substack_notes.py
-      - tests/test_substack_sync.py
-      - .github/workflows/sync-substack-notes.yml
+      - scripts/sync_substack_rss.py
   workflow_dispatch:
 
 permissions:
   contents: read
 
+concurrency:
+  group: substack-notes-${{ github.ref }}
+  cancel-in-progress: false
+
 jobs:
-  validate:
+  fetch:
     runs-on: ubuntu-latest
     timeout-minutes: 5
     steps:
       - uses: actions/checkout@v4
-      - name: Test note parsing and cache preservation
-        run: python3 -m unittest discover -s tests -p test_substack_sync.py
-      - name: Check the published cache shape
-        run: |
-          python3 - <<'PY'
-          from datetime import date
-          from pathlib import Path
-          from urllib.parse import urlsplit
-          import json
+      - name: Test cache preservation
+        run: python3 -m unittest discover -s tests -p 'test_substack*.py'
+      - name: Fetch and validate public Notes RSS
+        run: python3 scripts/sync_substack_rss.py
+      - name: Save verified notes
+        uses: actions/upload-artifact@v4
+        with:
+          name: substack-notes
+          path: blog/notes.json
+          retention-days: 1
 
-          notes = json.loads(Path("blog/notes.json").read_text())
-          assert isinstance(notes, list) and notes, "Expected a nonempty list of notes"
-          for note in notes:
-              assert isinstance(note["text"], str) and note["text"].strip()
-              assert date.fromisoformat(note["date"]).isoformat() == note["date"]
-              url = urlsplit(note["link"])
-              assert url.scheme == "https" and (
-                  url.hostname == "substack.com" or (url.hostname or "").endswith(".substack.com")
-              )
-          PY
+  publish:
+    if: github.ref == 'refs/heads/main'
+    needs: fetch
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      contents: write
+      pages: write
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with:
+          name: substack-notes
+          path: notes-incoming
+      - name: Commit any newly fetched notes
+        env:
+          START_SHA: ${{ github.sha }}
+        run: |
+          if [ "$(git rev-parse HEAD)" != "$START_SHA" ]; then
+            echo "The site changed during the sync. Run the workflow again." >&2
+            exit 1
+          fi
+          git fetch origin main
+          if [ "$(git rev-parse origin/main)" != "$START_SHA" ]; then
+            echo "Main changed during the sync. Run the workflow again." >&2
+            exit 1
+          fi
+          cp notes-incoming/notes.json blog/notes.json
+          if ! git diff --quiet -- blog/notes.json; then
+            git config user.name 'github-actions[bot]'
+            git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+            git add blog/notes.json
+            git commit -m 'Refresh public Substack notes'
+            git push origin HEAD:main
+          fi
+      - name: Publish the updated cache to GitHub Pages
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          if curl --fail --silent --show-error --max-time 15 \
+            "https://rajadhanda.me/blog/notes.json?v=$(git rev-parse HEAD)" -o "$RUNNER_TEMP/live-notes.json" &&
+            cmp -s blog/notes.json "$RUNNER_TEMP/live-notes.json"; then
+            echo "The live pinboard cache is current."
+          else
+            gh api --method POST "repos/$GITHUB_REPOSITORY/pages/builds" --jq .status
+          fi
